@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { FaTimes, FaBars } from "react-icons/fa";
 import { menuItems } from "@/data";
+import Link from "next/link";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,7 +46,7 @@ export default function Navbar() {
           whileHover={{ scale: 1.1 }}
           transition={{ duration: 0.3 }}
         >
-          Login
+          <Link href={"/chooseuser"}>Login</Link>
         </motion.button>
       </nav>
 
@@ -62,13 +63,13 @@ export default function Navbar() {
           ))}
           <li>
             <motion.button
-              className="px-6 py-2 bg-white text-indigo-800 font-bold rounded-lg shadow-lg transition-all transform hover:scale-105"
+              className="px-6 py-2 bg-white text-indigo-800 font-bold rounded-xl shadow-lg transition-all transform hover:scale-105"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.3 }}
             >
-              Login
+              <Link href={"/chooseuser"}>Login</Link>
             </motion.button>
           </li>
         </ul>
