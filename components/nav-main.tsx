@@ -17,7 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { useSidebarStore } from "@/store";
+import { useAuthStore, useSidebarStore } from "@/store";
 
 export function NavMain({
   items,
@@ -26,6 +26,7 @@ export function NavMain({
     title: string;
     url: string;
     icon?: LucideIcon;
+    role: string;
     isActive?: boolean;
     items?: {
       title: string;
