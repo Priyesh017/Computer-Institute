@@ -1,11 +1,17 @@
 "use client";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { fetcherWc } from "@/helper";
+import { useAuthStore } from "@/store";
 import Link from "next/link";
 import { useState } from "react";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const { logout } = useAuthStore();
+  const logouthandler = async () => {
+    await fetcherWc("/logout", "GET");
+    logout();
+  };
   return (
     <nav className="bg-purple-900 w-full text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,9 +33,9 @@ const Navbar = () => {
             <Link href="/profile" className="hover:text-gray-300">
               Profile
             </Link>
-            <Link href="/logout" className="hover:text-gray-300">
+            <button className="hover:text-gray-300" onClick={logouthandler}>
               Logout
-            </Link>
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -73,9 +79,12 @@ const Navbar = () => {
           <Link href="/profile" className="block px-4 py-2 hover:bg-purple-700">
             Profile
           </Link>
-          <Link href="/logout" className="block px-4 py-2 hover:bg-purple-700">
+          <button
+            className="block px-4 py-2 hover:bg-purple-700"
+            onClick={logouthandler}
+          >
             Logout
-          </Link>
+          </button>
         </div>
       )}
     </nav>
