@@ -28,9 +28,9 @@ const GalleryWall = () => {
   }, []);
 
   return (
-    <div className="p-6">
+    <div className="text-center px-6">
       <motion.h2
-        className="text-5xl font-bold fade-in mb-10"
+        className="text-5xl font-bold fade-in text-slate-700 mb-10"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}

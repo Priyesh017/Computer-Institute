@@ -10,6 +10,22 @@ export default {
   theme: {
     extend: {
       colors: {
+        grad: {
+          "1" : "#B2F0FF",
+          "2" : "#FFD6E0",
+
+          "3" : "#FFD6A5",
+          "4" : "#FF6B6B",
+
+          "5" : "#AEE6FF",
+          "6" : "#B5E48C",
+
+          "7" : "#FF9CEE",
+          "8" : "#F8B195",
+
+          "9" : "#D8B5FF",
+          "10" : "#1EAE98",
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {

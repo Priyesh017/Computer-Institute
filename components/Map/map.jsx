@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { renderToStaticMarkup } from "react-dom/server";
+import { markers } from "./markers";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -48,20 +49,16 @@ const MapComponent = () => {
   const customIcon = createIcon();
 
   // Markers data
-  const markers = [
-    { position: [28.6139, 77.209], label: "New Delhi" },
-    { position: [19.076, 72.8777], label: "Mumbai" },
-    { position: [13.0827, 80.2707], label: "Chennai" },
-    { position: [22.5726, 88.3639], label: "Kolkata" },
-    { position: [12.9716, 77.5946], label: "Bangalore" },
-  ];
+  
 
   return (
     <MapContainer
       center={[20.5937, 78.9629]} // Center view of India
       zoom={5}
-      style={{ height: "50vh", width: "50%" }}
-    >
+      scrollWheelZoom={true}
+      style={{ height: "500px", width: "70%" }}
+      className="relative top-[-20] md:min-w-[50%] min-w-full z-10"
+    > 
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
