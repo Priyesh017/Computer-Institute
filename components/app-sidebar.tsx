@@ -11,6 +11,14 @@ import {
 } from "lucide-react";
 import * as React from "react";
 
+// center
+// admission
+// id card download
+// admit download
+// exam form fillup
+// MARKSHEET download
+// certificate download
+
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
@@ -21,14 +29,11 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { useAuthStore } from "@/store";
 
 // This is sample data.
+
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   teams: [
     {
       name: "Acme Inc",
@@ -48,57 +53,51 @@ const data = {
   ],
   navMain: [
     {
-      title: "Course",
+      title: "Fee payment",
       url: "#",
+      role: "center",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "Course Details",
+          title: "exam fee",
           url: "#",
         },
         {
-          title: "Course Fees",
-          url: "#",
-        },
-        {
-          title: "Fees Deposit",
+          title: "Course Fee",
           url: "#",
         },
       ],
     },
     {
-      title: "Center",
+      title: "admin",
       url: "#",
-      icon: Bot,
+      role: "admin",
+      icon: SquareTerminal,
+      isActive: true,
       items: [
         {
-          title: "All Center",
+          title: "enrollments",
           url: "#",
         },
         {
-          title: "State and District Wise List",
+          title: "id cards",
+          url: "#",
+        },
+        {
+          title: "admit cards",
+          url: "#",
+        },
+        {
+          title: "marks",
           url: "#",
         },
       ],
     },
-    {
-      title: "Gallery",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Picnic",
-          url: "#",
-        },
-        {
-          title: "Online admission",
-          url: "#",
-        },
-      ],
-    },
+
     {
       title: "Education",
+      role: "center",
       url: "#",
       icon: Settings2,
       items: [
@@ -107,23 +106,23 @@ const data = {
           url: "#",
         },
         {
-          title: "Certificate Download",
+          title: "id Download",
           url: "#",
         },
         {
-          title: "Id Card",
+          title: "admit download",
           url: "#",
         },
         {
-          title: "Enrollment",
+          title: "exam form fillup",
           url: "#",
         },
         {
-          title: "Marksheet",
+          title: "Marksheet download",
           url: "#",
         },
         {
-          title: "Examination Form",
+          title: "certificate download",
           url: "#",
         },
       ],
@@ -132,16 +131,23 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useAuthStore();
+  if (!user) return;
+  console.log(user.role);
+  const filteredNav = data.navMain.filter(
+    (d) => d.role === user.role.toLowerCase()
+  );
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={filteredNav} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

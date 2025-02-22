@@ -1,32 +1,67 @@
 "use client";
+import { fetcher, fetcherWc } from "@/helper";
 import { ChangeEvent, FormEvent, Suspense, useState } from "react";
+import { z } from "zod";
+import { toast } from "react-toastify";
+import { useAuthStore } from "@/store";
+import { redirect } from "next/navigation";
 
 function LoginPage() {
   const [toggle, setToggle] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [rollNumberError, setRollNumberError] = useState(false);
-  const [studentNameError, setStudentNameError] = useState(false);
-  const [guestLoader, setGuestLoader] = useState(false);
   const [loader, setLoader] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
+  const { user } = useAuthStore();
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+  if (user) return redirect("/admin/dashboard");
+
+  const [fd, setfd] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({ name: "", email: "", password: "" });
+
+  const userSchema = z.object({
+    name: z.string().min(2, { message: "Name too short!" }),
+    email: z.string().email({ message: "Invalid email!" }),
+    password: z
+      .string()
+      .min(6, { message: "Password too weak!" })
+      .regex(/[A-Z]/, { message: "Must contain an uppercase letter!" })
+      .regex(/[0-9]/, { message: "Must contain a number!" }),
+  });
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    // Add form validation logic here
+
+    const result = userSchema.safeParse(fd);
+
+    if (!result.success) {
+      const formattedErrors = result.error.flatten().fieldErrors;
+      setErrors({
+        name: formattedErrors.name?.[0] || "",
+        email: formattedErrors.email?.[0] || "",
+        password: formattedErrors.password?.[0] || "",
+      });
+    } else {
+      setLoader(true);
+
+      const data = await fetcherWc("/signupRoute", "POST", {
+        email: fd.email,
+        name: fd.name,
+        password: fd.password,
+      });
+
+      setLoader(false);
+
+      if (data.message === "User registered successfully") {
+        toast("Signup Successfully plz login now");
+      } else toast(data.error);
+    }
   }
 
-  function handleInputChange(event: ChangeEvent<HTMLInputElement>): void {
-    // Handle input change validation logic here
-  }
-
-  function guestModeHandler(): void {
-    setGuestLoader(true);
-    // Simulate guest login
-    setTimeout(() => {
-      setGuestLoader(false);
-      setShowPopup(true);
-    }, 2000);
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>): void {
+    setfd({ ...fd, [e.target.name]: e.target.value });
   }
 
   return (
@@ -39,28 +74,28 @@ function LoginPage() {
         <p className="text-gray-600 mb-6 text-center">
           Please enter your details.
         </p>
-        <form onSubmit={handleSubmit} className="w-full space-y-6" noValidate>
+
+        <form onSubmit={handleSubmit} className="w-full space-y-6">
           <div className="relative">
             <input
               type="text"
-              id="studentName"
-              name="studentName"
+              id="name"
+              name="name"
               className={`peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                studentNameError ? "border-red-500" : "border-gray-300"
+                errors.name != "" ? "border-red-500" : "border-gray-300"
               }`}
-              placeholder=" "
               onChange={handleInputChange}
             />
             <label
-              htmlFor="studentName"
+              htmlFor="name"
               className={`absolute left-4 p-1 bg-white top-[-4] text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${
-                studentNameError ? "text-red-500" : "text-gray-700"
+                errors.name != "" ? "text-red-500" : "text-gray-700"
               }`}
             >
               Name
             </label>
-            {studentNameError && (
-              <p className="text-sm text-red-500 mt-1">Name is required</p>
+            {errors.name != "" && (
+              <p className="text-sm text-red-500 mt-1">{errors.name}</p>
             )}
           </div>
 
@@ -70,7 +105,7 @@ function LoginPage() {
               id="email"
               name="email"
               className={`peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                emailError ? "border-red-500" : "border-gray-300"
+                errors.email != "" ? "border-red-500" : "border-gray-300"
               }`}
               placeholder=" "
               onChange={handleInputChange}
@@ -78,13 +113,13 @@ function LoginPage() {
             <label
               htmlFor="email"
               className={`absolute left-4 p-1 top-[-4] bg-white  text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${
-                emailError ? "text-red-500" : "text-gray-700"
+                errors.email != "" ? "text-red-500" : "text-gray-700"
               }`}
             >
               Email
             </label>
-            {emailError && (
-              <p className="text-sm text-red-500 mt-1">Email is required</p>
+            {errors.email != "" && (
+              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
             )}
           </div>
 
@@ -94,7 +129,7 @@ function LoginPage() {
               id="password"
               name="password"
               className={`peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                passwordError ? "border-red-500" : "border-gray-300"
+                errors.password != "" ? "border-red-500" : "border-gray-300"
               }`}
               placeholder=" "
               onChange={handleInputChange}
@@ -102,7 +137,7 @@ function LoginPage() {
             <label
               htmlFor="password"
               className={`absolute left-4 p-1 bg-white top-[-4] text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${
-                passwordError ? "text-red-500" : "text-gray-700"
+                errors.password != "" ? "text-red-500" : "text-gray-700"
               }`}
             >
               Password
@@ -114,8 +149,8 @@ function LoginPage() {
             >
               {toggle ? "👁️" : "👁️‍🗨️"}
             </button>
-            {passwordError && (
-              <p className="text-sm text-red-500 mt-1">Password is required</p>
+            {errors.password != "" && (
+              <p className="text-sm text-red-500 mt-1">{errors.password}</p>
             )}
           </div>
           <div className="flex justify-between items-center">
@@ -146,31 +181,6 @@ function LoginPage() {
 
       {/* Right Side: Background Image */}
       <div className="hidden md:flex flex-grow bg-cover bg-center bg-[url('/designlogin.jpg')]"></div>
-
-      {/* Backdrop */}
-      {guestLoader && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="text-white">
-            <div className="animate-spin h-10 w-10 border-4 border-t-transparent border-white rounded-full"></div>
-            <p className="mt-2">Please Wait</p>
-          </div>
-        </div>
-      )}
-
-      {/* Popup */}
-      {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <p>Guest mode activated!</p>
-            <button
-              onClick={() => setShowPopup(false)}
-              className="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

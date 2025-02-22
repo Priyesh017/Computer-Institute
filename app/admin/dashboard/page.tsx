@@ -3,10 +3,14 @@ import Navbar from "@/app/_components/navbar";
 import AddStudent from "@/app/_components/studentEntry";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { useSidebarStore } from "@/store";
+import { useAuthStore, useSidebarStore } from "@/store";
+import { redirect } from "next/navigation";
 
 export default function AdminDashboard() {
   const selectedComponent = useSidebarStore((state) => state.selectedComponent);
+  // cookies na thakle redirect
+  const { user } = useAuthStore();
+  if (!user) redirect("/login");
 
   const renderComponent = () => {
     switch (selectedComponent) {

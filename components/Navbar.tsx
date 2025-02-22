@@ -4,9 +4,11 @@ import { useState } from "react";
 import { FaTimes, FaBars } from "react-icons/fa";
 import { menuItems } from "@/data";
 import Link from "next/link";
+import { useAuthStore } from "@/store";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user } = useAuthStore();
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -46,7 +48,9 @@ export default function Navbar() {
           whileHover={{ scale: 1.1 }}
           transition={{ duration: 0.3 }}
         >
-          <Link href={"/chooseuser"}>Login</Link>
+          <Link href={user ? "admin/dashboard" : "/chooseuser"}>
+            {user ? "dashboard" : "Login"}
+          </Link>
         </motion.button>
       </nav>
 
@@ -69,7 +73,9 @@ export default function Navbar() {
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.3 }}
             >
-              <Link href={"/chooseuser"}>Login</Link>
+              <Link href={user ? "admin/dashboard" : "/chooseuser"}>
+                {user ? "dashboard" : "Login"}
+              </Link>
             </motion.button>
           </li>
         </ul>

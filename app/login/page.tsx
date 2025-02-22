@@ -1,35 +1,46 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
-import { ChangeEvent, FormEvent, Suspense, useState } from "react";
+import { fetcherWc } from "@/helper";
+import { useAuthStore } from "@/store";
+import { redirect, useRouter } from "next/navigation";
+import { ChangeEvent, FormEvent, Suspense, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
-function LoginPage() {
+export default function LoginPage() {
+  const { utype, user, login } = useAuthStore();
+
+  if (user) return redirect("/admin/dashboard");
+
   const [toggle, setToggle] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [rollNumberError, setRollNumberError] = useState(false);
-  const [studentNameError, setStudentNameError] = useState(false);
-  const [guestLoader, setGuestLoader] = useState(false);
+  const [fd, setfd] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
   const [loader, setLoader] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const router = useRouter();
-  const role = useSearchParams().get("role");
-  const Role = role === "badmin" ? "Branch Admin" : "Control Admin";
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+
+  const Role = utype === "center" ? "Branch Admin" : "Control Admin";
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    // Add form validation logic here
+
+    setLoader(true);
+
+    const data = await fetcherWc("/loginRoute", "POST", {
+      email: fd.email,
+      password: fd.password,
+    });
+    console.log(data);
+    setLoader(false);
+
+    if (data.message === "Login successful") {
+      login(data.user);
+      toast("login Successfully");
+    } else toast(data.error);
   }
 
-  function handleInputChange(event: ChangeEvent<HTMLInputElement>): void {
-    // Handle input change validation logic here
-  }
-
-  function guestModeHandler(): void {
-    setGuestLoader(true);
-    // Simulate guest login
-    setTimeout(() => {
-      setGuestLoader(false);
-      setShowPopup(true);
-    }, 2000);
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>): void {
+    setfd({ ...fd, [e.target.name]: e.target.value });
   }
 
   return (
@@ -43,29 +54,22 @@ function LoginPage() {
           Welcome back! Please enter your details.
         </p>
         <form onSubmit={handleSubmit} className="w-full space-y-6" noValidate>
-          {role === "cadmin" ? (
+          {utype === "admin" ? (
             <div className="relative">
               <input
                 type="text"
                 id="studentName"
                 name="studentName"
-                className={`peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                  studentNameError ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${"border-gray-300"}`}
                 placeholder=" "
                 onChange={handleInputChange}
               />
               <label
                 htmlFor="studentName"
-                className={`absolute left-4 p-1 bg-white top-[-4] text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${
-                  studentNameError ? "text-red-500" : "text-gray-700"
-                }`}
+                className={`absolute left-4 p-1 bg-white top-[-4] text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${"text-gray-700"}`}
               >
                 Name
               </label>
-              {studentNameError && (
-                <p className="text-sm text-red-500 mt-1">Name is required</p>
-              )}
             </div>
           ) : (
             <div className="relative">
@@ -73,23 +77,16 @@ function LoginPage() {
                 type="email"
                 id="email"
                 name="email"
-                className={`peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                  emailError ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${"border-gray-300"}`}
                 placeholder=" "
                 onChange={handleInputChange}
               />
               <label
                 htmlFor="email"
-                className={`absolute left-4 p-1 top-[-4] bg-white  text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${
-                  emailError ? "text-red-500" : "text-gray-700"
-                }`}
+                className={`absolute left-4 p-1 top-[-4] bg-white  text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${"text-gray-700"}`}
               >
                 Email
               </label>
-              {emailError && (
-                <p className="text-sm text-red-500 mt-1">Email is required</p>
-              )}
             </div>
           )}
           <div className="relative">
@@ -97,17 +94,13 @@ function LoginPage() {
               type={toggle ? "text" : "password"}
               id="password"
               name="password"
-              className={`peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                passwordError ? "border-red-500" : "border-gray-300"
-              }`}
+              className={`peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${"border-gray-300"}`}
               placeholder=" "
               onChange={handleInputChange}
             />
             <label
               htmlFor="password"
-              className={`absolute left-4 p-1 bg-white top-[-4] text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${
-                passwordError ? "text-red-500" : "text-gray-700"
-              }`}
+              className={`absolute left-4 p-1 bg-white top-[-4] text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${"text-gray-700"}`}
             >
               Password
             </label>
@@ -118,9 +111,6 @@ function LoginPage() {
             >
               {toggle ? "👁️" : "👁️‍🗨️"}
             </button>
-            {passwordError && (
-              <p className="text-sm text-red-500 mt-1">Password is required</p>
-            )}
           </div>
           <div className="flex justify-between items-center">
             <label className="flex items-center text-sm text-gray-600">
@@ -142,18 +132,11 @@ function LoginPage() {
                 : "bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-300"
             } transition`}
             disabled={loader}
-            onClick={() => router.push("/admin/dashboard")}
           >
             {loader ? "Loading..." : "Login"}
           </button>
-          <button
-            type="button"
-            onClick={guestModeHandler}
-            className="w-full py-3 text-purple-600 font-bold border border-purple-600 rounded-lg hover:bg-purple-50 transition"
-          >
-            Login as Guest
-          </button>
-          {role === "cadmin" && (
+
+          {utype === "center" && (
             <div className="flex justify-center text-sm mt-4">
               <span>Don&apos;t have an account?</span>
               <a
@@ -169,39 +152,6 @@ function LoginPage() {
 
       {/* Right Side: Background Image */}
       <div className="hidden md:flex flex-grow bg-cover bg-center bg-[url('/designlogin.jpg')]"></div>
-
-      {/* Backdrop */}
-      {guestLoader && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="text-white">
-            <div className="animate-spin h-10 w-10 border-4 border-t-transparent border-white rounded-full"></div>
-            <p className="mt-2">Please Wait</p>
-          </div>
-        </div>
-      )}
-
-      {/* Popup */}
-      {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <p>Guest mode activated!</p>
-            <button
-              onClick={() => setShowPopup(false)}
-              className="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
-  );
-}
-
-export default function Fn() {
-  return (
-    <Suspense fallback="loading..">
-      <LoginPage />
-    </Suspense>
   );
 }
