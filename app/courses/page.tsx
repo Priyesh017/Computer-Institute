@@ -111,15 +111,8 @@ export default function CourseCategories() {
   }, [search, selectedCategory, sortedBy, isDescending]);
 
   return (
-    <div className="container text-center mx-auto p-4">
-      <motion.h2
-        className="text-5xl font-bold fade-in"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        Our Courses
-      </motion.h2>
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold text-center">Our Courses</h1>
 
       {/* Filters */}
       <div className="border-b border-gray-300 pb-4 mb-4">
@@ -144,7 +137,7 @@ export default function CourseCategories() {
                   }
                   setSortedBy(option);
                 }}
-                className={`px-4 py-2 flex items-center gap-1 transition-all duration-300 ${
+                className={`px-2 py-2 flex items-center gap-1 transition-all duration-300 ${
                   sortedBy === option
                     ? "bg-violet-600 text-white"
                     : "bg-gray-200"

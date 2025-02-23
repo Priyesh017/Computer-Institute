@@ -37,7 +37,7 @@ const AboutInfo = () => {
       >
         <div className="flex flex-col md:flex-row items-center">
           <div className="flex-1 justify-items-center">
-            <h2 className="relative top-[-40] text-4xl py-2 font-bold text-black dark:text-white">
+            <h2 className="relative top-[-40] text-4xl py-2 font-bold">
               About Us
             </h2>
             <div className="flex gap-10 mb-4">
@@ -45,7 +45,7 @@ const AboutInfo = () => {
                 <div key={index} className="text-center">
                   <span
                     id={`stat-${index}`}
-                    className="text-3xl font-bold text-black dark:text-white"
+                    className="text-3xl font-bold"
                   >
                     0
                   </span>

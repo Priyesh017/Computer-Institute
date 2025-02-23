@@ -44,6 +44,7 @@ interface Course {
 
 export const categories = [
   {
+    id: 1,
     title: "Adventure Sports",
     description: "Fear Of Driving And Automatic Negative Thoughts",
     lessons: 12,
@@ -52,6 +53,7 @@ export const categories = [
     image: "/project.png",
   },
   {
+    id: 2,
     title: "Sales and Operations",
     description: "Work more, Earn more while sitting at your home",
     lessons: 23,
@@ -60,6 +62,7 @@ export const categories = [
     image: "/project.png",
   },
   {
+    id: 3,
     title: "Marketing",
     description: "Foundation course to understand about Software",
     lessons: 23,

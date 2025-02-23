@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import { FaTimes, FaBars } from "react-icons/fa";
 import { menuItems } from "@/data";
 import Link from "next/link";
+import { useAuthStore } from "@/store";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true); // Track navbar visibility
   const [lastScrollY, setLastScrollY] = useState(0); // Track last scroll position
+  const { user } = useAuthStore();
 
   // Handle scrolling: show/hide navbar
   const handleScroll = () => {
@@ -58,6 +60,8 @@ export default function Navbar() {
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
+
+      {/* Desktop Menu */}
       <ul className={`md:flex space-x-6 hidden`}>
         <motion.li
           className="fade-in cursor-pointer hover:text-indigo-300 transition-all"
@@ -90,9 +94,12 @@ export default function Navbar() {
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.3 }}
       >
-        <Link href={"/chooseuser"}>Login</Link>
+        <Link href={user ? "admin/dashboard" : "/chooseuser"}>
+          {user ? "dashboard" : "Login"}
+        </Link>
       </motion.button>
 
+      {/* Mobile Menu */}
       {isMenuOpen && (
         <ul className="md:hidden fixed top-16 right-0 w-fit bg-indigo-900 bg-opacity-95 backdrop-blur-lg rounded-lg p-4 mt-4 space-y-4 text-center z-40">
           {menuItems.map((item, index) => (
@@ -106,7 +113,9 @@ export default function Navbar() {
           ))}
           <li>
             <button className="px-6 py-2 bg-white text-indigo-800 font-bold rounded-xl shadow-lg transition-all transform hover:scale-105">
-              <Link href={"/chooseuser"}>Login</Link>
+              <Link href={user ? "admin/dashboard" : "/chooseuser"}>
+                {user ? "dashboard" : "Login"}
+              </Link>
             </button>
           </li>
         </ul>
