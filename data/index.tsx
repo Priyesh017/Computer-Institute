@@ -1,48 +1,79 @@
-import Banner from "@/components/Banner";
-import About from "@/components/About";
-import Register from "@/components/Register";
-import Gallery from "@/components/Gallery";
-import Education from "@/components/Education";
-import Course from "@/components/Course";
-import Center from "@/components/Center";
+import Banner from "@/components/landingpage/Banner";
+import About from "@/components/landingpage/About";
+import Gallery from "@/components/landingpage/Gallery";
+import Course from "@/components/landingpage/Course";
+import Center from "@/components/landingpage/Center";
+import { FaEnvelope, FaPhone, FaWhatsapp } from "react-icons/fa";
 
 export const menuItems = [
   { name: "Home", pos: <Banner /> },
   { name: "About", pos: <About /> },
-  { name: "Register", pos: <Register /> },
   { name: "Gallery", pos: <Gallery /> },
-  { name: "Education", pos: <Education /> },
   { name: "Course", pos: <Course /> },
   { name: "Center", pos: <Center /> },
 ];
 
+export const contactIcons = [
+  {
+    icon: <FaWhatsapp size={24} />,
+    url: "https://api.whatsapp.com/send?phone=+8918580050",
+  },
+  {
+    icon: <FaPhone size={24} />,
+    url: "tel:+1234567890",
+  },
+  {
+    icon: <FaEnvelope size={24} />,
+    url: "mailto:your@email.com",
+  },
+];
+
+// about
+export const stats = [
+  { label: "Projects Done", value: 400 },
+  { label: "Active Clients", value: 340 },
+  { label: "Get Rewards", value: 95 },
+];
+
+// course
 interface Course {
   name: string;
   description: string;
   fees: string;
 }
 
-export const courses: Course[] = [
+export const categories = [
   {
-    name: "React for Beginners",
-    description:
-      "Learn the basics of React, including components, state management, and hooks.",
-    fees: "$99",
+    id: 1,
+    title: "Adventure Sports",
+    description: "Fear Of Driving And Automatic Negative Thoughts",
+    lessons: 12,
+    duration: "3 hr 30 min",
+    price: "$49.99",
+    image: "/project.png",
   },
   {
-    name: "Next.js Mastery",
-    description:
-      "Deep dive into Next.js 13+, covering server-side rendering, static site generation, and API routes.",
-    fees: "$149",
+    id: 2,
+    title: "Sales and Operations",
+    description: "Work more, Earn more while sitting at your home",
+    lessons: 23,
+    duration: "1 hr 30 min",
+    price: "$59.99",
+    image: "/project.png",
   },
   {
-    name: "Tailwind CSS Essentials",
-    description:
-      "Style faster with Tailwind, mastering utility-first design and responsive layouts.",
-    fees: "$79",
+    id: 3,
+    title: "Marketing",
+    description: "Foundation course to understand about Software",
+    lessons: 23,
+    duration: "1 hr 30 min",
+    price: "$39.99",
+    image: "/project.png",
+    badge: "New",
   },
 ];
 
+// gallery
 export const images = [
   {
     src: "/project.png",
@@ -84,4 +115,13 @@ export const images = [
     name: "Certification",
     gallery: ["/project.png", "/project.png", "/project.png"],
   },
+];
+
+// Map
+export const markers = [
+  { position: [28.6139, 77.209], label: "New Delhi" },
+  { position: [19.076, 72.8777], label: "Mumbai" },
+  { position: [13.0827, 80.2707], label: "Chennai" },
+  { position: [22.5726, 88.3639], label: "Kolkata" },
+  { position: [12.9716, 77.5946], label: "Bangalore" },
 ];
