@@ -1,15 +1,12 @@
 "use client";
 import { fetcherWc } from "@/helper";
 import { useAuthStore } from "@/store";
-import { redirect, useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, Suspense, useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const { utype, user, login } = useAuthStore();
-
-  if (user) return redirect("/admin/dashboard");
-
   const [toggle, setToggle] = useState(false);
   const [fd, setfd] = useState({
     name: "",
@@ -19,6 +16,7 @@ export default function LoginPage() {
 
   const [loader, setLoader] = useState(false);
 
+  if (user) return redirect("/admin/dashboard");
   const Role = utype === "center" ? "Branch Admin" : "Control Admin";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -30,7 +28,7 @@ export default function LoginPage() {
       email: fd.email,
       password: fd.password,
     });
-    console.log(data);
+
     setLoader(false);
 
     if (data.message === "Login successful") {
@@ -68,7 +66,7 @@ export default function LoginPage() {
                 htmlFor="studentName"
                 className={`absolute left-4 p-1 bg-white top-[-4] text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${"text-gray-700"}`}
               >
-                Name
+                Email
               </label>
             </div>
           ) : (

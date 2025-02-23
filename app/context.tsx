@@ -19,7 +19,7 @@ export default function App({ children }: { children: React.ReactNode }) {
     } catch (err) {
       console.log(err);
     }
-  }, [apiUrl]);
+  }, [apiUrl, login]);
 
   useEffect(() => {
     checkLoginState();
