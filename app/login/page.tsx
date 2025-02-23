@@ -30,7 +30,7 @@ export default function LoginPage() {
       email: fd.email,
       password: fd.password,
     });
-    console.log(data);
+
     setLoader(false);
 
     if (data.message === "Login successful") {
@@ -68,7 +68,7 @@ export default function LoginPage() {
                 htmlFor="studentName"
                 className={`absolute left-4 p-1 bg-white top-[-4] text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${"text-gray-700"}`}
               >
-                Name
+                Email
               </label>
             </div>
           ) : (

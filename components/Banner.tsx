@@ -20,7 +20,8 @@ export default function SchoolLandingPage() {
         transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }}
         className="mt-4 text-lg text-center max-w-2xl"
       >
-        The perfect place for your child’s growth and success. Enroll now to secure a brighter future!
+        The perfect place for your child’s growth and success. Enroll now to
+        secure a brighter future!
       </motion.p>
 
       {/* CTA Button */}
@@ -38,9 +39,18 @@ export default function SchoolLandingPage() {
       {/* Features */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 px-4">
         {[
-          { title: "Modern Facilities", desc: "State-of-the-art classrooms and labs." },
-          { title: "Expert Teachers", desc: "Highly qualified and experienced faculty." },
-          { title: "Holistic Learning", desc: "Focus on academics, sports, and arts." }
+          {
+            title: "Modern Facilities",
+            desc: "State-of-the-art classrooms and labs.",
+          },
+          {
+            title: "Expert Teachers",
+            desc: "Highly qualified and experienced faculty.",
+          },
+          {
+            title: "Holistic Learning",
+            desc: "Focus on academics, sports, and arts.",
+          },
         ].map((feature, index) => (
           <motion.div
             key={index}
@@ -49,8 +59,12 @@ export default function SchoolLandingPage() {
             transition={{ delay: 0.2 * index, duration: 0.6, ease: "easeOut" }}
             className="bg-white/10 backdrop-blur-lg p-6 rounded-2xl shadow-lg border border-white/20 transition-transform transform hover:scale-105 hover:bg-white/20 hover:shadow-xl"
           >
-            <h3 className="text-xl font-semibold hover:text-yellow-300 transition-colors duration-300">{feature.title}</h3>
-            <p className="text-sm mt-2 hover:text-yellow-200 transition-colors duration-300">{feature.desc}</p>
+            <h3 className="text-xl font-semibold hover:text-yellow-300 transition-colors duration-300">
+              {feature.title}
+            </h3>
+            <p className="text-sm mt-2 hover:text-yellow-200 transition-colors duration-300">
+              {feature.desc}
+            </p>
           </motion.div>
         ))}
       </div>

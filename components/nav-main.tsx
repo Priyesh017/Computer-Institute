@@ -17,7 +17,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { useAuthStore, useSidebarStore } from "@/store";
+import { useAuthStore } from "@/store";
 
 export function NavMain({
   items,
@@ -34,7 +34,7 @@ export function NavMain({
     }[];
   }[];
 }) {
-  const setSelectedComponent = useSidebarStore(
+  const setSelectedComponent = useAuthStore(
     (state) => state.setSelectedComponent
   );
 
@@ -63,7 +63,9 @@ export function NavMain({
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
                         <div
-                          onClick={() => setSelectedComponent("student_entry")}
+                          onClick={() =>
+                            setSelectedComponent(subItem.title.toUpperCase())
+                          }
                           className=" cursor-pointer"
                         >
                           <span>{subItem.title}</span>

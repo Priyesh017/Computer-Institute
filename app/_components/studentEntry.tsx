@@ -1,33 +1,79 @@
 "use client";
 
 import { CircularProgress } from "@mui/material";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import BasicDatePicker from "./datepicker";
+import { ComboboxDemo } from "./combo";
+import { z } from "zod";
+import { toast } from "react-toastify";
 
-interface AddStudentProps {
-  situation: string;
-}
+const frameworks = [
+  {
+    value: "next.js",
+    label: "Next.js",
+  },
+  {
+    value: "sveltekit",
+    label: "SvelteKit",
+  },
+  {
+    value: "nuxt.js",
+    label: "Nuxt.js",
+  },
+  {
+    value: "remix",
+    label: "Remix",
+  },
+  {
+    value: "astro",
+    label: "Astro",
+  },
+];
 
-const AddStudent: React.FC<AddStudentProps> = () => {
-  // State variables
-  const [name, setName] = useState("");
+const formSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  fatherName: z.string().min(1, "Father's name is required"),
+  motherName: z.string().min(1, "Mother's name is required"),
+  Address: z.string().min(5, "Address must be at least 5 characters long"),
+  dob: z
+    .date()
+    .nullable()
+    .refine((date) => date !== null, "Date of Birth is required"),
+  mobile: z.string().regex(/^\d{10}$/, "Invalid mobile number"),
+  wapp: z.string().regex(/^\d{10}$/, "Invalid WhatsApp number"),
+});
 
-  const [className, setClassName] = useState("");
-  const [showPopup, setShowPopup] = useState(false);
-  const [message, setMessage] = useState("");
+const AddStudent: React.FC = () => {
   const [loader, setLoader] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
 
+  const [fd, setfd] = useState({
+    name: "",
+    fatherName: "",
+    motherName: "",
+    Address: "",
+    dob: null,
+    mobile: "",
+    wapp: "",
+    courseName: "",
+  });
+
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>): void {
+    setfd({ ...fd, [e.target.id]: e.target.value });
+  }
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    setLoader(true);
+    const result = formSchema.safeParse(fd);
 
-    // Simulated API call or submission logic
-    setTimeout(() => {
-      setLoader(false);
-      setShowPopup(true);
-      setMessage("Student added successfully!");
-    }, 2000);
+    if (!result.success) {
+      const errorMessages: { [key: string]: string } = {};
+      result.error.issues.forEach((issue) => {
+        errorMessages[issue.path[0] as string] = issue.message;
+      });
+      toast("some error happend");
+    } else {
+      setLoader(true);
+      console.log("Valid data:", result.data);
+    }
   };
 
   return (
@@ -52,11 +98,10 @@ const AddStudent: React.FC<AddStudentProps> = () => {
             id="name"
             type="text"
             placeholder="Enter student's name..."
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={fd.name}
+            onChange={handleInputChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             autoComplete="name"
-            required
           />
         </div>
         <div>
@@ -67,11 +112,11 @@ const AddStudent: React.FC<AddStudentProps> = () => {
             Father's Name
           </label>
           <input
-            id="name"
+            id="fatherName"
             type="text"
             placeholder="Enter Father's Name..."
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={fd.fatherName}
+            onChange={handleInputChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             autoComplete="name"
             required
@@ -85,11 +130,11 @@ const AddStudent: React.FC<AddStudentProps> = () => {
             Mother's Name
           </label>
           <input
-            id="name"
+            id="motherName"
             type="text"
             placeholder="Enter Mother's Name..."
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={fd.motherName}
+            onChange={handleInputChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             autoComplete="name"
             required
@@ -103,11 +148,11 @@ const AddStudent: React.FC<AddStudentProps> = () => {
             Address
           </label>
           <input
-            id="name"
+            id="Address"
             type="text"
             placeholder="Enter Address..."
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={fd.Address}
+            onChange={handleInputChange}
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             autoComplete="name"
             required
@@ -121,11 +166,13 @@ const AddStudent: React.FC<AddStudentProps> = () => {
             Mobile No
           </label>
           <input
-            id="name"
+            id="mobile"
             type="number"
             placeholder="Enter Mobile No..."
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={fd.mobile}
+            onChange={
+              (e) => setfd({ ...fd, mobile: e.target.value.slice(0, 10) }) // Ensures only 10 digits
+            }
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             autoComplete="name"
             required
@@ -139,38 +186,28 @@ const AddStudent: React.FC<AddStudentProps> = () => {
             WhatsApp No
           </label>
           <input
-            id="name"
+            id="wapp"
             type="number"
             placeholder="Enter WhatsApp No..."
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={fd.wapp}
+            onChange={
+              (e) => setfd({ ...fd, wapp: e.target.value.slice(0, 10) }) // Ensures only 10 digits
+            }
             className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             autoComplete="name"
             required
           />
         </div>
-        <BasicDatePicker
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-        />
         <div>
           <label
             htmlFor="name"
             className="block text-sm font-medium text-gray-700"
           >
-            Center Name
+            Date Of Birth
           </label>
-          <input
-            id="name"
-            type="text"
-            placeholder="Enter Center Name..."
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            autoComplete="name"
-            required
-          />
+          <BasicDatePicker selectedDate={fd.dob} setSelectedDate={setfd} />
         </div>
+
         <div>
           <label
             htmlFor="name"
@@ -178,16 +215,7 @@ const AddStudent: React.FC<AddStudentProps> = () => {
           >
             Course Name
           </label>
-          <input
-            id="name"
-            type="text"
-            placeholder="Enter Course Name..."
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            autoComplete="name"
-            required
-          />
+          <ComboboxDemo frameworks={frameworks} heading={"Select Course"} />
         </div>
         <div className="flex flex-col gap-2">
           <label
@@ -196,21 +224,10 @@ const AddStudent: React.FC<AddStudentProps> = () => {
           >
             Educational Qualification
           </label>
-          <select
-            id="className"
-            value={className}
-            onChange={(event) => setClassName(event.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg 
-               bg-white text-gray-700 shadow-sm 
-               focus:outline-none focus:ring-2 focus:ring-purple-500 
-               dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-            required
-          >
-            <option value="">Select Class</option>
-            <option value="Class 1">Graduation</option>
-            <option value="Class 2">Higher Secondary</option>
-            <option value="Class 3">10th</option>
-          </select>
+          <ComboboxDemo
+            frameworks={frameworks}
+            heading={"Select Educational Qualification"}
+          />
         </div>
 
         {/* Submit Button */}
