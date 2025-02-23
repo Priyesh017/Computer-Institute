@@ -16,7 +16,7 @@ export default function AdminDashboard() {
   const renderComponent = () => {
     switch (selectedComponent) {
       case "ONLINE ADMISSION":
-        return <AddStudent situation="" />;
+        return <AddStudent />;
       case "ENROLLMENTS":
         return <EnrollmentList />;
     }

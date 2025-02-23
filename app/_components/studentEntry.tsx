@@ -6,6 +6,7 @@ import BasicDatePicker from "./datepicker";
 import { ComboboxDemo } from "./combo";
 import { z } from "zod";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
 const frameworks = [
   {
@@ -51,7 +52,7 @@ const AddStudent: React.FC = () => {
     fatherName: "",
     motherName: "",
     Address: "",
-    dob: null,
+    dob: dayjs(),
     mobile: "",
     wapp: "",
     courseName: "",
@@ -109,7 +110,7 @@ const AddStudent: React.FC = () => {
             htmlFor="name"
             className="block text-sm font-medium text-gray-700"
           >
-            Father's Name
+            Father `&apos;` s Name
           </label>
           <input
             id="fatherName"
@@ -127,7 +128,7 @@ const AddStudent: React.FC = () => {
             htmlFor="name"
             className="block text-sm font-medium text-gray-700"
           >
-            Mother's Name
+            Mother &apos; s Name
           </label>
           <input
             id="motherName"

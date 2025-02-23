@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FaTimes, FaBars } from "react-icons/fa";
 import { menuItems } from "@/data";
 import Link from "next/link";
@@ -13,7 +13,7 @@ export default function Navbar() {
   const { user } = useAuthStore();
 
   // Handle scrolling: show/hide navbar
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (typeof window !== "undefined") {
       if (window.scrollY > lastScrollY) {
         // If scroll down, hide navbar
@@ -24,7 +24,7 @@ export default function Navbar() {
       }
       setLastScrollY(window.scrollY); // Update last scroll position
     }
-  };
+  }, [lastScrollY]);
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -43,7 +43,7 @@ export default function Navbar() {
         window.removeEventListener("scroll", handleScroll); // Clean up listener on unmount
       };
     }
-  }, [lastScrollY]);
+  }, [lastScrollY, handleScroll]);
 
   return (
     <nav

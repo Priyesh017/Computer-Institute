@@ -1,15 +1,12 @@
 "use client";
 import { fetcherWc } from "@/helper";
 import { useAuthStore } from "@/store";
-import { redirect, useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, Suspense, useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const { utype, user, login } = useAuthStore();
-
-  if (user) return redirect("/admin/dashboard");
-
   const [toggle, setToggle] = useState(false);
   const [fd, setfd] = useState({
     name: "",
@@ -19,6 +16,7 @@ export default function LoginPage() {
 
   const [loader, setLoader] = useState(false);
 
+  if (user) return redirect("/admin/dashboard");
   const Role = utype === "center" ? "Branch Admin" : "Control Admin";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
