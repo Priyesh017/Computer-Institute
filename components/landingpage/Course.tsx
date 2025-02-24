@@ -111,9 +111,9 @@ export default function CourseCategories() {
   }, [search, selectedCategory, sortedBy, isDescending]);
 
   return (
-    <div className="container text-center mx-auto p-4">
+    <div className="container py-14 xl:pt-24 px-6">
       <motion.h2
-        className="text-5xl font-bold fade-in"
+        className="text-5xl font-bold fade-in text-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
@@ -122,15 +122,15 @@ export default function CourseCategories() {
       </motion.h2>
 
       {/* Filters */}
-      <div className="border-b border-gray-300 pb-4 mb-4">
-        <div className="flex justify-between items-center my-4">
+      <div className="md:my-1 my-4">
+        <div className="flex justify-between items-center my-1">
           {/* Search Bar */}
           <Input
             type="text"
             placeholder="Search courses..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-1/3 p-2 border"
+            className="w-1/3 p-2 border border-gray-400 rounded-lg"
           />
 
           {/* Sorting */}
@@ -144,7 +144,7 @@ export default function CourseCategories() {
                   }
                   setSortedBy(option);
                 }}
-                className={`px-4 py-2 flex items-center gap-1 transition-all duration-300 ${
+                className={`px-2 py-2 flex items-center gap-1 transition-all duration-300 ${
                   sortedBy === option
                     ? "bg-violet-600 text-white"
                     : "bg-gray-200"

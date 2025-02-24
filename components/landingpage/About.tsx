@@ -28,16 +28,16 @@ const AboutInfo = () => {
   }, [isInView]);
 
   return (
-    <div className="relative dark:from-gray-900 dark:to-gray-800 p-10 shadow-xl">
+    <div className="relative min-h-screen pt-20 md:pt-40 pb-10 px-10">
       <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 50 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <div className="flex flex-col md:flex-row items-center">
+        <div className="flex flex-col-reverse md:flex-row items-center">
           <div className="flex-1 justify-items-center">
-            <h2 className="relative top-[-40] text-4xl py-2 font-bold">
+            <h2 className="relative top-[-40] text-5xl py-2 font-bold">
               About Us
             </h2>
             <div className="flex gap-10 mb-4">
@@ -55,7 +55,7 @@ const AboutInfo = () => {
                 </div>
               ))}
             </div>
-            <p className="text-gray-700 dark:text-gray-300 mb-4">
+            <p className="text-gray-700 text-lg mb-4">
               Get professional & innovative service for your Civil, Commercial,
               Industrial, and Residential projects. We will make your dream
               design come true with the perfect architecture, construction
@@ -74,7 +74,7 @@ const AboutInfo = () => {
               alt="About us"
               width={500}
               height={300}
-              className="rounded-lg shadow-lg"
+              className="mb-20 md:mb-2 rounded-lg shadow-lg"
             />
           </div>
         </div>

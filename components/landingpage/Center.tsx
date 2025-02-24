@@ -19,7 +19,7 @@ const ContactInfo = () => {
   }, []);
 
   return (
-    <div className="relative flex flex-col items-center py-12 bg-gray-900 text-white">
+    <div className="relative flex flex-col items-center py-16 xl:pt-24 bg-gray-900 text-white">
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -34,7 +34,7 @@ const ContactInfo = () => {
       </p>
       <motion.div
         ref={cardRef}
-        className="realtive z-20 bg-white text-gray-900 p-8 rounded-lg shadow-lg w-full max-w-3xl grid grid-cols-1 sm:grid-cols-3 gap-6"
+        className="relative z-20 bg-white text-gray-900 p-8 rounded-lg shadow-lg w-full max-w-3xl grid grid-cols-1 sm:grid-cols-3 gap-6"
       >
         <div className="flex flex-col items-center">
           <div className="bg-yellow-400 p-3 rounded-full mb-2">📍</div>

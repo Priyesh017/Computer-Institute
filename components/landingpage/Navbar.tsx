@@ -47,7 +47,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 bg-purple-700 backdrop-blur-lg z-50 flex justify-between items-center p-4 shadow-lg transition-transform duration-300 ease-in-out ${
+      className={`sticky top-0 bg-purple-700 backdrop-blur-lg z-50 flex justify-between items-center px-4 py-2 xl:py-4 xl:text-lg shadow-lg transition-transform duration-300 ease-in-out ${
         showNavbar ? "translate-y-0" : "-translate-y-full"
       }`}
     >

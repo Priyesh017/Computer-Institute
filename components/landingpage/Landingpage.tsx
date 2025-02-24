@@ -45,7 +45,7 @@ export default function Home() {
           <section
             key={index}
             id={section.name.toLowerCase()}
-            className={`${section.name} w-[100%] min-h-screen mt-10 text-black`}
+            className={`${section.name} w-[100%] min-h-screen text-black`}
           >
             {section.pos}
           </section>
