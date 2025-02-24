@@ -1,5 +1,5 @@
 "use client";
-import { fetcher, fetcherWc } from "@/helper";
+import { fetcherWc } from "@/helper";
 import { ChangeEvent, FormEvent, Suspense, useState } from "react";
 import { z } from "zod";
 import { toast } from "react-toastify";
@@ -11,8 +11,6 @@ function LoginPage() {
   const [loader, setLoader] = useState(false);
   const { user } = useAuthStore();
 
-  if (user) return redirect("/admin/dashboard");
-
   const [fd, setfd] = useState({
     name: "",
     email: "",
@@ -20,6 +18,7 @@ function LoginPage() {
   });
 
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
+  if (user) return redirect("/admin/dashboard");
 
   const userSchema = z.object({
     name: z.string().min(2, { message: "Name too short!" }),

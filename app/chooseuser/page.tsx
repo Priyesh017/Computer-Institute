@@ -1,13 +1,11 @@
 "use client";
 import { useAuthStore } from "@/store";
 import { AccountCircle, School } from "@mui/icons-material";
-import Link from "next/link";
+
 import { useRouter } from "next/navigation";
 import {} from "next/router";
-import { useState } from "react";
 
 const ChooseUser = () => {
-  const [loader, setLoader] = useState(false);
   const { setUtype } = useAuthStore();
   const router = useRouter();
 
