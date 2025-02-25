@@ -116,10 +116,12 @@ const Marksheet = () => {
     ]);
   };
 
-  const handleChange = (index: number, field: string, value: string) => {
-    const newSubjects = [...subjects];
-    newSubjects[index][field as keyof (typeof newSubjects)[number]] = value;
-    setSubjects(newSubjects);
+  const handleChange = (rowIndex: number, name: string, value: string) => {
+    setSubjects((prevSubjects) =>
+      prevSubjects.map((subject, index) =>
+        index === rowIndex ? { ...subject, [name]: value } : subject
+      )
+    );
   };
 
   const handleDeleteRow = (index: number) => {
@@ -158,8 +160,8 @@ const Marksheet = () => {
             <span className="font-bold">{item.label}</span>
             <input
               type={item.type}
+              id="temp"
               placeholder={item.label}
-              value={item.value}
               onChange={(e) => setEnrollno(e.target.value)}
               className="mx-3 px-3 py-1 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
             />

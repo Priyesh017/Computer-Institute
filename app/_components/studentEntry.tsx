@@ -5,7 +5,7 @@ import { ChangeEvent, useState } from "react";
 import { ComboboxDemo } from "./combo";
 import { z } from "zod";
 import { toast } from "react-toastify";
-import { fetcher, fetcherWc } from "@/helper";
+import { fetcherWc } from "@/helper";
 
 const frameworks = [
   {
