@@ -4,6 +4,16 @@ import Gallery from "@/components/landingpage/Gallery";
 import Course from "@/components/landingpage/Course";
 import Center from "@/components/landingpage/Center";
 import { FaEnvelope, FaPhone, FaWhatsapp } from "react-icons/fa";
+import { Bell, Download, FileText, ClipboardList, User } from "lucide-react";
+import Profile from "@/components/studentdashboard/Profile";
+import Notification from "@/components/studentdashboard/Notification";
+import Downloads from "@/components/studentdashboard/Downloads";
+import Result from "@/components/studentdashboard/Result";
+import Form from "@/components/studentdashboard/Form";
+import Admit from "../components/studentdashboard/Admit";
+import Certificate from "@/components/studentdashboard/Certificate";
+import Marksheet from "@/components/studentdashboard/Marksheet";
+import IDCard from "@/components/studentdashboard/IDCard";
 
 export const menuItems = [
   { name: "Home", pos: <Banner /> },
@@ -11,6 +21,54 @@ export const menuItems = [
   { name: "Gallery", pos: <Gallery /> },
   { name: "Course", pos: <Course /> },
   { name: "Center", pos: <Center /> },
+];
+
+export const sideMenu = [
+  {
+    icon: <User size={24} />,
+    name: "Profile",
+    section: <Profile />,
+  },
+  {
+    icon: <Bell size={24} />,
+    name: "Notifications",
+    section: <Notification />,
+  },
+  {
+    icon: <Download size={24} />,
+    name: "Downloads",
+    section: <Downloads />,
+  },
+  {
+    icon: <FileText size={24} />,
+    name: "Result",
+    section: <Result />,
+  },
+  {
+    icon: <ClipboardList size={24} />,
+    name: "Form Fill-up",
+    section: <Form />,
+  },
+  {
+    icon: <ClipboardList size={24} />,
+    name: "Admit Form",
+    section: <Admit />,
+  },
+  {
+    icon: <ClipboardList size={24} />,
+    name: "Certificate Form",
+    section: <Certificate />,
+  },
+  {
+    icon: <ClipboardList size={24} />,
+    name: "Marksheet Form",
+    section: <Marksheet />,
+  },
+  {
+    icon: <ClipboardList size={24} />,
+    name: "ID Card Form",
+    section: <IDCard />,
+  },
 ];
 
 export const contactIcons = [
@@ -124,4 +182,124 @@ export const markers = [
   { position: [13.0827, 80.2707], label: "Chennai" },
   { position: [22.5726, 88.3639], label: "Kolkata" },
   { position: [12.9716, 77.5946], label: "Bangalore" },
+];
+
+// IDCard Form
+export const idCardFields = [
+  { key: "sName", label: "Student Name", type: "text" },
+  { key: "cName", label: "Course Name", type: "text" },
+  { key: "idCardNo", label: "ID Card No.", type: "number" },
+  { key: "enrollmentNo", label: "Enrollment No", type: "text" },
+  { key: "address", label: "Address", type: "text" },
+  { key: "centerName", label: "Center Name", type: "text" },
+];
+
+// Exam Form
+export const examFields = [
+  { key: "firstName", label: "First Name", type: "text" },
+  { key: "lastName", label: "Last Name", type: "text" },
+  { key: "enrollmentNo", label: "Enrollment No", type: "text" },
+  { key: "address", label: "Address", type: "text" },
+  { key: "centerName", label: "Center Name", type: "text" },
+  { key: "idCardNo", label: "ID Card No", type: "text" },
+  {
+    key: "lastPaymentReceiptNo",
+    label: "Last Payment Receipt No",
+    type: "text",
+  },
+  { key: "registeredCourse", label: "Registered Course", type: "text" },
+  { key: "mobileNo", label: "Mobile No", type: "tel" },
+  { key: "whatsappNo", label: "WhatsApp No", type: "tel" },
+];
+
+// Admit Form
+export const admitFields = [
+  {
+    key: "enrollNo",
+    label: "Enrollment No",
+    type: "text",
+  },
+  {
+    key: "stuName",
+    label: "Student Name",
+    type: "text",
+  },
+  {
+    key: "fName",
+    label: "Father Name",
+    type: "text",
+  },
+  {
+    key: "courseCode",
+    label: "Course Code",
+    type: "text",
+  },
+  {
+    key: "atiCode",
+    label: "ATI Code",
+    type: "text",
+  },
+  {
+    key: "ecCode",
+    label: "Exam Center Code",
+    type: "text",
+  },
+];
+
+export const certFields = [
+  { key: "sName", label: "Student Name", type: "text" },
+  { key: "sdwName", label: "S/D/W Name", type: "text" },
+  { key: "courseName", label: "Course Name", type: "text" },
+  { key: "duration", label: "Duration", type: "text" },
+  { key: "year", label: "Year", type: "text" },
+  { key: "grade", label: "Grade", type: "text" },
+  {
+    key: "enrollNo",
+    label: "Enrollment No",
+    type: "text",
+  },
+  { key: "centerName", label: "Center Name", type: "text" },
+  { key: "iDate", label: "Issued Date", type: "date" },
+];
+
+// Marksheet Form
+
+export const details = [
+  { key: "enrollNo", label: "Enrollment No", type: "text", value: "" },
+  { key: "sName", label: "Student Name", type: "text", value: "" },
+  { key: "swdName", label: "S/W/D Name", type: "text", value: "" },
+  { key: "year", label: "Year", type: "text", value: "" },
+  { key: "courseName", label: "Course Name", type: "text", value: "" },
+  { key: "centerName", label: "Center Name", type: "text", value: "" },
+  { key: "cAddress", label: "Center Address", type: "text", value: "" },
+  { key: "dob", label: "Data of Birth", type: "date", value: "" },
+];
+
+export const marks = [
+  { name: "subject", type: "text", value: "", placeholder: "Subject" },
+  {
+    name: "theoryFullMarks",
+    type: "number",
+    pattern: "[0-9]*",
+    value: "",
+    placeholder: "Theory Full Marks",
+  },
+  {
+    name: "practicalFullMarks",
+    type: "number",
+    value: "",
+    placeholder: "Practical Full Marks",
+  },
+  {
+    name: "theoryMarks",
+    type: "number",
+    value: "",
+    placeholder: "Theory Marks",
+  },
+  {
+    name: "practicalMarks",
+    type: "number",
+    value: "",
+    placeholder: "Practical Marks",
+  },
 ];

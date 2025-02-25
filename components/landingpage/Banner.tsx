@@ -4,9 +4,14 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import anime from "animejs";
 import Image from "next/image";
+import Link from "next/link";
 
 const Banner = () => {
   const textRef = useRef<HTMLDivElement>(null);
+
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     anime.timeline({ loop: false }).add({
@@ -40,9 +45,12 @@ const Banner = () => {
           </p>
           <div className="flex gap-4">
             <button className="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition-all">
-              Check enrollment
+              <Link href="/checkupdates">Get Started</Link>
             </button>
-            <button className="px-6 py-3 bg-gray-800 text-white font-semibold rounded-lg shadow-md hover:bg-gray-900 transition-all">
+            <button
+              className="px-6 py-3 bg-gray-800 text-white font-semibold rounded-lg shadow-md hover:bg-gray-900 transition-all"
+              onClick={() => scrollToSection("about")}
+            >
               Learn More
             </button>
           </div>
