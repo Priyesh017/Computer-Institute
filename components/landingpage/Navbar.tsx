@@ -114,7 +114,7 @@ export default function Navbar() {
           <li>
             <button className="px-6 py-2 bg-white text-indigo-800 font-bold rounded-xl shadow-lg transition-all transform hover:scale-105">
               <Link href={user ? "admin/dashboard" : "/chooseuser"}>
-                {user ? "dashboard" : "Login"}
+                {user ? "Dashboard" : "Login"}
               </Link>
             </button>
           </li>

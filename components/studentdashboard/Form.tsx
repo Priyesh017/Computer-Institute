@@ -5,10 +5,14 @@ import { motion } from "framer-motion";
 import { examFields } from "@/data/index";
 
 const ExamForm = () => {
-  const [formData, setFormData] = useState(
-    Object.fromEntries(examFields.map(({ key }) => [key, ""]))
+  const initialFormState: Record<string, string> = Object.fromEntries(
+    examFields.map(({ key }) => [key, ""])
   );
+
+  const [formData, setFormData] = useState(initialFormState);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const validateForm = () => {
     const newErrors = Object.fromEntries(
@@ -29,9 +33,32 @@ const ExamForm = () => {
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateForm()) console.log("Form submitted:", formData);
+    if (!validateForm()) return;
+
+    setLoading(true);
+    setSuccess(null);
+
+    try {
+      const response = await fetch("/api/exam", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error("Failed to submit the form");
+
+      setSuccess("Form submitted successfully!");
+      setFormData(initialFormState); // Reset form after success
+    } catch (error) {
+      console.error(error);
+      setSuccess("Submission failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -63,7 +90,6 @@ const ExamForm = () => {
                 value={formData[key]}
                 onChange={handleChange}
                 className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
-                required
               />
               {errors[key] && (
                 <span className="text-red-500 text-xs mt-1">{errors[key]}</span>
@@ -77,11 +103,26 @@ const ExamForm = () => {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             type="submit"
-            className="w-1/3 mx-auto bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 rounded-md transition"
+            disabled={loading}
+            className={`w-1/3 mx-auto bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 rounded-md transition ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            Submit
+            {loading ? "Submitting..." : "Submit"}
           </motion.button>
         </div>
+
+        {success && (
+          <p
+            className={`text-center mt-4 font-semibold ${
+              success.includes("successfully")
+                ? "text-green-500"
+                : "text-red-500"
+            }`}
+          >
+            {success}
+          </p>
+        )}
       </form>
     </motion.div>
   );

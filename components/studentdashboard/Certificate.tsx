@@ -5,18 +5,19 @@ import { motion } from "framer-motion";
 import { certFields } from "@/data/index"; // Ensure certFields is imported first
 
 const ExamForm = () => {
-  // Now we define initialFormState inside the component after certFields is imported
   const initialFormState = certFields.reduce((acc, field) => {
     acc[field.key] = ""; // Ensure all fields have default values
     return acc;
   }, {} as Record<string, string>);
 
   const [formData, setFormData] = useState(initialFormState);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const validateForm = () => {
     let valid = true;
-    const newErrors: { [key: string]: string } = {};
+    const newErrors: Record<string, string> = {};
 
     certFields.forEach(({ key, label }) => {
       if (!formData[key]) {
@@ -32,14 +33,36 @@ const ExamForm = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setErrors((prev) => ({ ...prev, [e.target.name]: "" }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    console.log("Form submitted:", formData);
+
+    setLoading(true);
+    setSuccessMessage(null);
+
+    try {
+      const response = await fetch("/api/certificate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error("Failed to submit the form");
+
+      setSuccessMessage("Form submitted successfully!");
+      setFormData(initialFormState); // Reset form after success
+    } catch (error) {
+      console.error(error);
+      setSuccessMessage("Submission failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -70,7 +93,6 @@ const ExamForm = () => {
                 value={formData[key]}
                 onChange={handleChange}
                 className="p-2 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
-                required
               />
               {errors[key] && (
                 <span className="text-red-500 text-xs mt-1">{errors[key]}</span>
@@ -84,11 +106,26 @@ const ExamForm = () => {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             type="submit"
-            className="w-1/3 mx-auto bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 rounded-md transition"
+            disabled={loading}
+            className={`w-1/3 mx-auto bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 rounded-md transition ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            Submit
+            {loading ? "Submitting..." : "Submit"}
           </motion.button>
         </div>
+
+        {successMessage && (
+          <p
+            className={`text-center mt-4 font-semibold ${
+              successMessage.includes("successfully")
+                ? "text-green-500"
+                : "text-red-500"
+            }`}
+          >
+            {successMessage}
+          </p>
+        )}
       </form>
     </motion.div>
   );
