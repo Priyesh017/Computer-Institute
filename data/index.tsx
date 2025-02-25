@@ -14,6 +14,86 @@ import Admit from "../components/studentdashboard/Admit";
 import Certificate from "@/components/studentdashboard/Certificate";
 import Marksheet from "@/components/studentdashboard/Marksheet";
 import IDCard from "@/components/studentdashboard/IDCard";
+import { Settings2, SquareTerminal } from "lucide-react";
+
+export const data = {
+  navMain: [
+    {
+      title: "Fee payment",
+      url: "#",
+      role: "center",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: "exam fee",
+          url: "#",
+        },
+        {
+          title: "Course Fee",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "admin",
+      url: "#",
+      role: "admin",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: "enrollments",
+          url: "#",
+        },
+        {
+          title: "id cards",
+          url: "#",
+        },
+        {
+          title: "admit cards",
+          url: "#",
+        },
+        {
+          title: "marks",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Education",
+      role: "center",
+      url: "#",
+      icon: Settings2,
+      items: [
+        {
+          title: "Online admission",
+          url: "#",
+        },
+        {
+          title: "id Download",
+          url: "#",
+        },
+        {
+          title: "admit download",
+          url: "#",
+        },
+        {
+          title: "exam form fillup",
+          url: "#",
+        },
+        {
+          title: "Marksheet download",
+          url: "#",
+        },
+        {
+          title: "certificate download",
+          url: "#",
+        },
+      ],
+    },
+  ],
+};
 
 export const menuItems = [
   { name: "Home", pos: <Banner /> },
@@ -201,15 +281,15 @@ export const examFields = [
   { key: "enrollmentNo", label: "Enrollment No", type: "text" },
   { key: "address", label: "Address", type: "text" },
   { key: "centerName", label: "Center Name", type: "text" },
-  { key: "idCardNo", label: "ID Card No", type: "text" },
+  { key: "idCardNo", label: "ID Card No", type: "number" },
   {
     key: "lastPaymentReceiptNo",
     label: "Last Payment Receipt No",
     type: "text",
   },
   { key: "registeredCourse", label: "Registered Course", type: "text" },
-  { key: "mobileNo", label: "Mobile No", type: "tel" },
-  { key: "whatsappNo", label: "WhatsApp No", type: "tel" },
+  { key: "mobileNo", label: "Mobile No", type: "number" },
+  { key: "whatsappNo", label: "WhatsApp No", type: "number" },
 ];
 
 // Admit Form

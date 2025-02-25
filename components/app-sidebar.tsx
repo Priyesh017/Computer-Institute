@@ -1,7 +1,5 @@
 "use client";
 
-import { Settings2, SquareTerminal } from "lucide-react";
-
 import * as React from "react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -12,85 +10,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store";
-
-const data = {
-  navMain: [
-    {
-      title: "Fee payment",
-      url: "#",
-      role: "center",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "exam fee",
-          url: "#",
-        },
-        {
-          title: "Course Fee",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "admin",
-      url: "#",
-      role: "admin",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "enrollments",
-          url: "#",
-        },
-        {
-          title: "id cards",
-          url: "#",
-        },
-        {
-          title: "admit cards",
-          url: "#",
-        },
-        {
-          title: "marks",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Education",
-      role: "center",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Online admission",
-          url: "#",
-        },
-        {
-          title: "id Download",
-          url: "#",
-        },
-        {
-          title: "admit download",
-          url: "#",
-        },
-        {
-          title: "exam form fillup",
-          url: "#",
-        },
-        {
-          title: "Marksheet download",
-          url: "#",
-        },
-        {
-          title: "certificate download",
-          url: "#",
-        },
-      ],
-    },
-  ],
-};
+import { data } from "@/data";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuthStore();
@@ -102,7 +22,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
+      <h1 className="text-2xl font-bold text-gray-900 text-center border-b border-gray-300 py-6">
+        Admin Dashboard
+      </h1>
       <SidebarContent>
+        <h1 className="text-md font-bold text-gray-600 px-4 text-center border-b border-gray-300 py-2">
+          Welcome {user ? user.name : "Guest"}
+        </h1>
         <NavMain items={filteredNav} />
       </SidebarContent>
       <SidebarFooter>
