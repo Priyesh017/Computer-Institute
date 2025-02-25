@@ -1,27 +1,31 @@
 "use client";
 import { fetcherWc } from "@/helper";
 import { useAuthStore } from "@/store";
-import { redirect } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const { utype, user, login } = useAuthStore();
+  const router = useRouter();
   const [toggle, setToggle] = useState(false);
   const [fd, setfd] = useState({
-    name: "",
     email: "",
     password: "",
   });
 
   const [loader, setLoader] = useState(false);
 
-  if (user) return redirect("/admin/dashboard");
+  useEffect(() => {
+    if (user) {
+      router.push("/admin/dashboard");
+    }
+  }, [user, router]); // Runs only when `user` changes
+
   const Role = utype === "center" ? "Branch Admin" : "Control Admin";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     setLoader(true);
 
     const data = await fetcherWc("/loginRoute", "POST", {
@@ -33,8 +37,11 @@ export default function LoginPage() {
 
     if (data.message === "Login successful") {
       login(data.user);
-      toast("login Successfully");
-    } else toast(data.error);
+      toast("Login Successfully");
+      router.push("/admin/dashboard");
+    } else {
+      toast(data.error);
+    }
   }
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>): void {
@@ -52,53 +59,34 @@ export default function LoginPage() {
           Welcome back! Please enter your details.
         </p>
         <form onSubmit={handleSubmit} className="w-full space-y-6" noValidate>
-          {utype === "admin" ? (
-            <div className="relative">
-              <input
-                type="text"
-                id="studentName"
-                name="studentName"
-                className={`peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${"border-gray-300"}`}
-                placeholder=" "
-                onChange={handleInputChange}
-              />
-              <label
-                htmlFor="studentName"
-                className={`absolute left-4 p-1 bg-white top-[-4] text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${"text-gray-700"}`}
-              >
-                Email
-              </label>
-            </div>
-          ) : (
-            <div className="relative">
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className={`peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${"border-gray-300"}`}
-                placeholder=" "
-                onChange={handleInputChange}
-              />
-              <label
-                htmlFor="email"
-                className={`absolute left-4 p-1 top-[-4] bg-white  text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${"text-gray-700"}`}
-              >
-                Email
-              </label>
-            </div>
-          )}
+          <div className="relative">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              className="peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 border-gray-300"
+              placeholder=" "
+              onChange={handleInputChange}
+            />
+            <label
+              htmlFor="email"
+              className="absolute left-4 p-1 bg-white top-[-4] text-sm  transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 text-gray-700"
+            >
+              Email
+            </label>
+          </div>
           <div className="relative">
             <input
               type={toggle ? "text" : "password"}
               id="password"
               name="password"
-              className={`peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 ${"border-gray-300"}`}
+              className="peer w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 border-gray-300"
               placeholder=" "
               onChange={handleInputChange}
             />
             <label
               htmlFor="password"
-              className={`absolute left-4 p-1 bg-white top-[-4] text-sm text-gray-500 transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 ${"text-gray-700"}`}
+              className="absolute left-4 p-1 bg-white top-[-4] text-sm  transition-all transform scale-100 -translate-y-1/2 peer-placeholder-shown:translate-y-4 peer-placeholder-shown:scale-100 peer-focus:-translate-y-1/2 peer-focus:scale-90 text-gray-700"
             >
               Password
             </label>
@@ -106,6 +94,7 @@ export default function LoginPage() {
               type="button"
               onClick={() => setToggle(!toggle)}
               className="absolute inset-y-0 right-4 flex items-center text-gray-500 hover:text-purple-700"
+              aria-label="Toggle password visibility"
             >
               {toggle ? "👁️" : "👁️‍🗨️"}
             </button>

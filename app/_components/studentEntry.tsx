@@ -2,11 +2,10 @@
 
 import { CircularProgress } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import BasicDatePicker from "./datepicker";
 import { ComboboxDemo } from "./combo";
 import { z } from "zod";
 import { toast } from "react-toastify";
-import dayjs from "dayjs";
+import { fetcher, fetcherWc } from "@/helper";
 
 const frameworks = [
   {
@@ -30,16 +29,30 @@ const frameworks = [
     label: "Astro",
   },
 ];
+export interface tfd {
+  name: string;
+  fatherName: string;
+  motherName: string;
+  Address: string;
+  dob: Date;
+  mobile: string;
+  wapp: string;
+  courseName: string;
+  idno: string;
+  enrollmentNo: string;
+  eduqualification: string;
+}
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   fatherName: z.string().min(1, "Father's name is required"),
   motherName: z.string().min(1, "Mother's name is required"),
   Address: z.string().min(5, "Address must be at least 5 characters long"),
-  dob: z
-    .date()
-    .nullable()
-    .refine((date) => date !== null, "Date of Birth is required"),
+  idno: z.string(),
+  courseName: z.string(),
+  enrollmentNo: z.string(),
+  dob: z.date(),
+  eduqualification: z.string(),
   mobile: z.string().regex(/^\d{10}$/, "Invalid mobile number"),
   wapp: z.string().regex(/^\d{10}$/, "Invalid WhatsApp number"),
 });
@@ -52,16 +65,23 @@ const AddStudent: React.FC = () => {
     fatherName: "",
     motherName: "",
     Address: "",
-    dob: dayjs(),
+    dob: new Date(),
     mobile: "",
     wapp: "",
     courseName: "",
+    eduqualification: "",
+    idno: "",
+    enrollmentNo: "",
   });
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>): void {
-    setfd({ ...fd, [e.target.id]: e.target.value });
+    if (e.target.id == "dob") {
+      const dateValue = e.target.value; // "YYYY-MM-DD"
+      const parsedDate = new Date(dateValue);
+      setfd({ ...fd, [e.target.id]: parsedDate });
+    } else setfd({ ...fd, [e.target.id]: e.target.value });
   }
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const result = formSchema.safeParse(fd);
 
@@ -71,9 +91,14 @@ const AddStudent: React.FC = () => {
         errorMessages[issue.path[0] as string] = issue.message;
       });
       toast("some error happend");
+      console.log(errorMessages);
     } else {
       setLoader(true);
-      console.log("Valid data:", result.data);
+
+      const data = await fetcherWc("/createEnrollment", "POST", fd);
+      setLoader(false);
+
+      toast(data.success);
     }
   };
 
@@ -110,7 +135,7 @@ const AddStudent: React.FC = () => {
             htmlFor="name"
             className="block text-sm font-medium text-gray-700"
           >
-            Father `&apos;` s Name
+            Father&apos;s Name
           </label>
           <input
             id="fatherName"
@@ -128,7 +153,7 @@ const AddStudent: React.FC = () => {
             htmlFor="name"
             className="block text-sm font-medium text-gray-700"
           >
-            Mother &apos; s Name
+            Mother&apos;s Name
           </label>
           <input
             id="motherName"
@@ -159,6 +184,44 @@ const AddStudent: React.FC = () => {
             required
           />
         </div>
+        <div>
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700"
+          >
+            enrollment No
+          </label>
+          <input
+            id="enrollmentNo"
+            type="text"
+            placeholder="Enter enrollment No."
+            value={fd.enrollmentNo}
+            onChange={handleInputChange}
+            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            autoComplete="name"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700"
+          >
+            ID Card No.
+          </label>
+          <input
+            id="idno"
+            type="text"
+            placeholder="Enter ID Card No."
+            value={fd.idno}
+            onChange={handleInputChange}
+            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            autoComplete="name"
+            required
+          />
+        </div>
+
         <div>
           <label
             htmlFor="name"
@@ -206,7 +269,7 @@ const AddStudent: React.FC = () => {
           >
             Date Of Birth
           </label>
-          <BasicDatePicker selectedDate={fd.dob} setSelectedDate={setfd} />
+          <input type="date" id="dob" onChange={(e) => handleInputChange(e)} />
         </div>
 
         <div>
@@ -216,7 +279,13 @@ const AddStudent: React.FC = () => {
           >
             Course Name
           </label>
-          <ComboboxDemo frameworks={frameworks} heading={"Select Course"} />
+          <ComboboxDemo
+            frameworks={frameworks}
+            heading={"Select Course"}
+            value={fd.courseName}
+            setValue={setfd}
+            data="courseName"
+          />
         </div>
         <div className="flex flex-col gap-2">
           <label
@@ -228,6 +297,9 @@ const AddStudent: React.FC = () => {
           <ComboboxDemo
             frameworks={frameworks}
             heading={"Select Educational Qualification"}
+            value={fd.eduqualification}
+            setValue={setfd}
+            data="eduqualification"
           />
         </div>
 
