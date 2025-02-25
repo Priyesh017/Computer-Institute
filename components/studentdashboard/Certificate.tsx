@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { certFields } from "@/data/index"; // Ensure certFields is imported first
+import { fetcherWc } from "@/helper";
 
 const ExamForm = () => {
   const initialFormState = certFields.reduce((acc, field) => {
@@ -45,13 +46,11 @@ const ExamForm = () => {
     setSuccessMessage(null);
 
     try {
-      const response = await fetch("/api/certificate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetcherWc(
+        "/generateCertificate",
+        "POST",
+        formData
+      );
 
       if (!response.ok) throw new Error("Failed to submit the form");
 

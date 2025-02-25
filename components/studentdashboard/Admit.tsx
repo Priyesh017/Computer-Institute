@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { admitFields } from "@/data/index";
+import { fetcherWc } from "@/helper";
 
 const AdmitForm = () => {
   const initialFormState: Record<string, string> = Object.fromEntries(
@@ -38,13 +39,7 @@ const AdmitForm = () => {
     setSuccessMessage(null);
 
     try {
-      const response = await fetch("/api/admit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetcherWc("/generateadmit", "POST", formData);
 
       if (!response.ok) throw new Error("Failed to submit the form");
 

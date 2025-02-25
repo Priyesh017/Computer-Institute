@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,11 +16,27 @@ import {
 import { sideMenu } from "@/data/index";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/store";
+import { fetcherWc } from "@/helper";
+import { useRouter } from "next/navigation";
 
 export default function Menu() {
   const defaultOpen = useState(true)[0];
   const [activeSection, setActiveSection] = useState(sideMenu[0].name);
+  const { user, logout } = useAuthStore();
+  const router = useRouter();
 
+  useEffect(() => {
+    if (!user) {
+      router.push("/");
+      return;
+    }
+  }, [user]);
+
+  const logouthandler = async () => {
+    await fetcherWc("/logout", "GET");
+    logout();
+  };
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
@@ -31,7 +47,7 @@ export default function Menu() {
               <SidebarGroupLabel className="text-lg text-gray-300 mx-auto my-6">
                 Student Dashboard
               </SidebarGroupLabel>
-              <h1 className="text-md text-gray-300 py-4">John Doe</h1>
+              <h1 className="text-md text-gray-300 py-4">{user!.name}</h1>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {sideMenu.map((item) => (
@@ -54,6 +70,7 @@ export default function Menu() {
               <Button
                 className="flex items-center gap-2 text-left w-full border border-gray-700 p-2"
                 variant="destructive"
+                onClick={logouthandler}
               >
                 Logout
                 <LogOut size={20} />

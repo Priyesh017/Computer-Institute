@@ -119,12 +119,7 @@ const Marksheet = () => {
     ]);
   };
 
-  const handleChange = (
-    index: number,
-    field: string,
-    value: string,
-    e: ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChange = (index: number, field: string, value: string) => {
     const newSubjects = [...subjects];
     newSubjects[index][field as keyof (typeof newSubjects)[number]] = value;
     setSubjects(newSubjects);
@@ -203,8 +198,7 @@ const Marksheet = () => {
                   handleChange(
                     index,
                     items.name as keyof Subject,
-                    e.target.value,
-                    e
+                    e.target.value
                   )
                 }
                 className="p-2 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
