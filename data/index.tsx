@@ -265,14 +265,14 @@ export const certFields = [
 // Marksheet Form
 
 export const details = [
-  { key: "enrollNo", label: "Enrollment No", type: "text", value: "" },
-  { key: "sName", label: "Student Name", type: "text", value: "" },
-  { key: "swdName", label: "S/W/D Name", type: "text", value: "" },
-  { key: "year", label: "Year", type: "text", value: "" },
-  { key: "courseName", label: "Course Name", type: "text", value: "" },
-  { key: "centerName", label: "Center Name", type: "text", value: "" },
-  { key: "cAddress", label: "Center Address", type: "text", value: "" },
-  { key: "dob", label: "Data of Birth", type: "date", value: "" },
+  { key: "enrollNo", label: "Enrollment No", type: "text" },
+  { key: "sName", label: "Student Name", type: "text" },
+  { key: "swdName", label: "S/W/D Name", type: "text" },
+  { key: "year", label: "Year", type: "text" },
+  { key: "courseName", label: "Course Name", type: "text" },
+  { key: "centerName", label: "Center Name", type: "text" },
+  { key: "cAddress", label: "Center Address", type: "text" },
+  { key: "dob", label: "Data of Birth", type: "date" },
 ];
 
 export const marks = [

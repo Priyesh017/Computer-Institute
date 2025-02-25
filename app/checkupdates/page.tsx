@@ -19,7 +19,7 @@ export default function StudentLogin() {
 
     // Mock authentication logic (Replace with API call)
     if (enrollmentNo === "123456" && password === "password") {
-      router.push("/studentdashboard"); // Redirect to dashboard after login
+      router.push("/student/dashboard"); // Redirect to dashboard after login
     } else {
       setError("Invalid Enrollment No. or Password.");
     }

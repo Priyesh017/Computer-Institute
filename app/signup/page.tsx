@@ -1,16 +1,16 @@
 "use client";
 import { fetcherWc } from "@/helper";
-import { ChangeEvent, FormEvent, Suspense, useState } from "react";
+import { ChangeEvent, FormEvent, Suspense, useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 function LoginPage() {
   const [toggle, setToggle] = useState(false);
   const [loader, setLoader] = useState(false);
   const { user } = useAuthStore();
-
+  const router = useRouter();
   const [fd, setfd] = useState({
     name: "",
     email: "",
@@ -18,7 +18,11 @@ function LoginPage() {
   });
 
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
-  if (user) return redirect("/admin/dashboard");
+  useEffect(() => {
+    if (user) {
+      router.push("/admin/dashboard");
+    }
+  }, [user, router]);
 
   const userSchema = z.object({
     name: z.string().min(2, { message: "Name too short!" }),
