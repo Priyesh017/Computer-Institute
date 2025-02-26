@@ -2,9 +2,24 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { examFields } from "@/data/index";
-
+export const examFields = [
+  { key: "firstName", label: "First Name", type: "text" },
+  { key: "lastName", label: "Last Name", type: "text" },
+  { key: "enrollmentNo", label: "Enrollment No", type: "text" },
+  { key: "address", label: "Address", type: "text" },
+  { key: "centerName", label: "Center Name", type: "text" },
+  { key: "idCardNo", label: "ID Card No", type: "number" },
+  {
+    key: "lastPaymentReceiptNo",
+    label: "Last Payment Receipt No",
+    type: "text",
+  },
+  { key: "registeredCourse", label: "Registered Course", type: "text" },
+  { key: "mobileNo", label: "Mobile No", type: "number" },
+  { key: "whatsappNo", label: "WhatsApp No", type: "number" },
+];
 const ExamForm = () => {
+  
   const initialFormState: Record<string, string> = Object.fromEntries(
     examFields.map(({ key }) => [key, ""])
   );

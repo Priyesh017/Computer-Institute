@@ -1,11 +1,16 @@
 "use client";
 import EnrollmentList from "@/app/_components/enrollments";
 import AddStudent from "@/app/_components/studentEntry";
+import IDcardForm from "@/admincomponents/IDCard";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Admit from "@/admincomponents/Admit";
+import Marksheet from "@/admincomponents/Marksheet";
+import Certificate from "@/admincomponents/Certificate";
+import Form from "@/admincomponents/Form";
 
 export default function AdminDashboard() {
   const selectedComponent = useAuthStore((state) => state.selectedComponent);
@@ -24,6 +29,16 @@ export default function AdminDashboard() {
         return <AddStudent />;
       case "ENROLLMENTS":
         return <EnrollmentList />;
+      case "ID CARDS":
+        return <IDcardForm />;
+      case "MARKSHEET":
+        return <Marksheet />;
+      case "ADMIT CARDS":
+        return <Admit />;
+      case "CERTIFICATES":
+        return <Certificate />;
+      case "EXAM FORM":
+        return <Form />;
     }
   };
   return (

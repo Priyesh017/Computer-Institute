@@ -13,13 +13,27 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { sideMenu } from "@/data/index";
-import { LogOut } from "lucide-react";
+
+import { Download, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store";
 import { fetcherWc } from "@/helper";
 import { useRouter } from "next/navigation";
+import Downloads from "@/components/studentdashboard/Downloads";
+import Profile from "@/components/studentdashboard/Profile";
 
+export const sideMenu = [
+  {
+    icon: <User size={24} />,
+    name: "Profile",
+    section: <Profile />,
+  },
+  {
+    icon: <Download size={24} />,
+    name: "Downloads",
+    section: <Downloads />,
+  },
+];
 export default function Menu() {
   const defaultOpen = useState(true)[0];
   const [activeSection, setActiveSection] = useState(sideMenu[0].name);

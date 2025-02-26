@@ -4,16 +4,7 @@ import Gallery from "@/components/landingpage/Gallery";
 import Course from "@/components/landingpage/Course";
 import Center from "@/components/landingpage/Center";
 import { FaEnvelope, FaPhone, FaWhatsapp } from "react-icons/fa";
-import { Bell, Download, FileText, ClipboardList, User } from "lucide-react";
-import Profile from "@/components/studentdashboard/Profile";
-import Notification from "@/admincomponents/Notification";
-import Downloads from "@/components/studentdashboard/Downloads";
-import Result from "@/components/studentdashboard/Result";
-import Form from "@/admincomponents/Form";
-import Admit from "../admincomponents/Admit";
-import Certificate from "@/admincomponents/Certificate";
-import Marksheet from "@/admincomponents/Marksheet";
-import IDCard from "@/admincomponents/IDCard";
+
 import { Settings2, SquareTerminal } from "lucide-react";
 
 export const data = {
@@ -47,15 +38,19 @@ export const data = {
           url: "#",
         },
         {
-          title: "id cards",
+          title: "id cards verify",
           url: "#",
         },
         {
-          title: "admit cards",
+          title: "admit cards verify",
           url: "#",
         },
         {
-          title: "marks",
+          title: "marks verify",
+          url: "#",
+        },
+        {
+          title: "certificates verify",
           url: "#",
         },
       ],
@@ -71,23 +66,23 @@ export const data = {
           url: "#",
         },
         {
-          title: "id Download",
+          title: "Id Cards",
           url: "#",
         },
         {
-          title: "admit download",
+          title: "Admit Cards",
           url: "#",
         },
         {
-          title: "exam form fillup",
+          title: "Exam Form",
           url: "#",
         },
         {
-          title: "Marksheet download",
+          title: "Marksheet",
           url: "#",
         },
         {
-          title: "certificate download",
+          title: "Certificates",
           url: "#",
         },
       ],
@@ -101,54 +96,6 @@ export const menuItems = [
   { name: "Gallery", pos: <Gallery /> },
   { name: "Course", pos: <Course /> },
   { name: "Center", pos: <Center /> },
-];
-
-export const sideMenu = [
-  {
-    icon: <User size={24} />,
-    name: "Profile",
-    section: <Profile />,
-  },
-  {
-    icon: <Bell size={24} />,
-    name: "Notifications",
-    section: <Notification />,
-  },
-  {
-    icon: <Download size={24} />,
-    name: "Downloads",
-    section: <Downloads />,
-  },
-  {
-    icon: <FileText size={24} />,
-    name: "Result",
-    section: <Result />,
-  },
-  {
-    icon: <ClipboardList size={24} />,
-    name: "Form Fill-up",
-    section: <Form />,
-  },
-  {
-    icon: <ClipboardList size={24} />,
-    name: "Admit Form",
-    section: <Admit />,
-  },
-  {
-    icon: <ClipboardList size={24} />,
-    name: "Certificate Form",
-    section: <Certificate />,
-  },
-  {
-    icon: <ClipboardList size={24} />,
-    name: "Marksheet Form",
-    section: <Marksheet />,
-  },
-  {
-    icon: <ClipboardList size={24} />,
-    name: "ID Card Form",
-    section: <IDCard />,
-  },
 ];
 
 export const contactIcons = [
@@ -275,22 +222,7 @@ export const idCardFields = [
 ];
 
 // Exam Form
-export const examFields = [
-  { key: "firstName", label: "First Name", type: "text" },
-  { key: "lastName", label: "Last Name", type: "text" },
-  { key: "enrollmentNo", label: "Enrollment No", type: "text" },
-  { key: "address", label: "Address", type: "text" },
-  { key: "centerName", label: "Center Name", type: "text" },
-  { key: "idCardNo", label: "ID Card No", type: "number" },
-  {
-    key: "lastPaymentReceiptNo",
-    label: "Last Payment Receipt No",
-    type: "text",
-  },
-  { key: "registeredCourse", label: "Registered Course", type: "text" },
-  { key: "mobileNo", label: "Mobile No", type: "number" },
-  { key: "whatsappNo", label: "WhatsApp No", type: "number" },
-];
+
 
 // Admit Form
 export const admitFields = [
