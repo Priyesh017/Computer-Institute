@@ -10,11 +10,13 @@ import {
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
+import { toast } from "react-toastify";
 
 interface Enrollment {
   name: string;
-  enrollmentNo: string;
+  Enrollmentno: string;
   activated: boolean;
+  id: number;
 }
 
 const PAGE_SIZE = 5; // Number of enrollments per page
@@ -27,19 +29,31 @@ const EnrollmentList = () => {
     const data = await fetcherWc("/AllEnrollments", "GET");
     setEnrollments(data);
   };
-
+  console.log(enrollments);
   useEffect(() => {
     fetchfn();
   }, []);
 
-  const toggleActivation = (index: number) => {
-    setEnrollments((prev) =>
-      prev.map((enrollment, i) =>
-        i === index
-          ? { ...enrollment, activated: !enrollment.activated }
-          : enrollment
-      )
-    );
+  const toggleActivation = async ({ activated, id }: Enrollment) => {
+    toast("plz wait");
+    if (activated) {
+      const data = await fetcherWc("/deActivateEnrollment", "POST", { id });
+      if (data.ok) {
+        setEnrollments((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, activated: false } : p))
+        );
+      }
+      toast(data.ok ? "success" : "failed");
+      return;
+    }
+
+    const data = await fetcherWc("/ActivateEnrollment", "POST", { id });
+    if (data.ok) {
+      setEnrollments((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, activated: true } : p))
+      );
+    }
+    toast(data.ok ? "success" : "failed");
   };
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
@@ -62,14 +76,13 @@ const EnrollmentList = () => {
             className="grid grid-cols-3 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-gray-500"
           >
             <div>{enrollment.name}</div>
-            <div>{enrollment.enrollmentNo}</div>
+            <div>{enrollment.Enrollmentno}</div>
             <div className="flex items-center justify-center gap-2">
               <Switch
                 id={`activation-${startIndex + index}`}
                 checked={enrollment.activated}
                 onCheckedChange={() => {
-                  console.log("Toggling:", startIndex + index); // Debugging
-                  toggleActivation(startIndex + index);
+                  toggleActivation(enrollment);
                 }}
                 className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
               />
