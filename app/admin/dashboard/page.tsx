@@ -14,15 +14,15 @@ import Form from "@/admincomponents/Form";
 
 export default function AdminDashboard() {
   const selectedComponent = useAuthStore((state) => state.selectedComponent);
-  // cookies na thakle redirect
-  // const { user } = useAuthStore();
+  const { user } = useAuthStore();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     router.push("/login");
-  //   }
-  // }, [user, router]); // Runs only when `user` changes
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+  }, [user, router]);
 
   const renderComponent = () => {
     switch (selectedComponent) {

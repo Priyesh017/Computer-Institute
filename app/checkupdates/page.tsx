@@ -16,6 +16,7 @@ export default function StudentLogin() {
   useEffect(() => {
     if (user) {
       router.push("/student/dashboard");
+      return;
     }
   }, [user, router]);
 

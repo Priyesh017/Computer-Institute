@@ -12,11 +12,13 @@ import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
 import Form from "@/admincomponents/Form";
 import { X } from "lucide-react";
+import { toast } from "react-toastify";
 
 export interface Enrollment {
   name: string;
-  enrollmentNo: string;
+  Enrollmentno: string;
   activated: boolean;
+  id: number;
 }
 
 const PAGE_SIZE = 5;
@@ -32,19 +34,31 @@ const EnrollmentList = () => {
     const data = await fetcherWc("/AllEnrollments", "GET");
     setEnrollments(data);
   };
-
+  console.log(enrollments);
   useEffect(() => {
     fetchfn();
   }, []);
 
-  const toggleActivation = (index: number) => {
-    setEnrollments((prev) =>
-      prev.map((enrollment, i) =>
-        i === index
-          ? { ...enrollment, activated: !enrollment.activated }
-          : enrollment
-      )
-    );
+  const toggleActivation = async ({ activated, id }: Enrollment) => {
+    toast("plz wait");
+    if (activated) {
+      const data = await fetcherWc("/deActivateEnrollment", "POST", { id });
+      if (data.ok) {
+        setEnrollments((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, activated: false } : p))
+        );
+      }
+      toast(data.ok ? "success" : "failed");
+      return;
+    }
+
+    const data = await fetcherWc("/ActivateEnrollment", "POST", { id });
+    if (data.ok) {
+      setEnrollments((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, activated: true } : p))
+      );
+    }
+    toast(data.ok ? "success" : "failed");
   };
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
@@ -66,6 +80,8 @@ const EnrollmentList = () => {
             key={index}
             className="click grid grid-cols-3 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-gray-500 cursor-pointer hover:bg-gray-100"
           >
+            <div>{enrollment.name}</div>
+            <div>{enrollment.Enrollmentno}</div>
             <div
               className="hover:text-red-500"
               onClick={() => {
@@ -75,12 +91,12 @@ const EnrollmentList = () => {
             >
               {enrollment.name}
             </div>
-            <div>{enrollment.enrollmentNo}</div>
+            <div>{enrollment.Enrollmentno}</div>
             <div className="flex items-center justify-center gap-2">
               <Switch
                 id={`activation-${startIndex + index}`}
                 checked={enrollment.activated}
-                onCheckedChange={() => toggleActivation(startIndex + index)}
+                onCheckedChange={() => toggleActivation(enrollment)}
                 className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
               />
             </div>
@@ -120,7 +136,7 @@ const EnrollmentList = () => {
             >
               <X size={24} className="hover:text-red-600" />
             </button>
-            <Form  />
+            <Form />
           </div>
         </div>
       )}
