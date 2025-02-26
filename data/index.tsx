@@ -326,6 +326,7 @@ export const admitFields = [
   },
 ];
 
+// Certificate Form
 export const certFields = [
   { key: "sName", label: "Student Name", type: "text" },
   { key: "sdwName", label: "S/D/W Name", type: "text" },
@@ -340,10 +341,11 @@ export const certFields = [
   },
   { key: "centerName", label: "Center Name", type: "text" },
   { key: "iDate", label: "Issued Date", type: "date" },
+  { key: "Branch", label: "Branch", type: "text" },
+  { key: "GrandTotal", label: "Grand Total", type: "text" },
 ];
 
 // Marksheet Form
-
 export const details = [
   { key: "enrollNo", label: "Enrollment No", type: "text" },
   { key: "sName", label: "Student Name", type: "text" },
