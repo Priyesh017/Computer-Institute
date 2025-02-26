@@ -11,6 +11,9 @@ import Admit from "@/admincomponents/Admit";
 import Marksheet from "@/admincomponents/Marksheet";
 import Certificate from "@/admincomponents/Certificate";
 import Form from "@/admincomponents/Form";
+import ExamForms from "@/app/_components/examforms";
+import AdmitCards from "@/app/_components/admitcards";
+import Marksheets from "@/app/_components/marksheets";
 
 export default function AdminDashboard() {
   const selectedComponent = useAuthStore((state) => state.selectedComponent);
@@ -30,16 +33,22 @@ export default function AdminDashboard() {
         return <AddStudent />;
       case "ENROLLMENTS":
         return <EnrollmentList />;
-      case "ID CARDS":
+      case "ID CARD":
         return <IDcardForm />;
       case "MARKSHEET":
         return <Marksheet />;
-      case "ADMIT CARDS":
+      case "ADMIT CARD":
         return <Admit />;
-      case "CERTIFICATES":
+      case "CERTIFICATE":
         return <Certificate />;
       case "EXAM FORM":
         return <Form />;
+      case "EXAM FORMS":
+        return <ExamForms />;
+      case "ADMIT CARDS":
+        return <AdmitCards />
+      case "MARKSHEETS":
+        return <Marksheets />;
     }
   };
   return (

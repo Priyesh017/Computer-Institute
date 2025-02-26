@@ -27,30 +27,26 @@ export const data = {
       ],
     },
     {
-      title: "admin",
+      title: "Verify",
       url: "#",
       role: "admin",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "enrollments",
+          title: "Enrollments",
           url: "#",
         },
         {
-          title: "id cards verify",
+          title: "Exam Forms",
           url: "#",
         },
         {
-          title: "admit cards verify",
+          title: "Admit Cards",
           url: "#",
         },
         {
-          title: "marks verify",
-          url: "#",
-        },
-        {
-          title: "certificates verify",
+          title: "Marksheets",
           url: "#",
         },
       ],
@@ -66,11 +62,11 @@ export const data = {
           url: "#",
         },
         {
-          title: "Id Cards",
+          title: "Id Card",
           url: "#",
         },
         {
-          title: "Admit Cards",
+          title: "Admit Card",
           url: "#",
         },
         {
@@ -82,7 +78,7 @@ export const data = {
           url: "#",
         },
         {
-          title: "Certificates",
+          title: "Certificate",
           url: "#",
         },
       ],
@@ -222,7 +218,6 @@ export const idCardFields = [
 ];
 
 // Exam Form
-
 
 // Admit Form
 export const admitFields = [
