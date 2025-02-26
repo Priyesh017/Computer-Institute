@@ -21,6 +21,7 @@ function LoginPage() {
   useEffect(() => {
     if (user) {
       router.push("/admin/dashboard");
+      return;
     }
   }, [user, router]);
 

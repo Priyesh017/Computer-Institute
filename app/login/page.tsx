@@ -19,6 +19,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (user) {
       router.push("/admin/dashboard");
+      return;
     }
   }, [user, router]); // Runs only when `user` changes
 

@@ -20,6 +20,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (!user) {
       router.push("/login");
+      return;
     }
   }, [user, router]);
 
