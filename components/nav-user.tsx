@@ -18,6 +18,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { fetcherWc } from "@/helper";
+import { useAuthStore } from "@/store";
 
 export function NavUser({
   user,
@@ -29,7 +31,11 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-
+  const { logout } = useAuthStore();
+  const logouthandler = async () => {
+    await fetcherWc("/logout", "GET");
+    logout();
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -78,7 +84,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={logouthandler}>
               <LogOut />
               Log out
             </DropdownMenuItem>

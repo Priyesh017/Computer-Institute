@@ -28,7 +28,7 @@ export default function Menu() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/");
+      router.push("/checkupdates");
       return;
     }
   }, [user]);
@@ -47,7 +47,7 @@ export default function Menu() {
               <SidebarGroupLabel className="text-lg text-gray-300 mx-auto my-6">
                 Student Dashboard
               </SidebarGroupLabel>
-              <h1 className="text-md text-gray-300 py-4">{user!.name}</h1>
+              <h1 className="text-md text-gray-300 py-4">{user?.name}</h1>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {sideMenu.map((item) => (

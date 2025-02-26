@@ -36,6 +36,14 @@ const StudentProfile: React.FC = () => {
     });
   }, []);
 
+  if (!student) {
+    return (
+      <p className="relative top-1/2 text-center text-red-500 ">
+        Student data is not available.
+      </p>
+    );
+  }
+
   const studentDetails = [
     {
       id: "enrollment",
@@ -60,13 +68,6 @@ const StudentProfile: React.FC = () => {
     },
   ];
 
-  if (!student) {
-    return (
-      <p className="relative top-1/2 text-center text-red-500 ">
-        Student data is not available.
-      </p>
-    );
-  }
   return (
     <motion.div
       ref={cardRef}
