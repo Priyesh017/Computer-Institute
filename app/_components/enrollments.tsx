@@ -32,6 +32,7 @@ const EnrollmentList = () => {
 
   const fetchfn = async () => {
     const data = await fetcherWc("/AllEnrollments", "GET");
+    console.log(data);
     setEnrollments(data);
   };
   console.log(enrollments);

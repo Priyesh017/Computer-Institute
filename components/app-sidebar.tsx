@@ -11,11 +11,22 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store";
 import { data } from "@/data";
+import { useRouter } from "next/navigation";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuthStore();
-  if (!user) return;
+  const router = useRouter();
 
+  React.useEffect(() => {
+    if (!user || !user.role) {
+      router.push("/");
+      return;
+    }
+  }, []);
+
+  if (!user || !user.role) {
+    return;
+  }
   const filteredNav = data.navMain.filter(
     (d) => d.role === user.role.toLowerCase()
   );
