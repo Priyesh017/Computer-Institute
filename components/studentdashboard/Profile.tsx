@@ -4,43 +4,27 @@ import { motion } from "framer-motion";
 import anime from "animejs";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import { useAuthStore } from "@/store";
 
-interface StudentProfileProps {
-  student?: {
-    name: string;
-    enrollmentNumber: string;
-    image: string;
-    cardNumber: string;
-    phone: string;
-    whatsapp: string;
-    dob: string;
-    father: string;
-    mother: string;
-    center: string;
-    course: string;
-    qualification: string;
-  };
+export interface StudentProfileProps {
+  name: string;
+  Enrollmentno: string;
+  image: string;
+  IdCardNo: string;
+  mobileNo: string;
+  wpNo: string;
+  dob: string;
+  father: string;
+  mother: string;
+  center: string;
+  course: string;
+  eduqualification: string;
 }
 
-const dummyStudent = {
-  name: "John Doe",
-  enrollmentNumber: "ENR123456",
-  image: "/placeholder-image.jpg",
-  cardNumber: "STU-987654",
-  phone: "+1234567890",
-  whatsapp: "+1234567890",
-  dob: "2000-01-01",
-  father: "Robert Doe",
-  mother: "Jane Doe",
-  center: "XYZ Training Center",
-  course: "Computer Science",
-  qualification: "Bachelor's Degree",
-};
-
-const StudentProfile: React.FC<StudentProfileProps> = ({
-  student = dummyStudent,
-}) => {
+const StudentProfile: React.FC = () => {
   const cardRef = useRef<HTMLDivElement>(null);
+
+  const student = useAuthStore().user as unknown as StudentProfileProps;
 
   useEffect(() => {
     anime({
@@ -56,19 +40,23 @@ const StudentProfile: React.FC<StudentProfileProps> = ({
     {
       id: "enrollment",
       label: "Enrollment No:",
-      value: student.enrollmentNumber,
+      value: student.Enrollmentno,
     },
-    { id: "card", label: "Student Card:", value: student.cardNumber },
-    { id: "phone", label: "Phone:", value: student.phone },
-    { id: "whatsapp", label: "WhatsApp:", value: student.whatsapp },
-    { id: "dob", label: "Date of Birth:", value: student.dob },
+    { id: "card", label: "Student Card:", value: student.IdCardNo },
+    { id: "phone", label: "Phone:", value: student.mobileNo },
+    { id: "whatsapp", label: "WhatsApp:", value: student.wpNo },
+    {
+      id: "dob",
+      label: "Date of Birth:",
+      value: new Date(student.dob).toLocaleDateString(),
+    },
     { id: "father", label: "Father:", value: student.father },
     { id: "mother", label: "Mother:", value: student.mother },
     { id: "center", label: "Center:", value: student.center },
     {
       id: "qualification",
       label: "Qualification:",
-      value: student.qualification,
+      value: student.eduqualification,
     },
   ];
 

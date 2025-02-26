@@ -345,18 +345,24 @@ export const certFields = [
 // Marksheet Form
 
 export const details = [
-  { key: "enrollNo", label: "Enrollment No", type: "text" },
-  { key: "sName", label: "Student Name", type: "text" },
-  { key: "swdName", label: "S/W/D Name", type: "text" },
-  { key: "year", label: "Year", type: "text" },
-  { key: "courseName", label: "Course Name", type: "text" },
-  { key: "centerName", label: "Center Name", type: "text" },
-  { key: "cAddress", label: "Center Address", type: "text" },
-  { key: "dob", label: "Data of Birth", type: "date" },
+  { key: "enrollNo", label: "Enrollment No", type: "text", id: "enrollNo" },
+  { key: "sName", label: "Student Name", type: "text", id: "sName" },
+  { key: "swdName", label: "S/W/D Name", type: "text", id: "swdName" },
+  { key: "year", label: "Year", type: "text", id: "year" },
+  { key: "courseName", label: "Course Name", type: "text", id: "courseName" },
+  { key: "centerName", label: "Center Name", type: "text", id: "centerName" },
+  { key: "cAddress", label: "Center Address", type: "text", id: "cAddress" },
+  { key: "dob", label: "Data of Birth", type: "date", id: "dob" },
 ];
 
 export const marks = [
-  { name: "subject", type: "text", value: "", placeholder: "Subject" },
+  {
+    name: "subject",
+    type: "text",
+    value: "",
+    placeholder: "Subject",
+    pattern: "[A-Za-z ]*",
+  },
   {
     name: "theoryFullMarks",
     type: "number",

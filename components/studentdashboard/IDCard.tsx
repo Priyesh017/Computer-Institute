@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { idCardFields } from "@/data/index";
+import { fetcherWc } from "@/helper";
 
 const IDcardForm = () => {
   const initialFormState: Record<string, string> = Object.fromEntries(
@@ -41,13 +42,7 @@ const IDcardForm = () => {
     setSuccess(null);
 
     try {
-      const response = await fetch("/api/idcard", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetcherWc("/generateId", "POST", formData);
 
       if (!response.ok) throw new Error("Failed to submit the form");
 
