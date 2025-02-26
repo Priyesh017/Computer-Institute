@@ -12,7 +12,7 @@ import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
-import Enroll from "@/app/_components/studentEntry";
+import AdmitCards from "@/admincomponents/Admit";
 
 export interface Enrollment {
   name: string;
@@ -24,7 +24,7 @@ export interface Enrollment {
 
 const PAGE_SIZE = 5;
 
-const EnrollmentList = () => {
+const ExamForm = () => {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedEnrollment, setSelectedEnrollment] =
@@ -148,7 +148,7 @@ const EnrollmentList = () => {
             >
               <X size={24} className="hover:text-red-600" />
             </button>
-            <Enroll />
+            <AdmitCards />
           </div>
         </div>
       )}
@@ -156,4 +156,4 @@ const EnrollmentList = () => {
   );
 };
 
-export default EnrollmentList;
+export default ExamForm;
