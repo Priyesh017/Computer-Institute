@@ -14,6 +14,17 @@ import Form from "@/admincomponents/Form";
 import ExamForms from "@/app/_components/examforms";
 import AdmitCards from "@/app/_components/admitcards";
 import Marksheets from "@/app/_components/marksheets";
+import IDCardDownload from "@/components/downloads/id_card";
+import AdmitCardDownload from "@/components/downloads/admit_card";
+import MarksheetDownload from "@/components/downloads/mark_sheet";
+import CertificateDownload from "@/components/downloads/certi_ficate";
+import CourseFee from "@/components/fees/CourseFee";
+import ExamFee from "@/components/fees/ExamFee";
+import IDCardApproval from "@/components/approval/Aidcard";
+import AdmitCardApproval from "@/components/approval/Aadmit";
+import MarksheetApproval from "@/components/approval/Amarksheet";
+import CertificateApproval from "@/components/approval/Acertificate";
+import EnrollmentApproval from "@/components/approval/Aenrollment";
 
 export default function AdminDashboard() {
   const selectedComponent = useAuthStore((state) => state.selectedComponent);
@@ -46,9 +57,31 @@ export default function AdminDashboard() {
       case "EXAM FORMS":
         return <ExamForms />;
       case "ADMIT CARDS":
-        return <AdmitCards />
+        return <AdmitCards />;
       case "MARKSHEETS":
         return <Marksheets />;
+      case "ID CARD DOWNLOAD":
+        return <IDCardDownload />;
+      case "ADMIT CARD DOWNLOAD":
+        return <AdmitCardDownload />;
+      case "MARKSHEET DOWNLOAD":
+        return <MarksheetDownload />;
+      case "CERTIFICATE DOWNLOAD":
+        return <CertificateDownload />;
+      case "COURSE FEE":
+        return <CourseFee />;
+      case "EXAM FEE":
+        return <ExamFee />;
+      case "ENROLLMENTS APPROVAL":
+        return <EnrollmentApproval />;
+      case "ID CARDS APPROVAL":
+        return <IDCardApproval />;
+      case "ADMIT CARDS APPROVAL":
+        return <AdmitCardApproval />;
+      case "MARKSHEETS APPROVAL":
+        return <MarksheetApproval />;
+      case "CERTIFICATES APPROVAL":
+        return <CertificateApproval />;
     }
   };
   return (

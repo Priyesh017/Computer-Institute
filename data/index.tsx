@@ -17,7 +17,7 @@ export const data = {
       isActive: true,
       items: [
         {
-          title: "exam fee",
+          title: "Exam Fee",
           url: "#",
         },
         {
@@ -79,6 +79,58 @@ export const data = {
         },
         {
           title: "Certificate",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Downloads",
+      role: "center",
+      url: "#",
+      icon: Settings2,
+      items: [
+        {
+          title: "Id Card Download",
+          url: "#",
+        },
+        {
+          title: "Admit Card Download",
+          url: "#",
+        },
+        {
+          title: "Marksheet Download",
+          url: "#",
+        },
+        {
+          title: "Certificate Download",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Approval",
+      role: "center",
+      url: "#",
+      icon: Settings2,
+      items: [
+        {
+          title: "Enrollments Approval",
+          url: "#",
+        },
+        {
+          title: "Id Cards Approval",
+          url: "#",
+        },
+        {
+          title: "Admit Cards Approval",
+          url: "#",
+        },
+        {
+          title: "Marksheets Approval",
+          url: "#",
+        },
+        {
+          title: "Certificates Approval",
           url: "#",
         },
       ],
