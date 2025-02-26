@@ -1,15 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { fetcherWc } from "@/helper";
+import { toast } from "react-toastify";
+import { useAuthStore } from "@/store";
 
 export default function StudentLogin() {
   const router = useRouter();
   const [enrollmentNo, setEnrollmentNo] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { user, login } = useAuthStore();
 
-  const handleLogin = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user) {
+      router.push("/student/dashboard");
+    }
+  }, [user, router]);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!enrollmentNo || !password) {
@@ -17,9 +27,16 @@ export default function StudentLogin() {
       return;
     }
 
-    // Mock authentication logic (Replace with API call)
-    if (enrollmentNo === "123456" && password === "password") {
-      router.push("/student/dashboard"); // Redirect to dashboard after login
+    const data = await fetcherWc("/studentLogin", "POST", {
+      enrollmentNo: enrollmentNo,
+      password,
+    });
+
+    if (data.success) {
+      toast("login successful");
+      login(data.data);
+
+      router.push("/student/dashboard");
     } else {
       setError("Invalid Enrollment No. or Password.");
     }

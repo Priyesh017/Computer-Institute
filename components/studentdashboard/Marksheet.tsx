@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { Trash2 } from "lucide-react";
@@ -25,13 +25,21 @@ const Marksheet = () => {
     },
   ]);
 
-  const [name, setName] = useState<string>("N/A");
-  const [enrollno, setEnrollno] = useState<string>("");
+  const [fd, setfd] = useState({
+    sName: "",
+    enrollNo: "",
+    swdName: "",
+    year: "",
+    courseName: "",
+    centerName: "",
+    cAddress: "",
+    dob: "",
+  });
+
   const [totalMarks, setTotalMarks] = useState<number>(0);
-  const [totalFullMarks, setTotalFullMarks] = useState<number>(0);
   const [percentage, setPercentage] = useState<number>(0);
   const [grade, setGrade] = useState<string>("N/A");
-
+  console.log(fd);
   useEffect(() => {
     anime({
       targets: ".marks-row",
@@ -43,14 +51,6 @@ const Marksheet = () => {
   }, [subjects]);
 
   useEffect(() => {
-    if (enrollno === "1") {
-      setName("John Doe");
-    } else if (enrollno === "2") {
-      setName("Jane Doe");
-    } else {
-      setName("N/A");
-    }
-
     const totalObtained = subjects.reduce(
       (sum, item) =>
         sum +
@@ -68,7 +68,6 @@ const Marksheet = () => {
     );
 
     setTotalMarks(totalObtained);
-    setTotalFullMarks(fullMarks);
 
     if (fullMarks > 0) {
       const calculatedPercentage = (totalObtained / fullMarks) * 100;
@@ -78,7 +77,11 @@ const Marksheet = () => {
       setPercentage(0);
       setGrade("N/A");
     }
-  }, [subjects, enrollno]);
+  }, [subjects, fd.enrollNo]);
+
+  const handlechange2 = (e: ChangeEvent<HTMLInputElement>) => {
+    setfd({ ...fd, [e.target.id]: e.target.value });
+  };
 
   const getGrade = (percentage: number): string => {
     if (percentage >= 90) return "A+";
@@ -116,12 +119,10 @@ const Marksheet = () => {
     ]);
   };
 
-  const handleChange = (rowIndex: number, name: string, value: string) => {
-    setSubjects((prevSubjects) =>
-      prevSubjects.map((subject, index) =>
-        index === rowIndex ? { ...subject, [name]: value } : subject
-      )
-    );
+  const handleChange = (index: number, field: string, value: string) => {
+    const newSubjects = [...subjects];
+    newSubjects[index][field as keyof (typeof newSubjects)[number]] = value;
+    setSubjects(newSubjects);
   };
 
   const handleDeleteRow = (index: number) => {
@@ -160,9 +161,9 @@ const Marksheet = () => {
             <span className="font-bold">{item.label}</span>
             <input
               type={item.type}
-              id="temp"
+              onChange={handlechange2}
+              id={item.id}
               placeholder={item.label}
-              onChange={(e) => setEnrollno(e.target.value)}
               className="mx-3 px-3 py-1 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
             />
           </div>
@@ -189,12 +190,16 @@ const Marksheet = () => {
             {marks.map((items, i) => (
               <input
                 key={i}
+                name={items.name}
                 type={items.type}
                 pattern={items.pattern}
                 placeholder={items.placeholder}
-                value={items.value}
                 onChange={(e) =>
-                  handleChange(index, items.name, e.target.value)
+                  handleChange(
+                    index,
+                    items.name as keyof Subject,
+                    e.target.value
+                  )
                 }
                 className="p-2 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               />

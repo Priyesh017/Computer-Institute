@@ -4,6 +4,7 @@ interface iDatatype {
   email?: string;
   name?: string;
   password?: string;
+  enrollmentNo?: string;
 }
 
 const ApiEnd = axios.create({
