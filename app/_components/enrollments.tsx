@@ -1,15 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
 import {
   Pagination,
   PaginationContent,
@@ -18,6 +9,7 @@ import {
   PaginationNext,
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
+import { Switch } from "@/components/ui/switch";
 
 interface Enrollment {
   name: string;
@@ -57,36 +49,34 @@ const EnrollmentList = () => {
   );
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl font-bold mb-4">Enrollment List</h2>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Enrollment No</TableHead>
-            <TableHead>Activated</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {currentEnrollments.map((enrollment, index) => (
-            <TableRow key={index}>
-              <TableCell>{enrollment.name}</TableCell>
-              <TableCell>{enrollment.enrollmentNo}</TableCell>
-              <TableCell>
-                <Button
-                  variant="default"
-                  onClick={() => toggleActivation(startIndex + index)}
-                  className={`px-3 py-1 text-white rounded ${
-                    enrollment.activated ? "bg-green-500" : "bg-red-500"
-                  }`}
-                >
-                  {enrollment.activated ? "Activated" : "Deactivate"}
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
+      <h2 className="text-xl text-center font-bold mb-6">Enrollment List</h2>
+      <div className="grid grid-cols-3 text-center gap-2 font-bold py-2 border-b border-gray-500">
+        <span>Name</span>
+        <span>Enrollment No</span>
+      </div>
+      <div>
+        {currentEnrollments.map((enrollment, index) => (
+          <div
+            key={index}
+            className="grid grid-cols-3 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-gray-500"
+          >
+            <div>{enrollment.name}</div>
+            <div>{enrollment.enrollmentNo}</div>
+            <div className="flex items-center justify-center gap-2">
+              <Switch
+                id={`activation-${startIndex + index}`}
+                checked={enrollment.activated}
+                onCheckedChange={() => {
+                  console.log("Toggling:", startIndex + index); // Debugging
+                  toggleActivation(startIndex + index);
+                }}
+                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* Pagination */}
       <Pagination className="mt-4">

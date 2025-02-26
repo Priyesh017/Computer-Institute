@@ -6,14 +6,14 @@ import Center from "@/components/landingpage/Center";
 import { FaEnvelope, FaPhone, FaWhatsapp } from "react-icons/fa";
 import { Bell, Download, FileText, ClipboardList, User } from "lucide-react";
 import Profile from "@/components/studentdashboard/Profile";
-import Notification from "@/components/studentdashboard/Notification";
+import Notification from "@/admincomponents/Notification";
 import Downloads from "@/components/studentdashboard/Downloads";
 import Result from "@/components/studentdashboard/Result";
-import Form from "@/components/studentdashboard/Form";
-import Admit from "../components/studentdashboard/Admit";
-import Certificate from "@/components/studentdashboard/Certificate";
-import Marksheet from "@/components/studentdashboard/Marksheet";
-import IDCard from "@/components/studentdashboard/IDCard";
+import Form from "@/admincomponents/Form";
+import Admit from "../admincomponents/Admit";
+import Certificate from "@/admincomponents/Certificate";
+import Marksheet from "@/admincomponents/Marksheet";
+import IDCard from "@/admincomponents/IDCard";
 import { Settings2, SquareTerminal } from "lucide-react";
 
 export const data = {
