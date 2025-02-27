@@ -42,7 +42,7 @@ const Banner = () => {
         quality={100}
         className="absolute w-full h-full z-0"
       />
-      <div className="relative w-full min-h-screen flex flex-col-reverse md:flex-row items-center justify-between p-2 md:p-12 bg-gradient-to-r from-grad-2/80 via-grad-3/50 to-grad-8/20">
+      <div className="relative w-full min-h-screen flex flex-col-reverse md:flex-row items-center justify-between p-2 md:p-12 bg-gradient-to-r from-grad-2/80 via-grad-3/60 to-grad-8/50">
         <div className="space-y-5 p-4 mt-20">
           <motion.div
             initial={{ x: -50, opacity: 0 }}
@@ -53,7 +53,7 @@ const Banner = () => {
             <h3 className="text-lg font-semibold text-gray-700">
               START BETTER LEARNING
             </h3>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">
               MISSION NATIONAL YOUTH COMPUTER CENTER
             </h1>
             <div className="bg-yellow-500 px-4 py-1 inline-block font-semibold text-black rounded-md text-sm">
