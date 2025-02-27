@@ -74,7 +74,7 @@ const ExamForm = () => {
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl text-center font-bold mb-6">Enrollment List</h2>
+      <h2 className="text-xl text-center font-bold mb-6">Exam Forms</h2>
       <div className="grid grid-cols-4 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
@@ -103,7 +103,7 @@ const ExamForm = () => {
               {enrollment.name}
             </div>
             <div>{enrollment.Enrollmentno}</div>
-            <span>{enrollment.createdAt}</span>
+            <span>{new Date(enrollment.createdAt).toDateString()}</span>
             <div className="flex items-center justify-center gap-2">
               <Switch
                 id={`activation-${startIndex + index}`}

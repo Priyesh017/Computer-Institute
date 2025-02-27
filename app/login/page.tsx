@@ -37,6 +37,10 @@ export default function LoginPage() {
     setLoader(false);
 
     if (data.message === "Login successful") {
+      if (data.user.role.toLowerCase() !== utype) {
+        toast(`u r not authorised`);
+        return;
+      }
       login(data.user);
       toast("Login Successfully");
       router.push("/admin/dashboard");
