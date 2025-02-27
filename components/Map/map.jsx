@@ -52,11 +52,11 @@ const MapComponent = () => {
 
   return (
     <MapContainer
-      center={[20.5937, 78.9629]} // Center view of India
-      zoom={5}
+      center={[23.336274082365158, 88.0103070358758]} // Center view of India
+      zoom={7}
       scrollWheelZoom={true}
       style={{ height: "500px", width: "70%" }}
-      className="relative top-[-20] md:min-w-[50%] min-w-full z-10"
+      className="relative top-[-20] md:min-w-[50%] min-w-fit z-10"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

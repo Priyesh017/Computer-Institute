@@ -34,7 +34,7 @@ const ContactInfo = () => {
       </p>
       <motion.div
         ref={cardRef}
-        className="relative z-20 bg-white text-gray-900 p-8 rounded-lg shadow-lg w-full max-w-3xl grid grid-cols-1 sm:grid-cols-3 gap-6"
+        className="relative z-20 bg-white text-gray-900 p-8 rounded-lg shadow-lg md:w-full max-w-3xl grid grid-cols-1 sm:grid-cols-3 gap-6"
       >
         <div className="flex flex-col items-center">
           <div className="bg-yellow-400 p-3 rounded-full mb-2">📍</div>
