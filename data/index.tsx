@@ -41,10 +41,7 @@ export const data = {
           title: "Exam Forms",
           url: "#",
         },
-        {
-          title: "Admit Cards",
-          url: "#",
-        },
+
         {
           title: "Marksheets",
           url: "#",
@@ -117,20 +114,13 @@ export const data = {
           title: "Enrollments Approval",
           url: "#",
         },
+
         {
-          title: "Id Cards Approval",
-          url: "#",
-        },
-        {
-          title: "Admit Cards Approval",
+          title: "Exam Form Approval",
           url: "#",
         },
         {
           title: "Marksheets Approval",
-          url: "#",
-        },
-        {
-          title: "Certificates Approval",
           url: "#",
         },
       ],
@@ -322,18 +312,6 @@ export const certFields = [
   { key: "iDate", label: "Issued Date", type: "date" },
   { key: "Branch", label: "Branch", type: "text" },
   { key: "GrandTotal", label: "Grand Total", type: "text" },
-];
-
-// Marksheet Form
-export const details = [
-  { key: "enrollNo", label: "Enrollment No", type: "text", id: "enrollNo" },
-  { key: "sName", label: "Student Name", type: "text", id: "sName" },
-  { key: "swdName", label: "S/W/D Name", type: "text", id: "swdName" },
-  { key: "year", label: "Year", type: "text", id: "year" },
-  { key: "courseName", label: "Course Name", type: "text", id: "courseName" },
-  { key: "centerName", label: "Center Name", type: "text", id: "centerName" },
-  { key: "cAddress", label: "Center Address", type: "text", id: "cAddress" },
-  { key: "dob", label: "Data of Birth", type: "date", id: "dob" },
 ];
 
 export const marks = [

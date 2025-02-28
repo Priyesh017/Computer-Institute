@@ -11,11 +11,22 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store";
 import { data } from "@/data";
+import { useRouter } from "next/navigation";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user } = useAuthStore();
-  if (!user) return;
+  const router = useRouter();
 
+  React.useEffect(() => {
+    if (!user || !user.role) {
+      router.push("/");
+      return;
+    }
+  }, []);
+
+  if (!user || !user.role) {
+    return;
+  }
   const filteredNav = data.navMain.filter(
     (d) => d.role === user.role.toLowerCase()
   );
@@ -23,7 +34,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <h1 className="text-2xl font-bold text-gray-900 text-center border-b border-gray-300 py-6">
-        Admin Dashboard
+        {user.role === "ADMIN" ? "Central Admin" : " Branch Admin"} Dashboard
       </h1>
       <SidebarContent>
         <h1 className="text-md font-bold text-gray-600 px-4 text-center border-b border-gray-300 py-2">

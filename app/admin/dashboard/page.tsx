@@ -10,9 +10,8 @@ import { useEffect } from "react";
 import Admit from "@/admincomponents/Admit";
 import Marksheet from "@/admincomponents/Marksheet";
 import Certificate from "@/admincomponents/Certificate";
-import Form from "@/admincomponents/Form";
+import Form from "@/admincomponents/ExamRegForm";
 import ExamForms from "@/app/_components/examforms";
-import AdmitCards from "@/app/_components/admitcards";
 import Marksheets from "@/app/_components/marksheets";
 import IDCardDownload from "@/components/downloads/id_card";
 import AdmitCardDownload from "@/components/downloads/admit_card";
@@ -20,10 +19,9 @@ import MarksheetDownload from "@/components/downloads/mark_sheet";
 import CertificateDownload from "@/components/downloads/certi_ficate";
 import CourseFee from "@/components/fees/CourseFee";
 import ExamFee from "@/components/fees/ExamFee";
-import IDCardApproval from "@/components/approval/Aidcard";
-import AdmitCardApproval from "@/components/approval/Aadmit";
+
+import ExamFormApproval from "@/components/approval/Aadmit";
 import MarksheetApproval from "@/components/approval/Amarksheet";
-import CertificateApproval from "@/components/approval/Acertificate";
 import EnrollmentApproval from "@/components/approval/Aenrollment";
 
 export default function AdminDashboard() {
@@ -56,8 +54,7 @@ export default function AdminDashboard() {
         return <Form />;
       case "EXAM FORMS":
         return <ExamForms />;
-      case "ADMIT CARDS":
-        return <AdmitCards />;
+
       case "MARKSHEETS":
         return <Marksheets />;
       case "ID CARD DOWNLOAD":
@@ -74,14 +71,11 @@ export default function AdminDashboard() {
         return <ExamFee />;
       case "ENROLLMENTS APPROVAL":
         return <EnrollmentApproval />;
-      case "ID CARDS APPROVAL":
-        return <IDCardApproval />;
-      case "ADMIT CARDS APPROVAL":
-        return <AdmitCardApproval />;
+
+      case "EXAM FORM APPROVAL":
+        return <ExamFormApproval />;
       case "MARKSHEETS APPROVAL":
         return <MarksheetApproval />;
-      case "CERTIFICATES APPROVAL":
-        return <CertificateApproval />;
     }
   };
   return (

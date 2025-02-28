@@ -35,7 +35,6 @@ const EnrollmentList = () => {
     fetchfn();
   }, []);
 
-
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const currentEnrollments = enrollments.slice(
     startIndex,
@@ -71,7 +70,7 @@ const EnrollmentList = () => {
               {enrollment.name}
             </div>
             <div>{enrollment.Enrollmentno}</div>
-            <span>{enrollment.createdAt}</span>
+            <span>{new Date(enrollment.createdAt).toDateString()}</span>
             <div className="flex items-center justify-center w-1/2 p-1 mx-auto gap-2 bg-gray-50 rounded-2xl">
               <span
                 className={
