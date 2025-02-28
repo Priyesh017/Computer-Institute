@@ -6,6 +6,13 @@ interface iDatatype {
   password?: string;
   enrollmentNo?: string;
   id?: number;
+  EnrollmentNo?: string;
+  marks?: any;
+  remarks?: "pass" | "fail";
+  grade?: string;
+  percentage?: number;
+  totalMarks?: number;
+  year?: string;
 }
 
 const ApiEnd = axios.create({

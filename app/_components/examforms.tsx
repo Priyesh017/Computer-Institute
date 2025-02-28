@@ -12,65 +12,67 @@ import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
-import Form from "@/admincomponents/Form";
+import Form from "@/admincomponents/ExamRegForm";
 
 export interface Enrollment {
   name: string;
-  Enrollmentno: string;
-  activated: boolean;
+  EnrollmentNo: string;
+  verified: boolean;
   id: number;
   createdAt: string;
+  enrollment: {
+    name: string;
+  };
 }
 
 const PAGE_SIZE = 5;
 
 const ExamForm = () => {
-  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [exmforms, setexmforms] = useState<Enrollment[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedEnrollment, setSelectedEnrollment] =
-    useState<Enrollment | null>(null);
+  const [selectedexmform, setselectedexmform] = useState<Enrollment | null>(
+    null
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNew, setIsNew] = useState(true);
 
   const fetchfn = async () => {
-    const data = await fetcherWc("/AllEnrollments", "GET");
-    console.log(data);
-    setEnrollments(data);
+    const data = await fetcherWc("/exmformsfetch", "GET");
+
+    setexmforms(data.data);
   };
-  console.log(enrollments);
+
+  console.log(exmforms);
   useEffect(() => {
     fetchfn();
   }, []);
 
-  const toggleActivation = async ({ activated, id }: Enrollment) => {
+  const toggleActivation = async ({ verified, id }: Enrollment) => {
     toast("plz wait");
-    if (activated) {
-      const data = await fetcherWc("/deActivateEnrollment", "POST", { id });
+    if (verified) {
+      const data = await fetcherWc("/exmformDisApprove", "POST", { id });
       console.log(data);
       if (data.ok) {
-        setEnrollments((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, activated: false } : p))
+        setexmforms((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, verified: false } : p))
         );
       }
       toast(data.ok ? "success" : "failed");
       return;
     }
 
-    const data = await fetcherWc("/ActivateEnrollment", "POST", { id });
+    const data = await fetcherWc("/exmformApprove", "POST", { id });
     console.log(data);
     if (data.ok) {
-      setEnrollments((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, activated: true } : p))
+      setexmforms((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
       );
     }
     toast(data.ok ? "success" : "failed");
   };
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const currentEnrollments = enrollments.slice(
-    startIndex,
-    startIndex + PAGE_SIZE
-  );
+  const currentEnrollments = exmforms.slice(startIndex, startIndex + PAGE_SIZE);
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
@@ -92,7 +94,7 @@ const ExamForm = () => {
             <div
               className="hover:text-violet-800"
               onClick={() => {
-                setSelectedEnrollment(enrollment);
+                setselectedexmform(enrollment);
                 setIsModalOpen(true);
                 setIsNew(false);
               }}
@@ -100,14 +102,14 @@ const ExamForm = () => {
               {isNew && (
                 <span className="w-2 h-2 bg-red-500 rounded-full"></span>
               )}
-              {enrollment.name}
+              {enrollment.enrollment.name}
             </div>
-            <div>{enrollment.Enrollmentno}</div>
+            <div>{enrollment.EnrollmentNo}</div>
             <span>{new Date(enrollment.createdAt).toDateString()}</span>
             <div className="flex items-center justify-center gap-2">
               <Switch
                 id={`activation-${startIndex + index}`}
-                checked={enrollment.activated}
+                checked={enrollment.verified}
                 onCheckedChange={() => toggleActivation(enrollment)}
                 className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
               />
@@ -129,17 +131,17 @@ const ExamForm = () => {
             <PaginationNext
               onClick={() =>
                 setCurrentPage((prev) =>
-                  startIndex + PAGE_SIZE < enrollments.length ? prev + 1 : prev
+                  startIndex + PAGE_SIZE < exmforms.length ? prev + 1 : prev
                 )
               }
-              isActive={startIndex + PAGE_SIZE < enrollments.length}
+              isActive={startIndex + PAGE_SIZE < exmforms.length}
             />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
 
       {/* Fullscreen Modal */}
-      {isModalOpen && selectedEnrollment && (
+      {isModalOpen && selectedexmform && (
         <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="relative bg-white rounded-lg shadow-xl w-full max-w-4xl h-full overflow-auto">
             <button

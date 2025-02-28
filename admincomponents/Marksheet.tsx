@@ -4,7 +4,10 @@ import { useState, useEffect, ChangeEvent } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { Trash2 } from "lucide-react";
-import { details, marks } from "@/data/index";
+import { marks } from "@/data/index";
+import { fetcherWc } from "@/helper";
+import { toast } from "react-toastify";
+import { ApiResponse, EnrollmentData } from "./ExamRegForm";
 
 interface Subject {
   subject: string;
@@ -25,21 +28,13 @@ const Marksheet = () => {
     },
   ]);
 
-  const [fd, setfd] = useState({
-    sName: "",
-    enrollNo: "",
-    swdName: "",
-    year: "",
-    courseName: "",
-    centerName: "",
-    cAddress: "",
-    dob: "",
-  });
-
   const [totalMarks, setTotalMarks] = useState<number>(0);
   const [percentage, setPercentage] = useState<number>(0);
   const [grade, setGrade] = useState<string>("N/A");
-  console.log(fd);
+  const [enrollmentNo, setenrollmentNo] = useState("");
+  const [year, setyear] = useState("");
+  const [fd, setfd] = useState<EnrollmentData>();
+
   useEffect(() => {
     anime({
       targets: ".marks-row",
@@ -77,11 +72,49 @@ const Marksheet = () => {
       setPercentage(0);
       setGrade("N/A");
     }
-  }, [subjects, fd.enrollNo]);
+  }, [subjects]);
 
-  const handlechange2 = (e: ChangeEvent<HTMLInputElement>) => {
-    setfd({ ...fd, [e.target.id]: e.target.value });
+  const details = [
+    { key: "sName", label: "Student Name", value: fd?.name || "" },
+    { key: "swdName", label: "S/W/D Name", value: fd?.father || "" },
+
+    { key: "courseName", label: "Course Name", value: fd?.course.CName || "" },
+    {
+      key: "centerName",
+      label: "Center Name",
+      value: fd?.center.Centername || "",
+    },
+    { key: "cAddress", label: "Center Address", value: fd?.address || "" },
+    {
+      key: "dob",
+      label: "Date of Birth",
+      value: fd && fd.dob ? new Date(fd.dob).toLocaleDateString() : "",
+    },
+  ];
+
+  const fetchData = async () => {
+    const data = (await fetcherWc("/exmformfillupDatafetch", "POST", {
+      enrollmentNo,
+    })) as ApiResponse;
+    setfd(data.data);
   };
+
+  const handleChange3 = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = e.target.value;
+
+    if (value.length <= 14) {
+      setenrollmentNo(value);
+    }
+  };
+
+  useEffect(() => {
+    if (enrollmentNo.length === 14) {
+      toast("plz wait while data is fetching...");
+      fetchData();
+    }
+  }, [enrollmentNo]);
 
   const getGrade = (percentage: number): string => {
     if (percentage >= 90) return "A+";
@@ -129,12 +162,23 @@ const Marksheet = () => {
     const newSubjects = subjects.filter((_, i) => i !== index);
     setSubjects(newSubjects);
   };
+  //  const { EnrollmentNo, marks, remarks, grade, percentage, totalMarks, year } =
 
   const handleSubmit = () => {
     if (!allFieldsFilled) {
       alert("Please fill all fields before submitting!");
       return;
     }
+    const data = fetcherWc("/exmmarksentry", "POST", {
+      EnrollmentNo: enrollmentNo,
+      marks: subjects,
+
+      grade,
+      percentage,
+      totalMarks,
+      year,
+    });
+    console.log(data);
     alert("Marksheet submitted successfully!");
   };
 
@@ -156,18 +200,30 @@ const Marksheet = () => {
     <div className="max-w-4xl mx-auto my-10 p-6 bg-white text-black rounded-lg shadow-lg border border-gray-300">
       <h2 className="text-3xl font-bold mb-6 text-center">Marksheet</h2>
       <div className="grid grid-cols-2 text-center gap-2 my-3">
+        <span className="font-bold">Enrollment no</span>
+
+        <input
+          type="text"
+          onChange={handleChange3}
+          placeholder="enter enrollment number"
+          className="mx-3 px-3 py-1 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
+        />
         {details.map((item, index) => (
           <div key={index} className="flex items-center">
             <span className="font-bold">{item.label}</span>
-            <input
-              type={item.type}
-              onChange={handlechange2}
-              id={item.id}
-              placeholder={item.label}
-              className="mx-3 px-3 py-1 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
-            />
+            <div className="mx-3 px-3 py-1 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600">
+              {item.value}
+            </div>
           </div>
         ))}
+        <span className="font-bold">year</span>
+        <input
+          type="text"
+          onChange={(e) => setyear(e.target.value)}
+          value={year}
+          placeholder="enter year"
+          className="mx-3 px-3 py-1 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
+        />
       </div>
       <div className="grid grid-cols-7 gap-2 text-center font-bold bg-gray-200 p-3 rounded-lg">
         <span>Subject</span>
