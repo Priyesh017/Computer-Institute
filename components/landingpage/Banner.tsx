@@ -59,12 +59,12 @@ const Banner = () => {
             <div className="bg-yellow-500 px-4 py-1 inline-block font-semibold text-black rounded-md text-sm">
               COMPUTER CENTER
             </div>
-            <p className="text-gray-900 text-sm md:text-base md:w-2/3">
-              <p className="text-md font-bold">Unlock Your Potential! 🚀</p>{" "}
+            <div className="text-gray-900 text-md md:text-base md:w-2/3">
+              <p className="text-md text-gray-900 font-bold">Unlock Your Potential! 🚀</p>{" "}
               Master in-demand digital skills with expert training at Mission
               National Youth Computer Center and step into a future of endless
               opportunities!
-            </p>
+            </div>
             <p className="text-lg font-semibold text-red-600">
               Now open for free registration
             </p>

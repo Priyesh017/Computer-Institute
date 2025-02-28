@@ -197,33 +197,39 @@ const Marksheet = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto my-10 p-6 bg-white text-black rounded-lg shadow-lg border border-gray-300">
-      <h2 className="text-3xl font-bold mb-6 text-center">Marksheet</h2>
-      <div className="grid grid-cols-2 text-center gap-2 my-3">
-        <span className="font-bold">Enrollment no</span>
-
-        <input
-          type="text"
-          onChange={handleChange3}
-          placeholder="enter enrollment number"
-          className="mx-3 px-3 py-1 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
-        />
+    <div className="max-w-4xl mx-auto my-10 p-10 bg-white text-black rounded-lg shadow-lg">
+      <h2 className="text-3xl font-bold mb-2 text-center">Marksheet</h2>
+      <p className="text-gray-500 text-center mb-6">
+        Clearly fill the form below
+      </p>
+      <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 my-6">
+        <div className="flex flex-col">
+          <label className="text-sm font-medium mb-1">Enrollment no</label>
+          <input
+            type="text"
+            onChange={handleChange3}
+            placeholder="enter enrollment number"
+            className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+          />
+        </div>
         {details.map((item, index) => (
-          <div key={index} className="flex items-center">
-            <span className="font-bold">{item.label}</span>
-            <div className="mx-3 px-3 py-1 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600">
+          <div key={index} className="flex flex-col">
+            <label className="text-sm font-medium mb-1">{item.label}</label>
+            <div className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none">
               {item.value}
             </div>
           </div>
         ))}
-        <span className="font-bold">year</span>
-        <input
-          type="text"
-          onChange={(e) => setyear(e.target.value)}
-          value={year}
-          placeholder="enter year"
-          className="mx-3 px-3 py-1 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-600"
-        />
+        <div className="flex flex-col">
+          <label className="text-sm font-medium mb-1">Year</label>
+          <input
+            type="text"
+            onChange={(e) => setyear(e.target.value)}
+            value={year}
+            placeholder="enter year"
+            className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+          />
+        </div>
       </div>
       <div className="grid grid-cols-7 gap-2 text-center font-bold bg-gray-200 p-3 rounded-lg">
         <span>Subject</span>

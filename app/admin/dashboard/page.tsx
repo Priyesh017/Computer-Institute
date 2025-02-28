@@ -3,20 +3,17 @@ import EnrollmentList from "@/app/_components/enrollments";
 import AddStudent from "@/app/_components/studentEntry";
 import IDcardForm from "@/admincomponents/IDCard";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Admit from "@/admincomponents/Admit";
 import Marksheet from "@/admincomponents/Marksheet";
 import Certificate from "@/admincomponents/Certificate";
 import Form from "@/admincomponents/ExamRegForm";
 import ExamForms from "@/app/_components/examforms";
 import Marksheets from "@/app/_components/marksheets";
-import IDCardDownload from "@/components/downloads/id_card";
-import AdmitCardDownload from "@/components/downloads/admit_card";
-import MarksheetDownload from "@/components/downloads/mark_sheet";
-import CertificateDownload from "@/components/downloads/certi_ficate";
+import AllDownloads from "@/admincomponents/AllDownloads";
 import CourseFee from "@/components/fees/CourseFee";
 import ExamFee from "@/components/fees/ExamFee";
 
@@ -28,6 +25,7 @@ export default function AdminDashboard() {
   const selectedComponent = useAuthStore((state) => state.selectedComponent);
   const { user } = useAuthStore();
   const router = useRouter();
+  const defaultOpen = useState(true)[0];
 
   useEffect(() => {
     if (!user) {
@@ -57,14 +55,8 @@ export default function AdminDashboard() {
 
       case "MARKSHEETS":
         return <Marksheets />;
-      case "ID CARD DOWNLOAD":
-        return <IDCardDownload />;
-      case "ADMIT CARD DOWNLOAD":
-        return <AdmitCardDownload />;
-      case "MARKSHEET DOWNLOAD":
-        return <MarksheetDownload />;
-      case "CERTIFICATE DOWNLOAD":
-        return <CertificateDownload />;
+      case "DOWNLOADS":
+        return <AllDownloads />;
       case "COURSE FEE":
         return <CourseFee />;
       case "EXAM FEE":
@@ -79,7 +71,8 @@ export default function AdminDashboard() {
     }
   };
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={defaultOpen}>
+      <SidebarTrigger className="absolute rounded-none z-50" />
       <div className="h-screen flex flex-col bg-gray-100 w-screen">
         {/* Navbar */}
         <div className="flex flex-1 overflow-hidden">

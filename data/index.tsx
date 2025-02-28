@@ -87,19 +87,7 @@ export const data = {
       icon: Settings2,
       items: [
         {
-          title: "Id Card Download",
-          url: "#",
-        },
-        {
-          title: "Admit Card Download",
-          url: "#",
-        },
-        {
-          title: "Marksheet Download",
-          url: "#",
-        },
-        {
-          title: "Certificate Download",
+          title: "Downloads",
           url: "#",
         },
       ],
