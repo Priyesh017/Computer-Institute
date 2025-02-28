@@ -5,6 +5,7 @@ import { FaTimes, FaBars } from "react-icons/fa";
 import { menuItems } from "@/data";
 import Link from "next/link";
 import { useAuthStore } from "@/store";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,15 +48,24 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 bg-purple-700 backdrop-blur-lg z-50 flex justify-between items-center px-4 py-2 xl:py-4 xl:text-lg shadow-lg transition-transform duration-300 ease-in-out ${
+      className={`fixed w-full top-0 text-gray-800 font-bold backdrop-blur-md z-50 flex justify-between items-center px-4 py-2 xl:text-lg shadow-lg transition-transform duration-300 ease-in-out ${
         showNavbar ? "translate-y-0" : "-translate-y-full"
       }`}
     >
-      <h1 className="text-3xl font-bold">Institution</h1>
+      <div className="flex justify-center items-center ml-6 gap-2">
+        <Image
+          src="/Logo.jpg"
+          alt="Student"
+          width={50}
+          height={50}
+          className="rounded-full shadow-lg"
+        />
+        <h1 className="text-3xl font-bold">MNYCTC</h1>
+      </div>
       <div className="md:hidden flex justify-center z-50 ">
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="text-white text-2xl"
+          className="text-gray-900 text-2xl"
         >
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
@@ -64,7 +74,7 @@ export default function Navbar() {
       {/* Desktop Menu */}
       <ul className={`md:flex space-x-6 hidden`}>
         <motion.li
-          className="fade-in cursor-pointer hover:text-indigo-300 transition-all"
+          className="fade-in cursor-pointer border-b-2 border-white/0 hover:text-purple-700 hover:border-purple-600 transition-all"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -77,7 +87,7 @@ export default function Navbar() {
           .map((item, index) => (
             <motion.li
               key={index}
-              className="fade-in cursor-pointer hover:text-indigo-300 transition-all"
+              className="fade-in cursor-pointer border-b-2 border-white/0 hover:text-purple-700 hover:border-purple-600 transition-all"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: index * 0.1 }}
@@ -88,7 +98,7 @@ export default function Navbar() {
           ))}
       </ul>
       <motion.button
-        className="hidden md:block px-6 py-2 bg-white text-indigo-800 font-bold rounded-lg shadow-lg transition-all transform hover:scale-105"
+        className="hidden md:block px-6 py-2 mr-4 ml-24 bg-white text-indigo-800 font-bold rounded-lg shadow-lg transition-all transform hover:scale-105"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         whileHover={{ scale: 1.1 }}
@@ -101,11 +111,11 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <ul className="md:hidden fixed top-16 right-0 w-fit bg-indigo-900 bg-opacity-95 backdrop-blur-lg rounded-lg p-4 mt-4 space-y-4 text-center z-40">
+        <ul className="md:hidden fixed top-16 right-0 w-fit bg-white/50 backdrop-blur-lg rounded-lg p-4 mt-4 mx-2 space-y-4 text-center z-40">
           {menuItems.map((item, index) => (
             <li
               key={index}
-              className="cursor-pointer hover:text-yellow-400 transition-all"
+              className="cursor-pointer border-b-2 border-white/0 hover:border-purple-700 transition-all"
               onClick={() => scrollToSection(item.name.toLowerCase())}
             >
               {item.name}

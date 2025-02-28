@@ -43,6 +43,19 @@ const ChooseUser = () => {
             </div>
           </button>
         </div>
+
+        {/* Student Login */}
+        <div className="p-5 text-center bg-gray-800 text-gray-400 cursor-pointer rounded-lg shadow-lg hover:bg-gray-700 hover:text-white transition w-80">
+          <button onClick={() => router.push("/checkupdates")}>
+            <div>
+              <div className="mb-4 flex justify-center">
+                <School className="text-5xl" />
+              </div>
+              <h2 className="text-lg mb-2 font-bold">Student Login</h2>
+              <p className="text-sm">Login as a Student to view student details.</p>
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   );

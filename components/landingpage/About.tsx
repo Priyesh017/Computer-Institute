@@ -9,6 +9,9 @@ import { stats } from "@/data/index";
 const AboutInfo = () => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true });
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     if (isInView && ref.current) {
@@ -28,7 +31,7 @@ const AboutInfo = () => {
   }, [isInView]);
 
   return (
-    <div className="relative min-h-screen pt-20 md:pt-40 pb-10 px-10">
+    <div className="relative min-h-screen flex items-center justify-center py-20 px-10">
       <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 50 }}
@@ -43,10 +46,7 @@ const AboutInfo = () => {
             <div className="flex gap-10 mb-4">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
-                  <span
-                    id={`stat-${index}`}
-                    className="text-3xl font-bold"
-                  >
+                  <span id={`stat-${index}`} className="text-3xl font-bold">
                     0
                   </span>
                   <p className="text-gray-600 dark:text-gray-400">
@@ -56,25 +56,31 @@ const AboutInfo = () => {
               ))}
             </div>
             <p className="text-gray-700 text-lg mb-4">
-              Get professional & innovative service for your Civil, Commercial,
-              Industrial, and Residential projects. We will make your dream
-              design come true with the perfect architecture, construction
-              documentation, and everything else you need.
+              At Mission National Youth Computer Center, we provide top-quality
+              training in cutting-edge technology. With expert instructors,
+              modern labs, and industry-focused courses, we equip students with
+              the skills needed for success in the digital world. Whether you're
+              a beginner or an advanced learner, our programs help you stay
+              ahead in technology.{" "}
+              <p className="font-bold text-center">
+                Join us and build your future today!
+              </p>
             </p>
             <motion.button
               whileHover={{ scale: 1.1 }}
               className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-lg font-medium shadow-lg"
+              onClick={() => scrollToSection("center")}
             >
               Contact Now
             </motion.button>
           </div>
           <div className="flex-1 justify-items-end">
             <Image
-              src="/project.png"
+              src="/logo.jpg"
               alt="About us"
               width={500}
               height={300}
-              className="mb-20 md:mb-2 rounded-lg shadow-lg"
+              className="mb-20 md:mb-2 rounded-lg"
             />
           </div>
         </div>

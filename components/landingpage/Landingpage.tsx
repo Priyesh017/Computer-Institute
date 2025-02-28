@@ -5,10 +5,11 @@ import anime from "animejs";
 import { FaArrowUp, FaTimes } from "react-icons/fa";
 import { contactIcons, menuItems } from "@/data";
 import Navbar from "@/components/landingpage/Navbar";
+import { X } from "lucide-react";
 
 export default function Home() {
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const [showContactOptions, setShowContactOptions] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     anime({
@@ -37,7 +38,7 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-100 to-gray-200 text-white">
+    <div className="bg-white text-white">
       <div className="min-h-screen text-white relative">
         <Navbar />
 
@@ -58,59 +59,78 @@ export default function Home() {
           </span>
         </footer>
 
-        <div className="fixed bottom-8 right-4 flex flex-col items-center space-y-3 z-50">
-          {showContactOptions && (
-            <>
-              {contactIcons.map((icons, index) => (
-                <motion.div
-                  key={index}
-                  className="bg-white text-indigo-800 p-3 rounded-full shadow-lg cursor-pointer hover:bg-indigo-300"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  onClick={() => icons.url}
-                >
-                  {icons.icon}
-                </motion.div>
-              ))}
-            </>
-          )}
+        <div className="fixed bottom-8 right-2 flex flex-col items-center z-50">
+          <div className="flex flex-row">
+            {/* Scroll to Top Arrow Button */}
+            {showScrollButton && (
+              <motion.button
+                className="bg-yellow-500 text-white mx-auto my-2 p-5 w-16 rounded-full shadow-lg hover:bg-yellow-400 transition-all"
+                onClick={scrollToTop}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                whileHover={{ scale: 1.1 }}
+              >
+                <FaArrowUp size={24} />
+              </motion.button>
+            )}
 
-          {/* Scroll to Top Arrow Button */}
-          {showScrollButton && (
-            <motion.button
-              className="bg-yellow-500 text-white p-4 rounded-full shadow-lg hover:bg-yellow-400 transition-all"
-              onClick={scrollToTop}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              whileHover={{ scale: 1.1 }}
+            {/* Enquiry Button */}
+            <motion.div
+              className="text-center font-bold p-2"
+              initial={{ y: 0 }}
+              animate={{ y: [0, -5, 0] }} // Subtle up & down animation
+              transition={{
+                repeat: Infinity,
+                duration: 1.5,
+                ease: "easeInOut",
+              }}
             >
-              <FaArrowUp size={24} />
-            </motion.button>
-          )}
+              <motion.button
+                className="bg-red-600 text-white p-4 rounded-full shadow-lg hover:bg-red-500 transition-all"
+                onClick={() => setIsModalOpen(!isModalOpen)}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                whileHover={{ scale: 1.1 }}
+              >
+                {isModalOpen ? (
+                  <FaTimes size={30} />
+                ) : (
+                  <p className="text-lg font-bold">Enquiry</p>
+                )}
+              </motion.button>
+            </motion.div>
+          </div>
 
-          {/* Contact Us Button */}
-          <motion.div
-            className="text-center font-bold p-2"
-            initial={{ y: 0 }}
-            animate={{ y: [0, -5, 0] }} // Subtle up & down animation
-            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-          >
-            <motion.button
-              className="bg-red-600 text-white p-4 rounded-full shadow-lg hover:bg-rose-600 transition-all"
-              onClick={() => setShowContactOptions(!showContactOptions)}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              whileHover={{ scale: 1.1 }}
+          {/* Enquiry Form */}
+          {isModalOpen && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="absolute bottom-24 right-2 w-64 p-5 bg-white text-gray-900 rounded-2xl shadow-xl border border-gray-300"
             >
-              {showContactOptions ? (
-                <FaTimes size={24} />
-              ) : (
-                <p className="font-bold">Contact Us</p>
-              )}
-            </motion.button>
-          </motion.div>
+              <h2 className="text-lg font-semibold mb-3">Enquiry Form</h2>
+              <input
+                type="text"
+                placeholder="Your Name"
+                className="w-full p-2 mb-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-400"
+              />
+              <input
+                type="email"
+                placeholder="Your Email"
+                className="w-full p-2 mb-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-400"
+              />
+              <textarea
+                placeholder="Your Message"
+                className="w-full p-2 bg-gray-100 text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-400"
+              />
+              <button className="w-full mt-3 bg-violet-600 hover:bg-violet-500 text-gray-100 font-semibold py-2 rounded-lg">
+                Submit
+              </button>
+            </motion.div>
+          )}
         </div>
       </div>
     </div>
