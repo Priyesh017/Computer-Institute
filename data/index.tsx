@@ -45,6 +45,32 @@ export const data = {
       ],
     },
     {
+      title: "Enquiry",
+      url: "#",
+      role: "admin",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: "Enquiry",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Gallery",
+      url: "#",
+      role: "admin",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: "Gallery Insertion",
+          url: "#",
+        },
+      ],
+    },
+    {
       title: "Education",
       role: "center",
       url: "#",
@@ -194,11 +220,30 @@ export const images = [
 
 // Map
 export const markers = [
-  { position: [28.6139, 77.209], label: "New Delhi" },
-  { position: [19.076, 72.8777], label: "Mumbai" },
-  { position: [13.0827, 80.2707], label: "Chennai" },
-  { position: [22.5726, 88.3639], label: "Kolkata" },
-  { position: [12.9716, 77.5946], label: "Bangalore" },
+  {
+    position: [23.24787204917826, 87.0755423782607],
+    label: "Jaltaki gora, Bankura - Raniganj Rd, Bankura, West Bengal: 722101",
+  },
+  {
+    position: [22.815395509826303, 86.64094832383695],
+    label:
+      "RJ8R+39W Vivekanand Computer training center Jhilimili, বিবেকানন্দ কম্পিউটার ট্রেনিং সেন্টার ঝিলিমিলি, Jhilimili Rd, Jhilimili, West Bengal: 722148",
+  },
+  {
+    position: [22.441094189000548, 86.99271726615162],
+    label:
+      "Jhargram National Youth Computer Center & Mind Mantra Abacus Jhargram, Chandra Apartment, Raj College Road, Jhargram, West Bengal: 721507",
+  },
+  {
+    position: [23.15471920640986, 87.32319480850578],
+    label:
+      "583F+R79 Radhanagar Youth Computer Training Centre, Radha Nagar, West Bengal: 722157",
+  },
+  {
+    position: [22.261376592341517, 87.01470513916067],
+    label:
+      "Lodhasuli - Ragra Main Rd, Khas Jangal, Lakshi Sagar, West Bengal: 721507",
+  },
 ];
 
 // IDCard Form

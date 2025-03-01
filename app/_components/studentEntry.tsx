@@ -190,7 +190,7 @@ const AddStudent: React.FC = () => {
               htmlFor="name"
               className="block text-sm font-medium text-gray-700"
             >
-              enrollment No
+              Enrollment No
             </label>
             <input
               id="enrollmentNo"

@@ -52,8 +52,8 @@ const MapComponent = () => {
 
   return (
     <MapContainer
-      center={[23.336274082365158, 88.0103070358758]} // Center view of India
-      zoom={7}
+      center={[22.913277978815863, 87.0079102124601]}
+      zoom={8}
       scrollWheelZoom={true}
       style={{ height: "500px", width: "70%" }}
       className="relative top-[-20] md:min-w-[50%] min-w-fit z-10"

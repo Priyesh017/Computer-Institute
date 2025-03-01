@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { fetcherWc } from "@/helper";
 import { useAuthStore } from "@/store";
 import { useRouter } from "next/navigation";
@@ -140,6 +141,12 @@ export default function LoginPage() {
             </div>
           )}
         </form>
+        <Button
+          className="mt-5 text-md font-bold bg-purple-600 hover:bg-purple-700"
+          onClick={() => router.push("/chooseuser")}
+        >
+          Back
+        </Button>
       </div>
 
       {/* Right Side: Background Image */}

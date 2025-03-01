@@ -41,7 +41,7 @@ const ExamFee = () => {
     startIndex,
     startIndex + PAGE_SIZE
   );
-  const saveHandler;
+  // const saveHandler;
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
       <h2 className="text-xl text-center font-bold mb-6"></h2>
@@ -83,7 +83,7 @@ const ExamFee = () => {
             <span>600</span>
             <Button
               className="mx-4 bg-green-600 hover:bg-green-500"
-              onClick={saveHandler}
+              // onClick={saveHandler}
             >
               Save
             </Button>

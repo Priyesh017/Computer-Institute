@@ -8,6 +8,7 @@ import { marks } from "@/data/index";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import { ApiResponse, EnrollmentData } from "./ExamRegForm";
+import Dropdown from "@/components/DropDown";
 
 interface Subject {
   subject: string;
@@ -117,13 +118,13 @@ const Marksheet = () => {
   }, [enrollmentNo]);
 
   const getGrade = (percentage: number): string => {
-    if (percentage >= 90) return "A+";
-    if (percentage >= 80) return "A";
-    if (percentage >= 70) return "B+";
-    if (percentage >= 60) return "B";
-    if (percentage >= 50) return "C";
-    if (percentage >= 40) return "D";
-    return "F";
+    if (percentage >= 90) return "AA";
+    if (percentage >= 80) return "A+";
+    if (percentage >= 70) return "A";
+    if (percentage >= 60) return "B+";
+    if (percentage >= 50) return "B";
+    if (percentage >= 40) return "C";
+    return "D";
   };
 
   const allFieldsFilled = subjects.every(
@@ -197,6 +198,25 @@ const Marksheet = () => {
     );
   };
 
+  // Calculate totals
+  const totalTheoryFullMarks = subjects.reduce(
+    (sum, subj) => sum + parseInt(subj.theoryFullMarks || "0"),
+    0
+  );
+  const totalPracticalFullMarks = subjects.reduce(
+    (sum, subj) => sum + parseInt(subj.practicalFullMarks || "0"),
+    0
+  );
+  const totalTheoryMarks = subjects.reduce(
+    (sum, subj) => sum + (parseInt(subj.theoryMarks) || 0),
+    0
+  );
+  const totalPracticalMarks = subjects.reduce(
+    (sum, subj) => sum + (parseInt(subj.practicalMarks) || 0),
+    0
+  );
+  const grandTotal = totalTheoryMarks + totalPracticalMarks;
+
   return (
     <div className="max-w-4xl mx-auto my-10 p-10 bg-white text-black rounded-lg shadow-lg">
       <h2 className="text-3xl font-bold mb-2 text-center">Marksheet</h2>
@@ -264,7 +284,7 @@ const Marksheet = () => {
                     e.target.value
                   )
                 }
-                className="p-2 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="p-2 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
               />
             ))}
             <p className="text-center font-bold text-blue-500">
@@ -278,6 +298,22 @@ const Marksheet = () => {
             </button>
           </motion.div>
         ))}
+
+        {/* Totals Section */}
+        <motion.div
+          className="mt-6 p-4 bg-gray-200 rounded-lg text-gray-800 font-semibold grid grid-cols-7 text-center"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <p>Total</p>
+          <p className="text-blue-600">{totalTheoryFullMarks}</p>
+          <p className="text-blue-600">{totalPracticalFullMarks}</p>
+          <p className="text-green-600">{totalTheoryMarks}</p>
+          <p className="text-green-600">{totalPracticalMarks}</p>
+          <p className="text-purple-600 pl-3">{grandTotal}</p>
+        </motion.div>
+
         <button
           onClick={handleAddRow}
           className={`w-full p-3 rounded text-white font-bold ${
@@ -290,9 +326,10 @@ const Marksheet = () => {
           + Add New Row
         </button>
       </div>
-      <div className="grid grid-cols-3 gap-2 mt-6 text-center">
+
+      <div className="grid grid-cols-4 items-center justify-center gap-2 mt-6 text-center">
         <motion.p className="text-lg font-semibold">
-          Total Marks: <span className="text-blue-500">{totalMarks}</span>
+          Grand Total: <span className="text-blue-500">{totalMarks}</span>
         </motion.p>
         <motion.p className="text-lg font-semibold text-center">
           Percentage: <span className="text-green-500">{percentage}%</span>
@@ -300,11 +337,12 @@ const Marksheet = () => {
         <motion.p className="text-lg font-semibold text-center">
           Grade: <span className="text-purple-500">{grade}</span>
         </motion.p>
+        <Dropdown />
       </div>
-      <div className="mt-4 flex justify-between">
+      <div className="mt-4 flex justify-between gap-4">
         <button
           onClick={handlePreview}
-          className={`w-1/2 p-2 rounded text-white font-bold mx-2 ${
+          className={`w-1/2 p-2 rounded text-white font-bold ${
             allFieldsFilled
               ? "bg-blue-600 hover:bg-blue-700"
               : "bg-gray-500 cursor-not-allowed"
@@ -315,7 +353,7 @@ const Marksheet = () => {
         </button>
         <button
           onClick={handleSubmit}
-          className={`w-1/2 p-2 rounded text-white font-bold mx-2 ${
+          className={`w-1/2 p-2 rounded text-white font-bold ${
             allFieldsFilled
               ? "bg-green-600 hover:bg-green-700"
               : "bg-gray-500 cursor-not-allowed"
