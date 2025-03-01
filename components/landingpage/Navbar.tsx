@@ -48,7 +48,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed w-full top-0 text-gray-800 font-bold backdrop-blur-md z-50 flex justify-between items-center px-4 py-2 xl:text-lg shadow-lg transition-transform duration-300 ease-in-out ${
+      className={`fixed w-full top-0 text-gray-800 font-bold backdrop-blur-md z-40 flex justify-between items-center px-4 py-2 xl:text-lg shadow-lg transition-transform duration-300 ease-in-out ${
         showNavbar ? "translate-y-0" : "-translate-y-full"
       }`}
     >
@@ -74,7 +74,7 @@ export default function Navbar() {
       {/* Desktop Menu */}
       <ul className={`md:flex space-x-6 hidden`}>
         <motion.li
-          className="fade-in cursor-pointer border-b-2 border-white/0 hover:text-purple-700 hover:border-purple-600 transition-all"
+          className="fade-in cursor-pointer border-b-2 border-white/0 hover:text-purple-600 hover:border-purple-600 transition-all"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -87,7 +87,7 @@ export default function Navbar() {
           .map((item, index) => (
             <motion.li
               key={index}
-              className="fade-in cursor-pointer border-b-2 border-white/0 hover:text-purple-700 hover:border-purple-600 transition-all"
+              className="fade-in cursor-pointer border-b-2 border-white/0 hover:text-purple-600 hover:border-purple-600 transition-all"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: index * 0.1 }}

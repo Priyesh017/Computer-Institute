@@ -33,13 +33,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <h1 className="text-2xl font-bold text-gray-900 text-center border-b border-gray-300 py-6">
-        {user.role === "ADMIN" ? "Central Admin" : " Branch Admin"} Dashboard
+      <h1 className="text-2xl text-ellipsis font-bold text-gray-900 text-center border-b border-gray-300 px-4 py-6 overflow-hidden">
+        {user.role === "ADMIN" ? "Central Admin" : "Branch Admin"} Dashboard
+      </h1>
+      <h1 className="text-md text-ellipsis font-bold text-gray-600 px-4 text-center border-b border-gray-300 py-2 overflow-x-hidden">
+        Welcome {user ? user.name : "Guest"}
       </h1>
       <SidebarContent>
-        <h1 className="text-md font-bold text-gray-600 px-4 text-center border-b border-gray-300 py-2">
-          Welcome {user ? user.name : "Guest"}
-        </h1>
         <NavMain items={filteredNav} />
       </SidebarContent>
       <SidebarFooter>

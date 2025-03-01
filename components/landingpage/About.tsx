@@ -55,7 +55,7 @@ const AboutInfo = () => {
                 </div>
               ))}
             </div>
-            <p className="text-gray-700 text-lg mb-4">
+            <div className="text-gray-700 text-lg mb-4">
               At Mission National Youth Computer Center, we provide top-quality
               training in cutting-edge technology. With expert instructors,
               modern labs, and industry-focused courses, we equip students with
@@ -65,7 +65,7 @@ const AboutInfo = () => {
               <p className="font-bold text-center">
                 Join us and build your future today!
               </p>
-            </p>
+            </div>
             <motion.button
               whileHover={{ scale: 1.1 }}
               className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-lg font-medium shadow-lg"
