@@ -59,7 +59,7 @@ export default function Home() {
           </span>
         </footer>
 
-        <div className="fixed bottom-8 right-2 flex flex-col items-center z-50">
+        <div className="fixed bottom-8 right-2 flex flex-col items-center z-40">
           <div className="flex flex-row">
             {/* Scroll to Top Arrow Button */}
             {showScrollButton && (
