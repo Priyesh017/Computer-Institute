@@ -13,28 +13,52 @@ import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
 import Marksheets from "@/admincomponents/Marksheet";
+import StudentReportCard from "./StudentReportCard";
 
-export interface Enrollment {
-  name: string;
-  Enrollmentno: string;
-  activated: boolean;
+type Mark = {
+  subject: string;
+  theoryMarks: string;
+  practicalMarks: string;
+  theoryFullMarks: string;
+  practicalFullMarks: string;
+};
+
+export type MarksWithEnrollment = {
   id: number;
-  createdAt: string;
-}
-
+  marks: Mark[];
+  remarks: "PASS" | "FAIL";
+  EnrollmentNo: string;
+  grade: string;
+  totalMarks: number;
+  percentage: number;
+  verified: boolean;
+  createdAt: Date;
+  year: string;
+  enrollment: {
+    name: string;
+    father: string;
+    dob: Date;
+    course: {
+      CName: string;
+    };
+    center: {
+      Centername: string;
+      address: string;
+    };
+  };
+};
 const PAGE_SIZE = 5;
 
 const ExamForm = () => {
-  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [enrollments, setEnrollments] = useState<MarksWithEnrollment[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedEnrollment, setSelectedEnrollment] =
-    useState<Enrollment | null>(null);
+    useState<MarksWithEnrollment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNew, setIsNew] = useState(true);
 
   const fetchfn = async () => {
     const data = await fetcherWc("/marksheetfetch", "GET");
-    console.log(data);
     setEnrollments(data.data);
   };
 
@@ -42,14 +66,15 @@ const ExamForm = () => {
     fetchfn();
   }, []);
 
-  const toggleActivation = async ({ activated, id }: Enrollment) => {
+  const toggleActivation = async ({ verified, id }: MarksWithEnrollment) => {
     toast("plz wait");
-    if (activated) {
-      const data = await fetcherWc("/exmmarksApprove", "POST", { id });
+
+    if (verified) {
+      const data = await fetcherWc("/exmformDisApprove", "POST", { id });
       console.log(data);
       if (data.ok) {
         setEnrollments((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, activated: false } : p))
+          prev.map((p) => (p.id === id ? { ...p, verified: false } : p))
         );
       }
       toast(data.ok ? "success" : "failed");
@@ -60,7 +85,7 @@ const ExamForm = () => {
     console.log(data);
     if (data.ok) {
       setEnrollments((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, activated: true } : p))
+        prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
       );
     }
     toast(data.ok ? "success" : "failed");
@@ -82,7 +107,7 @@ const ExamForm = () => {
         <span>Approval</span>
       </div>
       <div>
-        {currentEnrollments.map((enrollment: Enrollment, index: number) => (
+        {currentEnrollments.map((d, index: number) => (
           <div
             key={index}
             className={`click grid grid-cols-4 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer ${
@@ -92,7 +117,7 @@ const ExamForm = () => {
             <div
               className="hover:text-violet-800"
               onClick={() => {
-                setSelectedEnrollment(enrollment);
+                setSelectedEnrollment(d);
                 setIsModalOpen(true);
                 setIsNew(false);
               }}
@@ -100,15 +125,15 @@ const ExamForm = () => {
               {isNew && (
                 <span className="w-2 h-2 bg-red-500 rounded-full"></span>
               )}
-              {enrollment.name}
+              {d.enrollment.name}
             </div>
-            <div>{enrollment.Enrollmentno}</div>
-            <span>{new Date(enrollment.createdAt).toDateString()}</span>
+            <div>{d.EnrollmentNo}</div>
+            <span>{new Date(d.createdAt).toDateString()}</span>
             <div className="flex items-center justify-center gap-2">
               <Switch
                 id={`activation-${startIndex + index}`}
-                checked={enrollment.activated}
-                onCheckedChange={() => toggleActivation(enrollment)}
+                checked={d.verified}
+                onCheckedChange={() => toggleActivation(d)}
                 className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
               />
             </div>
@@ -148,7 +173,7 @@ const ExamForm = () => {
             >
               <X size={24} className="hover:text-red-600" />
             </button>
-            <Marksheets />
+            <StudentReportCard selectedEnrollment={selectedEnrollment} />
           </div>
         </div>
       )}

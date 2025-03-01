@@ -2,10 +2,16 @@
 import { useAuthStore } from "@/store";
 import axios from "axios";
 import { useCallback, useEffect } from "react";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 
 export default function App({ children }: { children: React.ReactNode }) {
   const apiUrl = process.env.NEXT_PUBLIC_SERVER_ENDPOINT;
   const { login } = useAuthStore();
+  const queryClient = new QueryClient();
 
   const checkLoginState = useCallback(async () => {
     try {
@@ -25,5 +31,7 @@ export default function App({ children }: { children: React.ReactNode }) {
     checkLoginState();
   }, [checkLoginState]);
 
-  return <>{children}</>;
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
 }

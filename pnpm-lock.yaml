@@ -50,6 +50,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.6
         version: 1.1.8(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@tanstack/react-query':
+        specifier: ^5.66.11
+        version: 5.66.11(react@19.0.0)
       animejs:
         specifier: ^3.2.2
         version: 3.2.2
@@ -1207,6 +1210,14 @@ packages:
 
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
+
+  '@tanstack/query-core@5.66.11':
+    resolution: {integrity: sha512-ZEYxgHUcohj3sHkbRaw0gYwFxjY5O6M3IXOYXEun7E1rqNhsP8fOtqjJTKPZpVHcdIdrmX4lzZctT4+pts0OgA==}
+
+  '@tanstack/react-query@5.66.11':
+    resolution: {integrity: sha512-uPDiQbZScWkAeihmZ9gAm3wOBA1TmLB1KCB1fJ1hIiEKq3dTT+ja/aYM7wGUD+XiEsY4sDSE7p8VIz/21L2Dow==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@types/animejs@3.1.13':
     resolution: {integrity: sha512-yWg9l1z7CAv/TKpty4/vupEh24jDGUZXv4r26StRkpUPQm04ztJaftgpto8vwdFs8SiTq6XfaPKCSI+wjzNMvQ==}
@@ -3867,6 +3878,13 @@ snapshots:
   '@swc/helpers@0.5.15':
     dependencies:
       tslib: 2.8.1
+
+  '@tanstack/query-core@5.66.11': {}
+
+  '@tanstack/react-query@5.66.11(react@19.0.0)':
+    dependencies:
+      '@tanstack/query-core': 5.66.11
+      react: 19.0.0
 
   '@types/animejs@3.1.13': {}
 

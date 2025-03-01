@@ -12,27 +12,39 @@ import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
-import Form from "@/admincomponents/ExamRegForm";
 
-export interface Enrollment {
-  name: string;
+type DataItem = {
+  id: number;
   EnrollmentNo: string;
   verified: boolean;
-  id: number;
   createdAt: string;
   enrollment: {
     name: string;
+    mobileNo: string;
+    wpNo: string;
+    Enrollmentno: string;
+    address: string;
+    center: {
+      Centername: string;
+    };
+    IdCardNo: string;
+    amount: number | null;
+    course: {
+      CName: string;
+    };
   };
-}
+};
+
+type ApiResponse = {
+  data: DataItem[];
+};
 
 const PAGE_SIZE = 5;
 
 const ExamForm = () => {
-  const [exmforms, setexmforms] = useState<Enrollment[]>([]);
+  const [exmforms, setexmforms] = useState<DataItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedexmform, setselectedexmform] = useState<Enrollment | null>(
-    null
-  );
+  const [selectedexmform, setselectedexmform] = useState<DataItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNew, setIsNew] = useState(true);
 
@@ -47,7 +59,7 @@ const ExamForm = () => {
     fetchfn();
   }, []);
 
-  const toggleActivation = async ({ verified, id }: Enrollment) => {
+  const toggleActivation = async ({ verified, id }: DataItem) => {
     toast("plz wait");
     if (verified) {
       const data = await fetcherWc("/exmformDisApprove", "POST", { id });
@@ -84,7 +96,7 @@ const ExamForm = () => {
         <span>Approval</span>
       </div>
       <div>
-        {currentEnrollments.map((enrollment: Enrollment, index: number) => (
+        {currentEnrollments.map((enrollment, index: number) => (
           <div
             key={index}
             className={`click grid grid-cols-4 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer ${
@@ -150,10 +162,53 @@ const ExamForm = () => {
             >
               <X size={24} className="hover:text-red-600" />
             </button>
-            <Form />
+            <EnrollmentDetails enrollment={selectedexmform} />
           </div>
         </div>
       )}
+    </div>
+  );
+};
+
+const EnrollmentDetails = ({ enrollment }: { enrollment: DataItem }) => {
+  const data = {
+    id: enrollment.id,
+    EnrollmentNo: enrollment.EnrollmentNo,
+    verified: enrollment.verified,
+    createdAt: enrollment.createdAt,
+    name: enrollment.enrollment.name,
+    mobileNo: enrollment.enrollment.name,
+    wpNo: enrollment.enrollment.name,
+    Enrollmentno: enrollment.enrollment.name,
+    address: enrollment.enrollment.name,
+
+    Centername: enrollment.enrollment.center.Centername,
+
+    IdCardNo: enrollment.enrollment.IdCardNo,
+    amount: enrollment.enrollment.amount,
+
+    CName: enrollment.enrollment.course.CName,
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-xl border border-gray-200">
+      <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+        Enrollment Details
+      </h2>
+      <div className="grid grid-cols-2 gap-4 text-gray-700">
+        {Object.entries(data).map(([key, value]) => (
+          <div key={key} className="p-3 border-b border-gray-300">
+            <span className="font-semibold capitalize text-gray-600">
+              {key.replace(/([A-Z])/g, " $1").trim()}:
+            </span>
+            <span className="block text-gray-900">
+              {key === "createdAt"
+                ? new Date(value as string).toDateString()
+                : value || "-"}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

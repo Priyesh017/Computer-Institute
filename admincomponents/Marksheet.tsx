@@ -164,12 +164,12 @@ const Marksheet = () => {
   };
   //  const { EnrollmentNo, marks, remarks, grade, percentage, totalMarks, year } =
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!allFieldsFilled) {
-      alert("Please fill all fields before submitting!");
+      toast("Please fill all fields before submitting!");
       return;
     }
-    const data = fetcherWc("/exmmarksentry", "POST", {
+    const data = await fetcherWc("/exmmarksentry", "POST", {
       EnrollmentNo: enrollmentNo,
       marks: subjects,
 
@@ -178,8 +178,9 @@ const Marksheet = () => {
       totalMarks,
       year,
     });
-    console.log(data);
-    alert("Marksheet submitted successfully!");
+    data.ok
+      ? toast("Marksheet submitted successfully!")
+      : toast("error happened");
   };
 
   const handlePreview = () => {

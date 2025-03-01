@@ -43,6 +43,8 @@ const ExamForm = () => {
   const [fd, setfd] = useState<EnrollmentData>();
   const [loading, setLoading] = useState(false);
   const [enrollmentNo, setEnrollmentNo] = useState<string>("");
+  const [ATI_CODE, setATI_CODE] = useState<string>("");
+  const [ExamCenterCode, setExamCenterCode] = useState<string>("");
 
   const examFields = [
     { key: "firstName", label: "Name", value: fd?.name || "" },
@@ -99,6 +101,8 @@ const ExamForm = () => {
 
     const response = await fetcherWc("/examFormFillup", "POST", {
       enrollmentNo,
+      ATI_CODE,
+      ExamCenterCode,
     });
 
     if (response.ok) {
@@ -150,6 +154,26 @@ const ExamForm = () => {
               </div>
             </div>
           ))}
+
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">ATI Code</label>
+            <input
+              type="text"
+              value={ATI_CODE}
+              onChange={(e) => setATI_CODE(e.target.value)}
+              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">ExamCenter Code</label>
+            <input
+              type="text"
+              value={ExamCenterCode}
+              onChange={(e) => setExamCenterCode(e.target.value)}
+              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+          </div>
         </div>
 
         <div className="flex justify-center">
