@@ -13,6 +13,8 @@ interface iDatatype {
   percentage?: number;
   totalMarks?: number;
   year?: string;
+  ExamCenterCode?: String;
+  ATI_CODE?: string;
 }
 
 const ApiEnd = axios.create({
