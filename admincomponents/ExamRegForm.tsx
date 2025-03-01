@@ -169,7 +169,7 @@ const ExamForm = () => {
             <label className="text-sm font-medium mb-1">ExamCenter Code</label>
             <input
               type="text"
-              value={enrollmentNo}
+              value={ExamCenterCode}
               onChange={(e) => setExamCenterCode(e.target.value)}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />

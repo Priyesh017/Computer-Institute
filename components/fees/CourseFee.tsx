@@ -9,6 +9,7 @@ import {
   PaginationNext,
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
+import { Button } from "../ui/button";
 
 export interface Enrollment {
   name: string;
@@ -40,23 +41,24 @@ const ExamFee = () => {
     startIndex,
     startIndex + PAGE_SIZE
   );
-
+  const saveHandler;
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl text-center font-bold mb-6">Course Fee</h2>
-      <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <h2 className="text-xl text-center font-bold mb-6"></h2>
+      <div className="grid grid-cols-7 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
         <span>Date</span>
         <span>Total Fee</span>
         <span>Fees Paid</span>
         <span>Fees Due</span>
+        <span>Action</span>
       </div>
-      <div>
+      <div className="">
         {currentEnrollments.map((enrollment: Enrollment, index: number) => (
           <div
             key={index}
-            className={`click grid grid-cols-6 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer ${
+            className={`click grid grid-cols-7 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer ${
               isNew ? "bg-rose-100" : "bg-gray-200"
             } hover:bg-blue-100`}
           >
@@ -73,6 +75,18 @@ const ExamFee = () => {
             </div>
             <div>{enrollment.Enrollmentno}</div>
             <span>{new Date(enrollment.createdAt).toDateString()}</span>
+            <span>2000</span>
+            <input
+              type="number"
+              className="p-2 rounded-md text-center bg-gray-100 text-gray-900 border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+            <span>600</span>
+            <Button
+              className="mx-4 bg-green-600 hover:bg-green-500"
+              onClick={saveHandler}
+            >
+              Save
+            </Button>
           </div>
         ))}
       </div>

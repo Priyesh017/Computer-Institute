@@ -15,7 +15,7 @@ import CourseFee from "@/components/fees/CourseFee";
 
 export default function AdminDashboard() {
   const selectedComponent = useAuthStore((state) => state.selectedComponent);
-  const { user } = useAuthStore();
+  const { user, isSidebarOpen, setSidebarOpen } = useAuthStore();
   const router = useRouter();
   const defaultOpen = useState(true)[0];
 
@@ -48,7 +48,11 @@ export default function AdminDashboard() {
   };
 
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
+    <SidebarProvider
+      defaultOpen={defaultOpen}
+      open={isSidebarOpen}
+      onOpenChange={setSidebarOpen}
+    >
       <SidebarTrigger className="absolute rounded-none z-50" />
       <div className="h-screen flex flex-col bg-gray-100 w-screen">
         {/* Navbar */}
