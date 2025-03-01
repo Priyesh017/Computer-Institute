@@ -4,15 +4,9 @@ import { motion } from "framer-motion";
 import anime from "animejs";
 import { useEffect } from "react";
 import { Download } from "lucide-react";
+import { EnrollmentType } from "@/admincomponents/AllDownloads";
 
-const downloadItems = [
-  { id: 1, name: "Student ID", file: "/downloads/student_id.pdf" },
-  { id: 2, name: "Admit Card", file: "/downloads/admit_card.pdf" },
-  { id: 3, name: "Marksheet", file: "/downloads/marksheet.pdf" },
-  { id: 4, name: "Certificate", file: "/downloads/certificate.pdf" },
-];
-
-const Downloads = () => {
+const Downloads = ({ enrollment }: { enrollment: EnrollmentType }) => {
   useEffect(() => {
     anime({
       targets: ".download-item",
@@ -23,6 +17,13 @@ const Downloads = () => {
       delay: anime.stagger(150),
     });
   }, []);
+
+  const downloadItems = [
+    { id: 1, name: "Student ID", file: enrollment.idCardLink },
+    { id: 2, name: "Admit Card", file: enrollment.admitLink },
+    { id: 3, name: "Marksheet", file: enrollment.marksheetLink },
+    { id: 4, name: "Certificate", file: enrollment.certificateLink },
+  ];
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-300 text-white p-6">

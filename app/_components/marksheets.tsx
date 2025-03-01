@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
 import Marksheets from "@/admincomponents/Marksheet";
+import StudentReportCard from "./StudentReportCard";
 
 type Mark = {
   subject: string;
@@ -22,7 +23,7 @@ type Mark = {
   practicalFullMarks: string;
 };
 
-type MarksWithEnrollment = {
+export type MarksWithEnrollment = {
   id: number;
   marks: Mark[];
   remarks: "PASS" | "FAIL";
@@ -172,7 +173,7 @@ const ExamForm = () => {
             >
               <X size={24} className="hover:text-red-600" />
             </button>
-            <Marksheets />
+            <StudentReportCard selectedEnrollment={selectedEnrollment} />
           </div>
         </div>
       )}

@@ -17,10 +17,6 @@ export const data = {
       isActive: true,
       items: [
         {
-          title: "Exam Fee",
-          url: "#",
-        },
-        {
           title: "Course Fee",
           url: "#",
         },
@@ -58,24 +54,13 @@ export const data = {
           title: "Online admission",
           url: "#",
         },
-        {
-          title: "Id Card",
-          url: "#",
-        },
-        {
-          title: "Admit Card",
-          url: "#",
-        },
+
         {
           title: "Exam Form",
           url: "#",
         },
         {
           title: "Marksheet",
-          url: "#",
-        },
-        {
-          title: "Certificate",
           url: "#",
         },
       ],
@@ -87,28 +72,7 @@ export const data = {
       icon: Settings2,
       items: [
         {
-          title: "Downloads",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Approval",
-      role: "center",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Enrollments Approval",
-          url: "#",
-        },
-
-        {
-          title: "Exam Form Approval",
-          url: "#",
-        },
-        {
-          title: "Marksheets Approval",
+          title: "All Downloads",
           url: "#",
         },
       ],
@@ -281,25 +245,6 @@ export const admitFields = [
     label: "Exam Center Code",
     type: "text",
   },
-];
-
-// Certificate Form
-export const certFields = [
-  { key: "sName", label: "Student Name", type: "text" },
-  { key: "sdwName", label: "S/D/W Name", type: "text" },
-  { key: "courseName", label: "Course Name", type: "text" },
-  { key: "duration", label: "Duration", type: "text" },
-  { key: "year", label: "Year", type: "text" },
-  { key: "grade", label: "Grade", type: "text" },
-  {
-    key: "enrollNo",
-    label: "Enrollment No",
-    type: "text",
-  },
-  { key: "centerName", label: "Center Name", type: "text" },
-  { key: "iDate", label: "Issued Date", type: "date" },
-  { key: "Branch", label: "Branch", type: "text" },
-  { key: "GrandTotal", label: "Grand Total", type: "text" },
 ];
 
 export const marks = [

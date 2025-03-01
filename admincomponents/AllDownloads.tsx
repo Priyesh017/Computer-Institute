@@ -9,37 +9,36 @@ import {
   PaginationNext,
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
-import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
-import { toast } from "react-toastify";
-import AllDownloads from "@/admincomponents/AllDownloads";
+import AllDownloads from "@/components/studentdashboard/Downloads";
 
-export interface Enrollment {
+export interface EnrollmentType {
+  Enrollmentno: string;
+  IdCardNo: string;
+  idCardLink: string;
+  admitLink: string;
+  certificateLink: string;
+  marksheetLink: string;
   name: string;
-  EnrollmentNo: string;
-  verified: boolean;
-  id: number;
+  dob: string;
   createdAt: string;
-  enrollment: {
-    name: string;
-  };
 }
 
 const PAGE_SIZE = 5;
 
 const ExamForm = () => {
-  const [exmforms, setexmforms] = useState<Enrollment[]>([]);
+  const [exmforms, setexmforms] = useState<EnrollmentType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedexmform, setselectedexmform] = useState<Enrollment | null>(
+  const [selectedexmform, setselectedexmform] = useState<EnrollmentType | null>(
     null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNew, setIsNew] = useState(true);
 
   const fetchfn = async () => {
-    const data = await fetcherWc("/exmformsfetch", "GET");
+    const data = await fetcherWc("/AllEnrollments", "GET");
 
-    setexmforms(data.data);
+    setexmforms(data);
   };
 
   console.log(exmforms);
@@ -47,44 +46,19 @@ const ExamForm = () => {
     fetchfn();
   }, []);
 
-  const toggleActivation = async ({ verified, id }: Enrollment) => {
-    toast("plz wait");
-    if (verified) {
-      const data = await fetcherWc("/exmformDisApprove", "POST", { id });
-      console.log(data);
-      if (data.ok) {
-        setexmforms((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, verified: false } : p))
-        );
-      }
-      toast(data.ok ? "success" : "failed");
-      return;
-    }
-
-    const data = await fetcherWc("/exmformApprove", "POST", { id });
-    console.log(data);
-    if (data.ok) {
-      setexmforms((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
-      );
-    }
-    toast(data.ok ? "success" : "failed");
-  };
-
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const currentEnrollments = exmforms.slice(startIndex, startIndex + PAGE_SIZE);
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl text-center font-bold mb-6">Exam Forms</h2>
+      <h2 className="text-xl text-center font-bold mb-6">All Enrollments</h2>
       <div className="grid grid-cols-4 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
         <span>Date</span>
-        <span>Approval</span>
       </div>
       <div>
-        {currentEnrollments.map((enrollment: Enrollment, index: number) => (
+        {currentEnrollments.map((enrollment, index: number) => (
           <div
             key={index}
             className={`click grid grid-cols-4 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer ${
@@ -102,18 +76,10 @@ const ExamForm = () => {
               {isNew && (
                 <span className="w-2 h-2 bg-red-500 rounded-full"></span>
               )}
-              {enrollment.enrollment.name}
+              {enrollment.name}
             </div>
-            <div>{enrollment.EnrollmentNo}</div>
+            <div>{enrollment.Enrollmentno}</div>
             <span>{new Date(enrollment.createdAt).toDateString()}</span>
-            <div className="flex items-center justify-center gap-2">
-              <Switch
-                id={`activation-${startIndex + index}`}
-                checked={enrollment.verified}
-                onCheckedChange={() => toggleActivation(enrollment)}
-                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
-              />
-            </div>
           </div>
         ))}
       </div>
@@ -150,7 +116,7 @@ const ExamForm = () => {
             >
               <X size={24} className="hover:text-red-600" />
             </button>
-            <AllDownloads />
+            <AllDownloads enrollment={selectedexmform} />
           </div>
         </div>
       )}

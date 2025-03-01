@@ -170,7 +170,11 @@ const EnrollmentDetails = ({ enrollment }: { enrollment: Enrollment }) => {
             <span className="font-semibold capitalize text-gray-600">
               {key.replace(/([A-Z])/g, " $1").trim()}:
             </span>
-            <span className="block text-gray-900">{value || "-"}</span>
+            <span className="block text-gray-900">
+              {key === "createdAt" || key === "dob"
+                ? new Date(value).toDateString()
+                : value || "-"}
+            </span>
           </div>
         ))}
       </div>

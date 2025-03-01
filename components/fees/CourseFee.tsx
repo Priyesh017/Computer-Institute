@@ -9,8 +9,6 @@ import {
   PaginationNext,
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
-// import { Download } from "lucide-react";
-// import { motion } from "framer-motion";
 
 export interface Enrollment {
   name: string;
@@ -45,7 +43,7 @@ const ExamFee = () => {
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl text-center font-bold mb-6">ID Card Download</h2>
+      <h2 className="text-xl text-center font-bold mb-6">Course Fee</h2>
       <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
@@ -74,19 +72,7 @@ const ExamFee = () => {
               {enrollment.name}
             </div>
             <div>{enrollment.Enrollmentno}</div>
-            <span>{enrollment.createdAt}</span>
-            <div className="flex items-center justify-center gap-2">
-              {/* <motion.a
-                // key={item.id}
-                // href={item.file}
-                download
-                className="download-item w-20 flex items-center justify-center p-2 text-gray-300 hover:text-gray-700 bg-violet-700 border border-violet-500 rounded-lg shadow-md hover:bg-violet-700/40 transition-colors cursor-pointer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Download size={20} />
-              </motion.a> */}
-            </div>
+            <span>{new Date(enrollment.createdAt).toDateString()}</span>
           </div>
         ))}
       </div>
