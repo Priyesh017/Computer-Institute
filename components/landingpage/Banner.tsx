@@ -6,7 +6,6 @@ import anime from "animejs";
 import Image from "next/image";
 
 const Banner = () => {
-  const textRef = useRef<HTMLDivElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
 
   const scrollToSection = (id: string) => {
@@ -60,7 +59,9 @@ const Banner = () => {
               COMPUTER CENTER
             </div>
             <div className="text-gray-900 text-md md:text-base md:w-2/3">
-              <p className="text-md text-gray-900 font-bold">Unlock Your Potential! 🚀</p>{" "}
+              <p className="text-md text-gray-900 font-bold">
+                Unlock Your Potential! 🚀
+              </p>{" "}
               Master in-demand digital skills with expert training at Mission
               National Youth Computer Center and step into a future of endless
               opportunities!

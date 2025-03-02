@@ -25,7 +25,7 @@ export type EnrollmentData = {
   courseId: number;
   centerid: number;
   createdAt: string;
-  amount: number | null;
+
   center: {
     Centername: string;
   };
@@ -45,6 +45,7 @@ const ExamForm = () => {
   const [enrollmentNo, setEnrollmentNo] = useState<string>("");
   const [ATI_CODE, setATI_CODE] = useState<string>("");
   const [ExamCenterCode, setExamCenterCode] = useState<string>("");
+  const [lastpaymentR, setlastpaymentR] = useState<string>("");
 
   const examFields = [
     { key: "firstName", label: "Name", value: fd?.name || "" },
@@ -56,11 +57,7 @@ const ExamForm = () => {
       value: fd?.center.Centername || "",
     },
     { key: "idCardNo", label: "ID Card No", value: fd?.IdCardNo || "" },
-    {
-      key: "lastPaymentReceiptNo",
-      label: "Last Payment Receipt No",
-      value: fd?.amount || "",
-    },
+
     {
       key: "registeredCourse",
       label: "Registered Course",
@@ -103,6 +100,7 @@ const ExamForm = () => {
       enrollmentNo,
       ATI_CODE,
       ExamCenterCode,
+      lprn: lastpaymentR,
     });
 
     if (response.ok) {
@@ -171,6 +169,17 @@ const ExamForm = () => {
               type="text"
               value={ExamCenterCode}
               onChange={(e) => setExamCenterCode(e.target.value)}
+              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">
+              Last Payment Reciept No
+            </label>
+            <input
+              type="text"
+              value={lastpaymentR}
+              onChange={(e) => setlastpaymentR(e.target.value)}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
           </div>

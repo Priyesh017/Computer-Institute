@@ -12,7 +12,6 @@ import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
-import Enroll from "@/app/_components/studentEntry";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -46,6 +45,7 @@ const EnrollmentList = () => {
 
   const toggleActivation = async ({ activated, id }: Enrollment) => {
     toast("plz wait");
+    console.log(id);
     if (activated) {
       const data = await fetcherWc("/deActivateEnrollment", "POST", { id });
       console.log(data);
@@ -84,7 +84,7 @@ const EnrollmentList = () => {
         <h2 className="text-xl font-bold">Enrollment Verify</h2>
         <Input
           type="text"
-          placeholder="Search courses..."
+          placeholder="Search enrollment..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-1/3 p-2 border border-gray-400 rounded-lg"
@@ -98,7 +98,7 @@ const EnrollmentList = () => {
         <span>Generate</span>
       </div>
       <div>
-        {currentEnrollments.map((enrollment: Enrollment, index: number) => (
+        {currentEnrollments.map((enrollment, index: number) => (
           <div
             key={index}
             className="click grid grid-cols-5 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer bg-gray-200 hover:bg-blue-100"

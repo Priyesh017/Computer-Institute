@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
 import { Button } from "../ui/button";
+import { toast } from "react-toastify";
 
 export interface Enrollment {
   name: string;
@@ -17,6 +18,13 @@ export interface Enrollment {
   activated: boolean;
   id: number;
   createdAt: string;
+  course: {
+    price: number;
+  };
+  amount?: {
+    TotalPaid: number;
+    amountRemain: number;
+  };
 }
 
 const PAGE_SIZE = 5;
@@ -24,16 +32,15 @@ const PAGE_SIZE = 5;
 const ExamFee = () => {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isNew, setIsNew] = useState(true);
-
-  const fetchfn = async () => {
-    const data = await fetcherWc("/AllEnrollments", "GET");
-    console.log(data);
-    setEnrollments(data);
-  };
-  console.log(enrollments);
+  const [feesPaid, setFeesPaid] = useState<{ [key: number]: number }>({});
+  console.log(feesPaid);
   useEffect(() => {
-    fetchfn();
+    const fetchEnrollments = async () => {
+      const data = await fetcherWc("/amountFetch", "POST");
+      setEnrollments(data.data);
+    };
+
+    fetchEnrollments();
   }, []);
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
@@ -41,10 +48,26 @@ const ExamFee = () => {
     startIndex,
     startIndex + PAGE_SIZE
   );
-  // const saveHandler;
+
+  const saveHandler = async (
+    enrollmentNo: string,
+    id: number,
+    remainingAmount: number
+  ) => {
+    toast("wait for some time...");
+    const amountPaid = feesPaid[id] || 0;
+    const data = await fetcherWc("/amountEdit", "POST", {
+      EnrollmentNo: enrollmentNo,
+      tp: amountPaid,
+      ar: remainingAmount - amountPaid,
+    });
+    if (data.ok) toast("ok");
+    else toast("not ok");
+  };
+
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl text-center font-bold mb-6"></h2>
+      <h2 className="text-xl text-center font-bold mb-6">All Course Fees</h2>
       <div className="grid grid-cols-7 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
@@ -54,41 +77,48 @@ const ExamFee = () => {
         <span>Fees Due</span>
         <span>Action</span>
       </div>
-      <div className="">
-        {currentEnrollments.map((enrollment: Enrollment, index: number) => (
-          <div
-            key={index}
-            className={`click grid grid-cols-7 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer ${
-              isNew ? "bg-rose-100" : "bg-gray-200"
-            } hover:bg-blue-100`}
-          >
+      <div>
+        {currentEnrollments.map((enrollment) => {
+          const remainingAmount =
+            enrollment.amount?.amountRemain ?? enrollment.course.price;
+          return (
             <div
-              className="hover:text-violet-800"
-              onClick={() => {
-                setIsNew(false);
-              }}
+              key={enrollment.id}
+              className="grid grid-cols-7 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer hover:bg-blue-100"
             >
-              {isNew && (
-                <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-              )}
-              {enrollment.name}
+              <div className="hover:text-violet-800">{enrollment.name}</div>
+              <div>{enrollment.Enrollmentno}</div>
+              <span>{new Date(enrollment.createdAt).toDateString()}</span>
+              <span>{enrollment.course.price}</span>
+              <input
+                type="number"
+                value={
+                  feesPaid[enrollment.id] !== undefined
+                    ? feesPaid[enrollment.id]
+                    : enrollment.amount?.TotalPaid || ""
+                }
+                onChange={(e) => {
+                  const value = parseInt(e.target.value) || 0;
+                  setFeesPaid((prev) => ({ ...prev, [enrollment.id]: value }));
+                }}
+                className="p-2 rounded-md text-center bg-gray-100 text-gray-900 border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+              />
+              <span>{remainingAmount}</span>
+              <Button
+                className="mx-4 bg-green-600 hover:bg-green-500"
+                onClick={() =>
+                  saveHandler(
+                    enrollment.Enrollmentno,
+                    enrollment.id,
+                    remainingAmount
+                  )
+                }
+              >
+                Save
+              </Button>
             </div>
-            <div>{enrollment.Enrollmentno}</div>
-            <span>{new Date(enrollment.createdAt).toDateString()}</span>
-            <span>2000</span>
-            <input
-              type="number"
-              className="p-2 rounded-md text-center bg-gray-100 text-gray-900 border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
-            />
-            <span>600</span>
-            <Button
-              className="mx-4 bg-green-600 hover:bg-green-500"
-              // onClick={saveHandler}
-            >
-              Save
-            </Button>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Pagination */}
@@ -97,7 +127,6 @@ const ExamFee = () => {
           <PaginationItem>
             <PaginationPrevious
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              isActive={currentPage !== 1}
             />
           </PaginationItem>
           <PaginationItem>
@@ -107,7 +136,6 @@ const ExamFee = () => {
                   startIndex + PAGE_SIZE < enrollments.length ? prev + 1 : prev
                 )
               }
-              isActive={startIndex + PAGE_SIZE < enrollments.length}
             />
           </PaginationItem>
         </PaginationContent>

@@ -8,13 +8,17 @@ interface iDatatype {
   id?: number;
   EnrollmentNo?: string;
   marks?: any;
-  remarks?: "pass" | "fail";
+  remarks?: "PASS" | "FAIL" | "Select";
   grade?: string;
   percentage?: number;
   totalMarks?: number;
   year?: string;
   ExamCenterCode?: String;
   ATI_CODE?: string;
+  amountPaid?: number;
+  tp?: number;
+  ar?: number;
+  lprn?: string;
 }
 
 const ApiEnd = axios.create({

@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import anime from "animejs";
 import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
-import { X, Trash2 } from "lucide-react";
-import axios from "axios";
+import { X } from "lucide-react";
+import { fetcherWc } from "@/helper";
 
 const categories = [
   "Program",
@@ -20,13 +20,13 @@ const categories = [
 ];
 
 export default function GalleryInsertion() {
-  const [images, setImages] = useState<{ category: string; src: string }[]>([]);
-  const [newCategory, setNewCategory] = useState("");
-  const [customCategories, setCustomCategories] = useState<string[]>([]);
+  const [images, setImages] = useState<
+    { category: string; src: string; file: File }[]
+  >([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const allCategories = [...categories, ...customCategories];
+  const allCategories = [...categories];
 
   const onDrop = (acceptedFiles: File[], category: string) => {
     acceptedFiles.forEach((file) => {
@@ -34,7 +34,7 @@ export default function GalleryInsertion() {
       reader.onload = () => {
         setImages((prev) => [
           ...prev,
-          { category, src: reader.result as string },
+          { category, src: reader.result as string, file },
         ]);
         anime({
           targets: ".gallery-item",
@@ -55,11 +55,32 @@ export default function GalleryInsertion() {
   const handleSave = async () => {
     setLoading(true);
     setError("");
+
     try {
-      await axios.post("/api/upload", { images });
-      setImages([]);
-    } catch (err) {
-      setError("Failed to upload images. Please try again.");
+      for (const image of images) {
+        const { url } = await fetcherWc(
+          `/generate-presigned-url?fileName=${image.file.name}&fileType=${image.file.type}&catagory=${image.category}`,
+          "GET"
+        );
+
+        if (!url) throw new Error("Failed to generate pre-signed URL");
+
+        const uploadResponse = await fetch(url, {
+          method: "PUT",
+          body: image.file,
+          headers: {
+            "Content-Type": image.file.type,
+          },
+        });
+
+        if (!uploadResponse.ok) throw new Error("Upload failed");
+
+        console.log(`Uploaded ${image.file.name} successfully!`);
+      }
+
+      setImages([]); // Clear images after successful upload
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -99,7 +120,11 @@ export default function GalleryInsertion() {
         </div>
       ))}
       {error && <p className="text-red-500">{error}</p>}
-      <Button onClick={handleSave} disabled={loading} className="w-full">
+      <Button
+        onClick={handleSave}
+        disabled={loading || images.length === 0}
+        className="w-full"
+      >
         {loading ? "Saving..." : "Save Images"}
       </Button>
     </div>
@@ -108,6 +133,7 @@ export default function GalleryInsertion() {
 
 function Dropzone({ onDrop }: { onDrop: (files: File[]) => void }) {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
   return (
     <div
       {...getRootProps()}

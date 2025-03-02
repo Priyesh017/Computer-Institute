@@ -20,24 +20,29 @@ import { useAuthStore } from "@/store";
 import { fetcherWc } from "@/helper";
 import { useRouter } from "next/navigation";
 import Downloads from "@/components/studentdashboard/Downloads";
-import Profile from "@/components/studentdashboard/Profile";
+import Profile, {
+  StudentProfileProps,
+} from "@/components/studentdashboard/Profile";
 
-export const sideMenu = [
-  {
-    icon: <User size={24} />,
-    name: "Profile",
-    section: <Profile />,
-  },
-  {
-    icon: <Download size={24} />,
-    name: "Downloads",
-    section: <Downloads />,
-  },
-];
 export default function Menu() {
-  const defaultOpen = useState(true)[0];
-  const [activeSection, setActiveSection] = useState(sideMenu[0].name);
   const { user, logout } = useAuthStore();
+  const student = useAuthStore().user as unknown as StudentProfileProps;
+
+  const defaultOpen = useState(true)[0];
+  const sideMenu = [
+    {
+      icon: <User size={24} />,
+      name: "Profile",
+      section: <Profile />,
+    },
+    {
+      icon: <Download size={24} />,
+      name: "Downloads",
+      section: <Downloads enrollment={student} />,
+    },
+  ];
+  const [activeSection, setActiveSection] = useState(sideMenu[0].name);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -45,7 +50,7 @@ export default function Menu() {
       router.push("/checkupdates");
       return;
     }
-  }, [user]);
+  }, [user, router]);
 
   const logouthandler = async () => {
     await fetcherWc("/logout", "GET");

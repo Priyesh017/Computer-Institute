@@ -12,7 +12,6 @@ import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
-import Marksheets from "@/admincomponents/Marksheet";
 import StudentReportCard from "./StudentReportCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -74,7 +73,7 @@ const ExamForm = () => {
     toast("plz wait");
 
     if (verified) {
-      const data = await fetcherWc("/exmformDisApprove", "POST", { id });
+      const data = await fetcherWc("/exmmarksDisApprove", "POST", { id });
       console.log(data);
       if (data.ok) {
         setEnrollments((prev) =>

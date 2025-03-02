@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { ChevronDown } from "lucide-react";
 
-const options = ["P", "F"];
-
-const Dropdown = () => {
+const options: Array<"PASS" | "FAIL"> = ["PASS", "FAIL"];
+interface itype {
+  selected: "PASS" | "FAIL" | "Select";
+  setSelected: Dispatch<SetStateAction<"PASS" | "FAIL" | "Select">>;
+}
+const Dropdown = ({ selected, setSelected }: itype) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("Select");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -40,7 +42,10 @@ const Dropdown = () => {
   }, [isOpen]);
 
   return (
-    <div className="relative flex justify-center items-center w-48" ref={dropdownRef}>
+    <div
+      className="relative flex justify-center items-center w-48"
+      ref={dropdownRef}
+    >
       {/* Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
