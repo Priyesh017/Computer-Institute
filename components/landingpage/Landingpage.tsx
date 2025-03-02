@@ -44,7 +44,8 @@ export default function Home() {
   };
   const handleSubmit = async () => {
     const data = await fetcher("/TakeEnquiry", "POST", fd);
-    data.ok ? toast("form submitted successfully") : toast("failed to submit");
+    if (data.ok) toast("form submitted successfully");
+    else toast("failed to submit");
   };
   return (
     <div className="bg-white text-white">

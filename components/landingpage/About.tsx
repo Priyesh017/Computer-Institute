@@ -59,9 +59,9 @@ const AboutInfo = () => {
               At Mission National Youth Computer Center, we provide top-quality
               training in cutting-edge technology. With expert instructors,
               modern labs, and industry-focused courses, we equip students with
-              the skills needed for success in the digital world. Whether you're
-              a beginner or an advanced learner, our programs help you stay
-              ahead in technology.{" "}
+              the skills needed for success in the digital world. Whether
+              you&apos;re a beginner or an advanced learner, our programs help
+              you stay ahead in technology.{" "}
               <p className="font-bold text-center">
                 Join us and build your future today!
               </p>

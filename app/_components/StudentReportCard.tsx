@@ -35,7 +35,7 @@ const StudentReportCard = ({
           <span className="font-semibold">Name:</span> {enrollment.name}
         </p>
         <p>
-          <span className="font-semibold">Father's Name:</span>{" "}
+          <span className="font-semibold">Father&apos;s Name:</span>{" "}
           {enrollment.father}
         </p>
         <p>

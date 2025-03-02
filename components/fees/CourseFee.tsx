@@ -61,7 +61,8 @@ const ExamFee = () => {
       tp: amountPaid,
       ar: remainingAmount - amountPaid,
     });
-    data.ok ? toast("ok") : toast("not ok");
+    if (data.ok) toast("ok");
+    else toast("not ok");
   };
 
   return (

@@ -39,10 +39,6 @@ type DataItem = {
   };
 };
 
-type ApiResponse = {
-  data: DataItem[];
-};
-
 const PAGE_SIZE = 5;
 
 const ExamForm = () => {
