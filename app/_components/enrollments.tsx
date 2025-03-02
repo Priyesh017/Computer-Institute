@@ -13,6 +13,8 @@ import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
 import Enroll from "@/app/_components/studentEntry";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export interface Enrollment {
   name: string;
@@ -30,7 +32,7 @@ const EnrollmentList = () => {
   const [selectedEnrollment, setSelectedEnrollment] =
     useState<Enrollment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isNew, setIsNew] = useState(true);
+  const [search, setSearch] = useState("");
 
   const fetchfn = async () => {
     const data = await fetcherWc("/AllEnrollments", "GET");
@@ -67,40 +69,48 @@ const EnrollmentList = () => {
     toast(data.ok ? "success" : "failed");
   };
 
+  const filteredEnrollment = enrollments.filter((enrollment) =>
+    enrollment.Enrollmentno.toLowerCase().includes(search.toLowerCase())
+  );
+
   const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const currentEnrollments = enrollments.slice(
+  const currentEnrollments = filteredEnrollment.slice(
     startIndex,
     startIndex + PAGE_SIZE
   );
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl text-center font-bold mb-6">Enrollment List</h2>
-      <div className="grid grid-cols-4 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <div className="flex justify-between items-center px-4 py-2">
+        <h2 className="text-xl font-bold">Enrollment Verify</h2>
+        <Input
+          type="text"
+          placeholder="Search courses..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-1/3 p-2 border border-gray-400 rounded-lg"
+        />
+      </div>
+      <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
-        <span>Enrollment No</span>
+        <span>Email ID</span>
         <span>Date</span>
         <span>Approval</span>
+        <span>Generate</span>
       </div>
       <div>
         {currentEnrollments.map((enrollment, index: number) => (
           <div
             key={index}
-            className={`click grid grid-cols-4 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer ${
-              isNew ? "bg-rose-100" : "bg-gray-200"
-            } hover:bg-blue-100`}
+            className="click grid grid-cols-5 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer bg-gray-200 hover:bg-blue-100"
           >
             <div
               className="hover:text-violet-800"
               onClick={() => {
                 setSelectedEnrollment(enrollment);
                 setIsModalOpen(true);
-                setIsNew(false);
               }}
             >
-              {isNew && (
-                <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-              )}
               {enrollment.name}
             </div>
             <div>{enrollment.Enrollmentno}</div>
@@ -113,6 +123,16 @@ const EnrollmentList = () => {
                 className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
               />
             </div>
+            <Button
+              className={`mx-4 ${
+                enrollment.activated
+                  ? "bg-purple-600 hover:bg-purple-700"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+              disabled={!enrollment.activated} // Disable if not verified
+            >
+              Generate
+            </Button>
           </div>
         ))}
       </div>

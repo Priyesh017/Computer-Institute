@@ -12,6 +12,8 @@ import ExamForms from "@/app/_components/examforms";
 import Marksheets from "@/app/_components/marksheets";
 import AllDownloads from "@/admincomponents/AllDownloads";
 import CourseFee from "@/components/fees/CourseFee";
+import Enquiry from "@/app/_components/enquiry";
+import Gallery from "@/components/GalleryForm";
 
 export default function AdminDashboard() {
   const selectedComponent = useAuthStore((state) => state.selectedComponent);
@@ -44,6 +46,10 @@ export default function AdminDashboard() {
         return <AllDownloads />;
       case "COURSE FEE":
         return <CourseFee />;
+      case "ENQUIRY":
+        return <Enquiry />;
+      case "GALLERY INSERTION":
+        return <Gallery />;
     }
   };
 
