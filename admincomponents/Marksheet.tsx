@@ -35,6 +35,9 @@ const Marksheet = () => {
   const [enrollmentNo, setenrollmentNo] = useState("");
   const [year, setyear] = useState("");
   const [fd, setfd] = useState<EnrollmentData>();
+  const [selected, setSelected] = useState<"PASS" | "FAIL" | "Select">(
+    "Select"
+  );
 
   useEffect(() => {
     anime({
@@ -163,7 +166,6 @@ const Marksheet = () => {
     const newSubjects = subjects.filter((_, i) => i !== index);
     setSubjects(newSubjects);
   };
-  //  const { EnrollmentNo, marks, remarks, grade, percentage, totalMarks, year } =
 
   const handleSubmit = async () => {
     if (!allFieldsFilled) {
@@ -173,7 +175,7 @@ const Marksheet = () => {
     const data = await fetcherWc("/exmmarksentry", "POST", {
       EnrollmentNo: enrollmentNo,
       marks: subjects,
-
+      remarks: selected,
       grade,
       percentage,
       totalMarks,
@@ -337,7 +339,7 @@ const Marksheet = () => {
         <motion.p className="text-lg font-semibold text-center">
           Grade: <span className="text-purple-500">{grade}</span>
         </motion.p>
-        <Dropdown />
+        <Dropdown selected={selected} setSelected={setSelected} />
       </div>
       <div className="mt-4 flex justify-between gap-4">
         <button

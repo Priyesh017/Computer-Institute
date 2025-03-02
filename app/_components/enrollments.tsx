@@ -85,7 +85,7 @@ const EnrollmentList = () => {
         <h2 className="text-xl font-bold">Enrollment Verify</h2>
         <Input
           type="text"
-          placeholder="Search courses..."
+          placeholder="Search enrollment..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-1/3 p-2 border border-gray-400 rounded-lg"

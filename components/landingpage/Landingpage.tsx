@@ -3,13 +3,19 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import anime from "animejs";
 import { FaArrowUp, FaTimes } from "react-icons/fa";
-import { contactIcons, menuItems } from "@/data";
+import { menuItems } from "@/data";
 import Navbar from "@/components/landingpage/Navbar";
-import { X } from "lucide-react";
-
+import { fetcher } from "@/helper";
+import { toast } from "react-toastify";
+interface etype {
+  name: string;
+  email: string;
+  message: string;
+}
 export default function Home() {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [fd, setfd] = useState<etype>({ name: "", email: "", message: "" });
 
   useEffect(() => {
     anime({
@@ -36,7 +42,10 @@ export default function Home() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
+  const handleSubmit = async () => {
+    const data = await fetcher("/TakeEnquiry", "POST", fd);
+    data.ok ? toast("form submitted successfully") : toast("failed to submit");
+  };
   return (
     <div className="bg-white text-white">
       <div className="min-h-screen text-white relative">
@@ -115,18 +124,24 @@ export default function Home() {
               <input
                 type="text"
                 placeholder="Your Name"
+                onChange={(e) => setfd({ ...fd, name: e.target.value })}
                 className="w-full p-2 mb-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-400"
               />
               <input
                 type="email"
+                onChange={(e) => setfd({ ...fd, email: e.target.value })}
                 placeholder="Your Email"
                 className="w-full p-2 mb-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-400"
               />
               <textarea
                 placeholder="Your Message"
+                onChange={(e) => setfd({ ...fd, message: e.target.value })}
                 className="w-full p-2 bg-gray-100 text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-400"
               />
-              <button className="w-full mt-3 bg-violet-600 hover:bg-violet-500 text-gray-100 font-semibold py-2 rounded-lg">
+              <button
+                className="w-full mt-3 bg-violet-600 hover:bg-violet-500 text-gray-100 font-semibold py-2 rounded-lg"
+                onClick={handleSubmit}
+              >
                 Submit
               </button>
             </motion.div>
