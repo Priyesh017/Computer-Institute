@@ -44,6 +44,7 @@ const EnrollmentList = () => {
 
   const toggleActivation = async ({ activated, id }: Enrollment) => {
     toast("plz wait");
+    console.log(id);
     if (activated) {
       const data = await fetcherWc("/deActivateEnrollment", "POST", { id });
       console.log(data);
@@ -82,7 +83,7 @@ const EnrollmentList = () => {
         <span>Approval</span>
       </div>
       <div>
-        {currentEnrollments.map((enrollment: Enrollment, index: number) => (
+        {currentEnrollments.map((enrollment, index: number) => (
           <div
             key={index}
             className={`click grid grid-cols-4 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer ${

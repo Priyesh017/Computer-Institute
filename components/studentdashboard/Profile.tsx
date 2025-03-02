@@ -19,6 +19,12 @@ export interface StudentProfileProps {
   center: string;
   course: string;
   eduqualification: string;
+  EnrollmentType: string;
+  idCardLink: string;
+  admitLink: string;
+  certificateLink: string;
+  marksheetLink: string;
+  createdAt: string;
 }
 
 const StudentProfile: React.FC = () => {

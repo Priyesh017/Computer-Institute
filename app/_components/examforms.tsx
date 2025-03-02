@@ -28,7 +28,9 @@ type DataItem = {
       Centername: string;
     };
     IdCardNo: string;
-    amount: number | null;
+    amount: {
+      lastPaymentRecieptno: string;
+    };
     course: {
       CName: string;
     };
@@ -185,7 +187,8 @@ const EnrollmentDetails = ({ enrollment }: { enrollment: DataItem }) => {
     Centername: enrollment.enrollment.center.Centername,
 
     IdCardNo: enrollment.enrollment.IdCardNo,
-    amount: enrollment.enrollment.amount,
+    "Last Payment Reciept No":
+      enrollment.enrollment.amount.lastPaymentRecieptno,
 
     CName: enrollment.enrollment.course.CName,
   };

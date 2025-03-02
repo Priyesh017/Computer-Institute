@@ -15,6 +15,10 @@ interface iDatatype {
   year?: string;
   ExamCenterCode?: String;
   ATI_CODE?: string;
+  amountPaid?: number;
+  tp?: number;
+  ar?: number;
+  lprn?: string;
 }
 
 const ApiEnd = axios.create({

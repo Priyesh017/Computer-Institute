@@ -70,7 +70,7 @@ const ExamForm = () => {
     toast("plz wait");
 
     if (verified) {
-      const data = await fetcherWc("/exmformDisApprove", "POST", { id });
+      const data = await fetcherWc("/exmmarksDisApprove", "POST", { id });
       console.log(data);
       if (data.ok) {
         setEnrollments((prev) =>

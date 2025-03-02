@@ -2,11 +2,7 @@
 import { useAuthStore } from "@/store";
 import axios from "axios";
 import { useCallback, useEffect } from "react";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function App({ children }: { children: React.ReactNode }) {
   const apiUrl = process.env.NEXT_PUBLIC_SERVER_ENDPOINT;
