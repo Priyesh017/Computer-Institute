@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { FaArrowLeft } from "react-icons/fa6";
 
 export default function LoginPage() {
   const { utype, user, login } = useAuthStore();
@@ -58,6 +59,12 @@ export default function LoginPage() {
     <div className="flex min-h-screen bg-gray-50">
       {/* Left Side: Login Form */}
       <div className="flex flex-col justify-center items-center w-full max-w-md px-8 py-12 bg-white shadow-lg md:rounded-lg">
+        <Button
+          className="absolute top-8 left-8 text-md font-bold bg-purple-600 hover:bg-purple-700"
+          onClick={() => router.push("/chooseuser")}
+        >
+          <FaArrowLeft />
+        </Button>
         <h1 className="text-3xl font-bold text-purple-900 mb-4 capitalize">
           {Role} Login
         </h1>
@@ -141,12 +148,6 @@ export default function LoginPage() {
             </div>
           )}
         </form>
-        <Button
-          className="mt-5 text-md font-bold bg-purple-600 hover:bg-purple-700"
-          onClick={() => router.push("/chooseuser")}
-        >
-          Back
-        </Button>
       </div>
 
       {/* Right Side: Background Image */}

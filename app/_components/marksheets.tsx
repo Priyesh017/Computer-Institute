@@ -263,13 +263,13 @@ const ExamForm = () => {
                 className="bg-blue-600 hover:bg-blue-700 flex-1"
                 onClick={() => handleDownload("marksheet")}
               >
-                Download Marksheet
+                Generate Marksheet
               </Button>
               <Button
                 className="bg-green-600 hover:bg-green-700 flex-1"
                 onClick={() => handleDownload("certificate")}
               >
-                Download Certificate
+                Generate Certificate
               </Button>
             </div>
           </div>

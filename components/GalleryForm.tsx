@@ -48,18 +48,6 @@ export default function GalleryInsertion() {
     });
   };
 
-  const handleAddCategory = () => {
-    if (newCategory && !customCategories.includes(newCategory)) {
-      setCustomCategories([...customCategories, newCategory]);
-      setNewCategory("");
-    }
-  };
-
-  const handleDeleteCategory = (category: string) => {
-    setCustomCategories(customCategories.filter((c) => c !== category));
-    setImages(images.filter((img) => img.category !== category));
-  };
-
   const handleDeleteImage = (src: string) => {
     setImages(images.filter((img) => img.src !== src));
   };
@@ -79,29 +67,12 @@ export default function GalleryInsertion() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6 bg-white text-gray-900 rounded-lg">
-      <div className="flex items-center gap-4">
-        <input
-          type="text"
-          placeholder="Add new category"
-          value={newCategory}
-          onChange={(e) => setNewCategory(e.target.value)}
-          className="p-2 border border-gray-300 rounded-md w-full bg-gray-100"
-        />
-        <Button onClick={handleAddCategory}>Add</Button>
-      </div>
-
       {allCategories.map((category) => (
         <div
           key={category}
           className="border p-4 rounded-lg shadow-md bg-gray-100 text-gray-900 relative"
         >
           <h2 className="text-xl font-semibold mb-4">{category}</h2>
-          <button
-            onClick={() => handleDeleteCategory(category)}
-            className="absolute top-2 right-2 bg-red-500 text-white rounded-md p-2 text-sm hover:bg-red-700"
-          >
-            <Trash2 size={18} />
-          </button>
           <Dropzone onDrop={(files) => onDrop(files, category)} />
           <div className="grid grid-cols-3 gap-4 mt-4">
             {images
