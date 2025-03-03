@@ -5,14 +5,57 @@ import { useEffect, useRef, useState } from "react";
 import anime from "animejs";
 import Image from "next/image";
 import { images } from "@/data/index";
+import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { useAuthStore } from "@/store";
+const bucketRegion = process.env.NEXT_PUBLIC_YOUR_BUCKET_REGION!;
+
+const s3Client = new S3Client({
+  region: bucketRegion,
+  credentials: {
+    accessKeyId: process.env.NEXT_PUBLIC_YOUR_ACCESS_KEY!,
+    secretAccessKey: process.env.NEXT_PUBLIC_YOUR_SECRET_KEY!,
+  },
+});
+
+if (!bucketRegion) {
+  console.error("Error: AWS region is missing");
+}
 
 const GalleryWall = () => {
   const gridRef = useRef<HTMLDivElement>(null);
-  const [selectedGallery, setSelectedGallery] = useState<{
-    name: string;
-    gallery: string[];
-  } | null>(null);
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
+  const [folder, setFolder] = useState<string | null>(null);
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
+  const { setloadingTime } = useAuthStore();
+
+  const bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME;
+
+  useEffect(() => {
+    if (!folder || !bucketName || !bucketRegion) return;
+    const fetchGalleryImages = async () => {
+      setloadingTime(true);
+      try {
+        const command = new ListObjectsV2Command({
+          Bucket: bucketName,
+          Prefix: `images/${folder}`,
+        });
+        const data = await s3Client.send(command);
+
+        const imageUrls =
+          data.Contents?.map((item) => {
+            if (!item.Key) return null;
+            return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${item.Key}`;
+          }).filter(Boolean) || [];
+
+        setGalleryImages(imageUrls as string[]);
+        setloadingTime(false);
+      } catch (error) {
+        console.error("Error fetching gallery images:", error);
+      }
+    };
+
+    fetchGalleryImages();
+  }, [folder, bucketName, bucketRegion]);
 
   useEffect(() => {
     if (!gridRef.current) return;
@@ -37,7 +80,7 @@ const GalleryWall = () => {
       >
         Our Gallery Wall
       </motion.h2>
-      {/* Fullscreen Image Modal */}
+
       {fullscreenImage && (
         <div
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50"
@@ -54,14 +97,11 @@ const GalleryWall = () => {
         </div>
       )}
 
-      {/* Selected Gallery View */}
-      {selectedGallery ? (
+      {folder ? (
         <div>
-          <h2 className="text-xl font-bold mb-4 text-center">
-            {selectedGallery.name}
-          </h2>
+          <h2 className="text-xl font-bold mb-4 text-center">{folder}</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {selectedGallery.gallery.map((src, index) => (
+            {galleryImages.map((src, index) => (
               <motion.div
                 key={index}
                 className="gallery-item relative overflow-hidden rounded-2xl shadow-lg cursor-pointer"
@@ -70,7 +110,7 @@ const GalleryWall = () => {
               >
                 <Image
                   src={src}
-                  alt={selectedGallery.name}
+                  alt={folder}
                   width={300}
                   height={200}
                   className="w-full h-48 object-cover rounded-2xl"
@@ -80,26 +120,20 @@ const GalleryWall = () => {
             ))}
           </div>
           <button
-            onClick={() => setSelectedGallery(null)}
+            onClick={() => setFolder(null)}
             className="mt-4 px-4 py-2 bg-violet-500 text-white rounded-lg hover:bg-violet-600 block mx-auto"
           >
             Back to Main Gallery
           </button>
         </div>
       ) : (
-        // Main Gallery View
         <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {(images ?? []).map((image, index) => (
+          {images?.map((image, index) => (
             <motion.div
               key={index}
               className="gallery-item relative overflow-hidden rounded-2xl shadow-lg cursor-pointer"
               whileHover={{ scale: 1.05 }}
-              onClick={() =>
-                setSelectedGallery({
-                  name: image.name,
-                  gallery: image.gallery ?? [],
-                })
-              }
+              onClick={() => setFolder(image.name)}
             >
               <Image
                 src={image.src}

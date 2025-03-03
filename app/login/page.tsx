@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { FaArrowLeft } from "react-icons/fa6";
 
 export default function LoginPage() {
-  const { utype, user, login } = useAuthStore();
+  const { utype, user, login, setloadingTime } = useAuthStore();
   const router = useRouter();
   const [toggle, setToggle] = useState(false);
   const [fd, setfd] = useState({
@@ -30,14 +30,14 @@ export default function LoginPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoader(true);
-
+    setloadingTime(true);
     const data = await fetcherWc("/loginRoute", "POST", {
       email: fd.email,
       password: fd.password,
     });
 
     setLoader(false);
-
+    setloadingTime(false);
     if (data.message === "Login successful") {
       if (data.user.role.toLowerCase() !== utype) {
         toast(`u r not authorised`);

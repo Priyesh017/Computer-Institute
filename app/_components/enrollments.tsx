@@ -10,17 +10,22 @@ import {
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
-import { X } from "lucide-react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuthStore } from "@/store";
 
-export interface Enrollment {
+interface Enrollment {
+  admitLink: string;
+  certificateLink: string;
+  dob: string; // or Date if you want to parse it
+  idCardLink: string;
+  marksheetLink: string;
   name: string;
+  createdAt: string; // or Date
   Enrollmentno: string;
-  activated: boolean;
   id: number;
-  createdAt: string;
+  activated: boolean;
 }
 
 const PAGE_SIZE = 5;
@@ -32,50 +37,55 @@ const EnrollmentList = () => {
     useState<Enrollment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const { temploading, settemploading } = useAuthStore();
+  const [totalEnrollments, setTotalEnrollments] = useState(0); // Track total count
 
-  const fetchfn = async () => {
-    const data = await fetcherWc("/AllEnrollments", "GET");
-    console.log(data);
-    setEnrollments(data);
-  };
-  console.log(enrollments);
-  useEffect(() => {
-    fetchfn();
-  }, []);
-
-  const toggleActivation = async ({ activated, id }: Enrollment) => {
-    toast("plz wait");
-    console.log(id);
-    if (activated) {
-      const data = await fetcherWc("/deActivateEnrollment", "POST", { id });
-      console.log(data);
-      if (data.ok) {
-        setEnrollments((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, activated: false } : p))
-        );
-      }
-      toast(data.ok ? "success" : "failed");
-      return;
+  const fetchEnrollments = async () => {
+    try {
+      const { enrollments, total } = await fetcherWc(
+        `/AllEnrollments?page=${currentPage}&limit=${PAGE_SIZE}`,
+        "GET"
+      );
+      setEnrollments(enrollments);
+      setTotalEnrollments(total);
+    } catch (error) {
+      console.error("Failed to fetch enrollments:", error);
     }
+  };
 
-    const data = await fetcherWc("/ActivateEnrollment", "POST", { id });
-    console.log(data);
+  useEffect(() => {
+    fetchEnrollments();
+  }, [currentPage]);
+
+  const toggleActivation = async (enrollment: Enrollment) => {
+    toast("Please wait...");
+    const endpoint = enrollment.activated
+      ? "/deActivateEnrollment"
+      : "/ActivateEnrollment";
+    const data = await fetcherWc(endpoint, "POST", { id: enrollment.id });
+
     if (data.ok) {
       setEnrollments((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, activated: true } : p))
+        prev.map((p) =>
+          p.id === enrollment.id ? { ...p, activated: !p.activated } : p
+        )
       );
+      toast("Success");
+    } else {
+      toast("Failed");
     }
-    toast(data.ok ? "success" : "failed");
+  };
+
+  const generateHandler = async (Enrollmentno: string) => {
+    toast("Generating ID...");
+    settemploading(true);
+    const data = await fetcherWc("/generateId", "POST", { Enrollmentno });
+    settemploading(false);
+    toast(data.ok ? "ID generated successfully" : "ID generation failed");
   };
 
   const filteredEnrollment = enrollments.filter((enrollment) =>
-    enrollment.Enrollmentno.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const currentEnrollments = filteredEnrollment.slice(
-    startIndex,
-    startIndex + PAGE_SIZE
+    enrollment.Enrollmentno?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -98,9 +108,9 @@ const EnrollmentList = () => {
         <span>Generate</span>
       </div>
       <div>
-        {currentEnrollments.map((enrollment, index: number) => (
+        {filteredEnrollment.map((enrollment) => (
           <div
-            key={index}
+            key={enrollment.id}
             className="click grid grid-cols-5 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer bg-gray-200 hover:bg-blue-100"
           >
             <div
@@ -116,7 +126,7 @@ const EnrollmentList = () => {
             <span>{new Date(enrollment.createdAt).toDateString()}</span>
             <div className="flex items-center justify-center gap-2">
               <Switch
-                id={`activation-${startIndex + index}`}
+                id={`activation-${enrollment.id}`}
                 checked={enrollment.activated}
                 onCheckedChange={() => toggleActivation(enrollment)}
                 className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
@@ -128,9 +138,10 @@ const EnrollmentList = () => {
                   ? "bg-purple-600 hover:bg-purple-700"
                   : "bg-gray-400 cursor-not-allowed"
               }`}
-              disabled={!enrollment.activated} // Disable if not verified
+              onClick={() => generateHandler(enrollment.Enrollmentno)}
+              disabled={!enrollment.activated || temploading}
             >
-              Generate
+              Generate ID
             </Button>
           </div>
         ))}
@@ -149,10 +160,10 @@ const EnrollmentList = () => {
             <PaginationNext
               onClick={() =>
                 setCurrentPage((prev) =>
-                  startIndex + PAGE_SIZE < enrollments.length ? prev + 1 : prev
+                  currentPage * PAGE_SIZE < totalEnrollments ? prev + 1 : prev
                 )
               }
-              isActive={startIndex + PAGE_SIZE < enrollments.length}
+              isActive={currentPage * PAGE_SIZE < totalEnrollments}
             />
           </PaginationItem>
         </PaginationContent>
@@ -166,7 +177,7 @@ const EnrollmentList = () => {
               className="absolute top-4 right-4 p-2 bg-gray-200 rounded-full hover:bg-gray-300"
               onClick={() => setIsModalOpen(false)}
             >
-              <X size={24} className="hover:text-red-600" />
+              ✖
             </button>
             <EnrollmentDetails enrollment={selectedEnrollment} />
           </div>

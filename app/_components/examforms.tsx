@@ -93,6 +93,7 @@ const ExamForm = () => {
     startIndex,
     startIndex + PAGE_SIZE
   );
+  const generateAdmit = () => {};
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
       <div className="flex justify-between items-center px-4 py-2">
@@ -149,9 +150,10 @@ const ExamForm = () => {
                   ? "bg-purple-600 hover:bg-purple-700"
                   : "bg-gray-400 cursor-not-allowed"
               }`}
+              onClick={() => generateAdmit()}
               disabled={!enrollment.verified} // Disable if not verified
             >
-              Generate
+              Generate Admit
             </Button>
           </div>
         ))}
