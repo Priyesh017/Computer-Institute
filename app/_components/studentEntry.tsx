@@ -75,12 +75,22 @@ const AddStudent: React.FC = () => {
   });
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>): void {
-    if (e.target.id == "dob") {
-      const dateValue = e.target.value; // "YYYY-MM-DD"
-      const parsedDate = new Date(dateValue);
-      setfd({ ...fd, [e.target.id]: parsedDate });
-    } else setfd({ ...fd, [e.target.id]: e.target.value });
+    const { id, value } = e.target;
+
+    setfd((prevFd) => {
+      if (id === "dob") {
+        return { ...prevFd, [id]: new Date(value) };
+      }
+
+      // Allow backspace by only restricting new character additions
+      if (id === "enrollmentNo" && value.length > 14) {
+        return prevFd;
+      }
+
+      return { ...prevFd, [id]: value };
+    });
   }
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const result = formSchema.safeParse(fd);

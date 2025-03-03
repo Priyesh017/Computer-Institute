@@ -177,7 +177,7 @@ export const categories = [
 // gallery
 export const images = [
   {
-    src: "/project.png",
+    src: "/project.png", // client upload korar por ekhane update korbo
     name: "Program",
     gallery: ["/project.png", "/project.png", "/project.png"],
   },

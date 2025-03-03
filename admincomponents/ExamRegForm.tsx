@@ -46,6 +46,7 @@ const ExamForm = () => {
   const [ATI_CODE, setATI_CODE] = useState<string>("");
   const [ExamCenterCode, setExamCenterCode] = useState<string>("");
   const [lastpaymentR, setlastpaymentR] = useState<string>("");
+  const [SemNo, setSemNo] = useState<string>("");
 
   const examFields = [
     { key: "firstName", label: "Name", value: fd?.name || "" },
@@ -180,6 +181,64 @@ const ExamForm = () => {
               type="text"
               value={lastpaymentR}
               onChange={(e) => setlastpaymentR(e.target.value)}
+              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">Semester No</label>
+            <input
+              type="text"
+              value={SemNo}
+              onChange={(e) => setSemNo(e.target.value)}
+              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">Theory Exam Date</label>
+            <input
+              type="text"
+              value={SemNo}
+              onChange={(e) => setSemNo(e.target.value)}
+              placeholder="dd/mm/yy"
+              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">
+              Practical Exam Date
+            </label>
+            <input
+              type="text"
+              value={SemNo}
+              placeholder="dd/mm/yy"
+              onChange={(e) => setSemNo(e.target.value)}
+              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">Theory Exam Time</label>
+            <input
+              type="text"
+              value={SemNo}
+              placeholder="dd/mm/yy"
+              onChange={(e) => setSemNo(e.target.value)}
+              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="text-sm font-medium mb-1">
+              Practical Exam Time
+            </label>
+            <input
+              type="text"
+              value={SemNo}
+              placeholder="dd/mm/yy"
+              onChange={(e) => setSemNo(e.target.value)}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
           </div>

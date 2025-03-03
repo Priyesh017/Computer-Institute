@@ -1,5 +1,4 @@
 // store/sidebarStore.ts
-import { Dispatch, SetStateAction } from "react";
 import { create } from "zustand";
 
 interface usertype {
@@ -19,6 +18,10 @@ interface userAuthState {
   setSidebarOpen: (s: true | false) => void;
   selectedComponent: string;
   setSelectedComponent: (component: string) => void;
+  loadingTime: boolean;
+  setloadingTime: (val: boolean) => void;
+  temploading: boolean;
+  settemploading: (val: boolean) => void;
 }
 
 const useAuthStore = create<userAuthState>((set) => ({
@@ -33,6 +36,14 @@ const useAuthStore = create<userAuthState>((set) => ({
   user: null,
   login: (userData: usertype) => set({ user: userData }),
   logout: () => set({ user: null, selectedComponent: "" }),
+  loadingTime: false,
+  setloadingTime(val) {
+    set({ loadingTime: val });
+  },
+  temploading: false, // default state
+  settemploading(val) {
+    set({ temploading: val });
+  },
 }));
 
 export { useAuthStore };

@@ -19,6 +19,8 @@ interface iDatatype {
   tp?: number;
   ar?: number;
   lprn?: string;
+  Enrollmentno?: string;
+  data?: any;
 }
 
 const ApiEnd = axios.create({
