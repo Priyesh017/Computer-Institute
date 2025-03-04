@@ -73,6 +73,7 @@ const ExamForm = () => {
       enrollmentNo,
     })) as ApiResponse;
 
+    if (data.success && data.data == null) toast("invalid enrollment id");
     setfd(data.data);
   };
 
@@ -104,7 +105,7 @@ const ExamForm = () => {
       lprn: lastpaymentR,
     });
 
-    if (response.ok) {
+    if (response.success) {
       toast("success");
     } else {
       toast("failed");

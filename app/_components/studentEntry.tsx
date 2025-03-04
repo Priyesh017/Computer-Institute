@@ -7,26 +7,105 @@ import { z } from "zod";
 import { toast } from "react-toastify";
 import { fetcherWc } from "@/helper";
 
-const frameworks = [
+const frameworksCourse = [
   {
-    value: "next.js",
-    label: "Next.js",
+    label: "DOAP",
+    value: "15",
   },
   {
-    value: "sveltekit",
-    label: "SvelteKit",
+    label: "DITA",
+    value: "16",
   },
   {
-    value: "nuxt.js",
-    label: "Nuxt.js",
+    label: "ADCA",
+    value: "17",
   },
   {
-    value: "remix",
-    label: "Remix",
+    label: "ADOAP",
+    value: "18",
   },
   {
-    value: "astro",
-    label: "Astro",
+    label: "WEBSITE DESIGNING & DEVELOPMENT",
+    value: "19",
+  },
+  {
+    label: "COMPUTER HARDWARE & NETWORKING",
+    value: "14",
+  },
+  {
+    label: "DCA",
+    value: "13",
+  },
+  {
+    label: "TYPING",
+    value: "12",
+  },
+  {
+    label: "DTP",
+    value: "11",
+  },
+  {
+    label: "KNOWLEDGE ON C/C++ PROGRAMMING",
+    value: "7",
+  },
+  {
+    label: "CCTV INSTALLATION & MAINTENANCE",
+    value: "10",
+  },
+  {
+    label: "ADVANCE EXCEL",
+    value: "9",
+  },
+  {
+    label: "PYTHON",
+    value: "8",
+  },
+  {
+    label: "Knowledge on LINUX",
+    value: "6",
+  },
+  {
+    label: "CITA",
+    value: "5",
+  },
+  {
+    label: "CCA",
+    value: "4",
+  },
+  {
+    label: "BASIC HARDWARE MAINTENANCE",
+    value: "3",
+  },
+  {
+    label: "TALLY",
+    value: "2",
+  },
+  {
+    label: "OFFICE MANAGEMENT",
+    value: "",
+  },
+  {
+    label: "BASIC COMPUTER CONCEPT",
+    value: "1",
+  },
+];
+
+const frameworksEdu = [
+  {
+    value: "8th Pass",
+    label: "8th Pass",
+  },
+  {
+    value: "10th Pass",
+    label: "10th Pass",
+  },
+  {
+    value: "12th Pass",
+    label: "12th Pass",
+  },
+  {
+    value: "Graduation",
+    label: "Graduation",
   },
 ];
 export interface tfd {
@@ -37,10 +116,10 @@ export interface tfd {
   dob: Date;
   mobile: string;
   wapp: string;
-  courseName: string;
   idno: string;
   enrollmentNo: string;
   eduqualification: string;
+  courseid: string;
 }
 
 const formSchema = z.object({
@@ -49,10 +128,10 @@ const formSchema = z.object({
   motherName: z.string().min(1, "Mother's name is required"),
   Address: z.string().min(5, "Address must be at least 5 characters long"),
   idno: z.string(),
-  courseName: z.string(),
   enrollmentNo: z.string(),
   dob: z.date(),
   eduqualification: z.string(),
+  courseid: z.string(),
   mobile: z.string().regex(/^\d{10}$/, "Invalid mobile number"),
   wapp: z.string().regex(/^\d{10}$/, "Invalid WhatsApp number"),
 });
@@ -68,8 +147,8 @@ const AddStudent: React.FC = () => {
     dob: new Date(),
     mobile: "",
     wapp: "",
-    courseName: "",
     eduqualification: "",
+    courseid: "",
     idno: "",
     enrollmentNo: "",
   });
@@ -295,11 +374,11 @@ const AddStudent: React.FC = () => {
               Course Name
             </label>
             <ComboboxDemo
-              frameworks={frameworks}
+              frameworks={frameworksCourse}
               heading={"Select Course"}
-              value={fd.courseName}
+              value={fd.courseid}
               setValue={setfd}
-              data="courseName"
+              data="courseid"
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -310,7 +389,7 @@ const AddStudent: React.FC = () => {
               Educational Qualification
             </label>
             <ComboboxDemo
-              frameworks={frameworks}
+              frameworks={frameworksEdu}
               heading={"Select Educational Qualification"}
               value={fd.eduqualification}
               setValue={setfd}

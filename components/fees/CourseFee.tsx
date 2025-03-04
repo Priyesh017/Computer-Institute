@@ -33,15 +33,17 @@ const ExamFee = () => {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [feesPaid, setFeesPaid] = useState<{ [key: number]: number }>({});
-  console.log(feesPaid);
+  const [reload, setreload] = useState(false);
+
   useEffect(() => {
     const fetchEnrollments = async () => {
       const data = await fetcherWc("/amountFetch", "POST");
       setEnrollments(data.data);
+      setreload(false);
     };
 
     fetchEnrollments();
-  }, []);
+  }, [reload]);
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const currentEnrollments = enrollments.slice(
@@ -61,8 +63,10 @@ const ExamFee = () => {
       tp: amountPaid,
       ar: remainingAmount - amountPaid,
     });
-    if (data.ok) toast("ok");
-    else toast("not ok");
+    if (data.success) {
+      toast("ok");
+      setreload(true);
+    } else toast("not ok");
   };
 
   return (
@@ -98,7 +102,7 @@ const ExamFee = () => {
                     : enrollment.amount?.TotalPaid || ""
                 }
                 onChange={(e) => {
-                  const value = parseInt(e.target.value) || 0;
+                  const value = parseInt(e.target.value);
                   setFeesPaid((prev) => ({ ...prev, [enrollment.id]: value }));
                 }}
                 className="p-2 rounded-md text-center bg-gray-100 text-gray-900 border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"

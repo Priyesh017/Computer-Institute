@@ -64,7 +64,7 @@ const EnrollmentList = () => {
       : "/ActivateEnrollment";
     const data = await fetcherWc(endpoint, "POST", { id: enrollment.id });
 
-    if (data.ok) {
+    if (data.success) {
       setEnrollments((prev) =>
         prev.map((p) =>
           p.id === enrollment.id ? { ...p, activated: !p.activated } : p
@@ -81,7 +81,7 @@ const EnrollmentList = () => {
     settemploading(true);
     const data = await fetcherWc("/generateId", "POST", { Enrollmentno });
     settemploading(false);
-    toast(data.ok ? "ID generated successfully" : "ID generation failed");
+    toast(data.success ? "ID generated successfully" : "ID generation failed");
   };
 
   const filteredEnrollment = enrollments.filter((enrollment) =>

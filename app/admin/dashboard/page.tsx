@@ -1,19 +1,44 @@
 "use client";
-import EnrollmentList from "@/app/_components/enrollments";
-import AddStudent from "@/app/_components/studentEntry";
+
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Marksheet from "@/admincomponents/Marksheet";
-import Form from "@/admincomponents/ExamRegForm";
-import ExamForms from "@/app/_components/examforms";
-import Marksheets from "@/app/_components/marksheets";
-import AllDownloads from "@/admincomponents/AllDownloads";
-import CourseFee from "@/components/fees/CourseFee";
-import Enquiry from "@/app/_components/enquiry";
-import Gallery from "@/components/GalleryForm";
+
+import dynamic from "next/dynamic";
+import Loader from "@/components/Loader";
+
+const EnrollmentList = dynamic(() => import("@/app/_components/enrollments"), {
+  loading: () => <Loader />,
+});
+const AddStudent = dynamic(() => import("@/app/_components/studentEntry"), {
+  loading: () => <p>Loading...</p>,
+});
+const Marksheet = dynamic(() => import("@/admincomponents/Marksheet"), {
+  loading: () => <p>Loading...</p>,
+});
+const Form = dynamic(() => import("@/admincomponents/ExamRegForm"), {
+  loading: () => <p>Loading...</p>,
+});
+const ExamForms = dynamic(() => import("@/app/_components/examforms"), {
+  loading: () => <p>Loading...</p>,
+});
+const Marksheets = dynamic(() => import("@/app/_components/marksheets"), {
+  loading: () => <p>Loading...</p>,
+});
+const AllDownloads = dynamic(() => import("@/admincomponents/AllDownloads"), {
+  loading: () => <p>Loading...</p>,
+});
+const CourseFee = dynamic(() => import("@/components/fees/CourseFee"), {
+  loading: () => <p>Loading...</p>,
+});
+const Enquiry = dynamic(() => import("@/app/_components/enquiry"), {
+  loading: () => <p>Loading...</p>,
+});
+const Gallery = dynamic(() => import("@/components/GalleryForm"), {
+  loading: () => <p>Loading...</p>,
+});
 
 export default function AdminDashboard() {
   const selectedComponent = useAuthStore((state) => state.selectedComponent);

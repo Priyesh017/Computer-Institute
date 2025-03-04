@@ -30,7 +30,7 @@ interface proptype {
   frameworks: ftype;
   value: string;
   setValue: React.Dispatch<React.SetStateAction<tfd>>;
-  data: "eduqualification" | "courseName";
+  data: "eduqualification" | "courseid";
 }
 
 export function ComboboxDemo({

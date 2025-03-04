@@ -72,7 +72,7 @@ export default function GalleryInsertion() {
           },
         });
         console.log(uploadResponse);
-        if (!uploadResponse.ok) throw new Error("Upload failed");
+        if (!uploadResponse.success) throw new Error("Upload failed");
 
         console.log(`Uploaded ${image.file.name} successfully!`);
       }

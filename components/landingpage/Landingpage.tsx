@@ -7,15 +7,32 @@ import { menuItems } from "@/data";
 import Navbar from "@/components/landingpage/Navbar";
 import { fetcher } from "@/helper";
 import { toast } from "react-toastify";
+import { useAuthStore } from "@/store";
+import Loader from "../Loader";
+
 interface etype {
   name: string;
   email: string;
   message: string;
 }
+
 export default function Home() {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fd, setfd] = useState<etype>({ name: "", email: "", message: "" });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const handleComplete = () => setLoading(false);
+
+    if (document.readyState === "complete") {
+      handleComplete(); // If already loaded
+    } else {
+      window.addEventListener("load", handleComplete);
+    }
+
+    return () => window.removeEventListener("load", handleComplete);
+  }, []);
 
   useEffect(() => {
     anime({
@@ -38,14 +55,18 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
+  if (loading) return <Loader />;
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
   const handleSubmit = async () => {
-    const data = await fetcher("/TakeEnquiry", "POST", fd);
-    if (data.ok) toast("form submitted successfully");
-    else toast("failed to submit");
+    try {
+      const data = await fetcher("/TakeEnquiry", "POST", fd);
+      if (data.success) toast("form submitted successfully");
+      else toast("failed to submit");
+    } catch (error) {
+      toast.error("fatal error");
+    }
   };
   return (
     <div className="bg-white text-white">

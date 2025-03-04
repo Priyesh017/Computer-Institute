@@ -65,23 +65,23 @@ const ExamForm = () => {
     if (verified) {
       const data = await fetcherWc("/exmformDisApprove", "POST", { id });
       console.log(data);
-      if (data.ok) {
+      if (data.success) {
         setexmforms((prev) =>
           prev.map((p) => (p.id === id ? { ...p, verified: false } : p))
         );
       }
-      toast(data.ok ? "success" : "failed");
+      toast(data.success ? "success" : "failed");
       return;
     }
 
     const data = await fetcherWc("/exmformApprove", "POST", { id });
     console.log(data);
-    if (data.ok) {
+    if (data.success) {
       setexmforms((prev) =>
         prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
       );
     }
-    toast(data.ok ? "success" : "failed");
+    toast(data.success ? "success" : "failed");
   };
 
   const filteredEnrollment = exmforms.filter((enrollment) =>
