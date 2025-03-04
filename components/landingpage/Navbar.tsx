@@ -105,7 +105,7 @@ export default function Navbar() {
         transition={{ duration: 0.3 }}
       >
         <Link href={user ? "admin/dashboard" : "/chooseuser"}>
-          {user?.role ? "dashboard" : "Login"}
+          {user?.role ? "Dashboard" : "Login"}
         </Link>
       </motion.button>
 
