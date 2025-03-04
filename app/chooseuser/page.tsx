@@ -1,9 +1,11 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store";
 import { AccountCircle, School } from "@mui/icons-material";
 
 import { useRouter } from "next/navigation";
 import {} from "next/router";
+import { FaArrowLeft } from "react-icons/fa";
 
 const ChooseUser = () => {
   const { setUtype } = useAuthStore();
@@ -16,6 +18,12 @@ const ChooseUser = () => {
 
   return (
     <div className="bg-gradient-to-b from-purple-900 to-blue-900 h-screen p-8 flex items-center justify-center">
+      <Button
+        className="absolute top-8 left-8 text-md font-bold bg-purple-600 hover:bg-purple-700"
+        onClick={() => router.push("/")}
+      >
+        <FaArrowLeft />
+      </Button>
       <div className="flex flex-col gap-8 items-center">
         {/* Central Admin Login */}
         <button
@@ -52,7 +60,9 @@ const ChooseUser = () => {
                 <School className="text-5xl" />
               </div>
               <h2 className="text-lg mb-2 font-bold">Student Login</h2>
-              <p className="text-sm">Login as a Student to view student details.</p>
+              <p className="text-sm">
+                Login as a Student to view student details.
+              </p>
             </div>
           </button>
         </div>

@@ -5,6 +5,8 @@ import { z } from "zod";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { FaArrowLeft } from "react-icons/fa";
 
 function LoginPage() {
   const [toggle, setToggle] = useState(false);
@@ -72,6 +74,12 @@ function LoginPage() {
     <div className="flex min-h-screen bg-gray-50">
       {/* Left Side: Login Form */}
       <div className="flex flex-col justify-center items-center w-full max-w-md px-8 py-12 bg-white shadow-lg md:rounded-lg">
+        <Button
+          className="absolute top-8 left-8 text-md font-bold bg-purple-600 hover:bg-purple-700"
+          onClick={() => router.push("/chooseuser")}
+        >
+          <FaArrowLeft />
+        </Button>
         <h1 className="text-3xl font-bold text-purple-900 mb-4 capitalize">
           Register
         </h1>
