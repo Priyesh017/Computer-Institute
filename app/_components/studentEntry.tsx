@@ -6,6 +6,10 @@ import { ComboboxDemo } from "./combo";
 import { z } from "zod";
 import { toast } from "react-toastify";
 import { fetcherWc } from "@/helper";
+import { useDropzone } from "react-dropzone";
+import { motion } from "framer-motion";
+import { X } from "lucide-react";
+import anime from "animejs";
 
 const frameworks = [
   {
@@ -59,6 +63,7 @@ const formSchema = z.object({
 
 const AddStudent: React.FC = () => {
   const [loader, setLoader] = useState(false);
+  const [images, setImages] = useState<{ src: string; file: File }[]>([]);
 
   const [fd, setfd] = useState({
     name: "",
@@ -81,6 +86,28 @@ const AddStudent: React.FC = () => {
       setfd({ ...fd, [e.target.id]: parsedDate });
     } else setfd({ ...fd, [e.target.id]: e.target.value });
   }
+
+  const onDrop = (acceptedFiles: File[]) => {
+    acceptedFiles.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImages((prev) => [...prev, { src: reader.result as string, file }]);
+        anime({
+          targets: ".gallery-item",
+          opacity: [0, 1],
+          translateY: [50, 0],
+          easing: "easeOutElastic(1, .8)",
+          duration: 1000,
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleDeleteImage = (src: string) => {
+    setImages(images.filter((img) => img.src !== src));
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const result = formSchema.safeParse(fd);
@@ -130,6 +157,37 @@ const AddStudent: React.FC = () => {
               className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               autoComplete="name"
             />
+          </div>
+          <div className="flex-row md:flex w-full gap-2">
+            <div>
+              <label
+                htmlFor="image"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Applicant Image
+              </label>
+              <Dropzone onDrop={(files) => onDrop(files)} />
+            </div>
+            <div className="flex-1 mt-2 gap-4 min-w-fit">
+              {images.map((img) => (
+                <div key={img.src} className="relative">
+                  <motion.img
+                    src={img.src}
+                    alt="student_image"
+                    className="gallery-item w-fit h-32 object-cover rounded-md"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
+                  <button
+                    onClick={() => handleDeleteImage(img.src)}
+                    className="absolute top-0 right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-700"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
           <div>
             <label
@@ -324,3 +382,19 @@ const AddStudent: React.FC = () => {
 };
 
 export default AddStudent;
+
+function Dropzone({ onDrop }: { onDrop: (files: File[]) => void }) {
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+  return (
+    <div
+      {...getRootProps()}
+      className="p-6 max-w-56 border-dashed border-2 border-gray-400 rounded-md text-center cursor-pointer hover:border-gray-600 transition bg-gray-50"
+    >
+      <input {...getInputProps()} />
+      <p className="text-gray-700">
+        Drag & drop images here or click to select
+      </p>
+    </div>
+  );
+}

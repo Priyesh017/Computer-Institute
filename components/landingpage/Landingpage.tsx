@@ -73,23 +73,34 @@ export default function Home() {
           <div className="flex flex-row">
             {/* Scroll to Top Arrow Button */}
             {showScrollButton && (
-              <motion.button
-                className="bg-yellow-500 text-white mx-auto my-2 p-5 w-16 rounded-full shadow-lg hover:bg-yellow-400 transition-all"
-                onClick={scrollToTop}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                whileHover={{ scale: 1.1 }}
+              <motion.div
+                className="text-center font-bold p-2"
+                initial={{ y: 0 }}
+                animate={{ y: [0, -5, 0] }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 1.5,
+                  ease: "easeInOut",
+                }}
               >
-                <FaArrowUp size={24} />
-              </motion.button>
+                <motion.button
+                  className="bg-yellow-500 text-white mx-auto my-2 p-3 w-12 rounded-full shadow-lg hover:bg-yellow-400 transition-all"
+                  onClick={scrollToTop}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  whileHover={{ scale: 1.1 }}
+                >
+                  <FaArrowUp size={24} />
+                </motion.button>
+              </motion.div>
             )}
 
             {/* Enquiry Button */}
             <motion.div
               className="text-center font-bold p-2"
               initial={{ y: 0 }}
-              animate={{ y: [0, -5, 0] }} // Subtle up & down animation
+              animate={{ y: [0, -5, 0] }}
               transition={{
                 repeat: Infinity,
                 duration: 1.5,
@@ -104,7 +115,7 @@ export default function Home() {
                 whileHover={{ scale: 1.1 }}
               >
                 {isModalOpen ? (
-                  <FaTimes size={30} />
+                  <FaTimes size={24} />
                 ) : (
                   <p className="text-lg font-bold">Enquiry</p>
                 )}
