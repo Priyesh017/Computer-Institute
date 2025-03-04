@@ -3,13 +3,15 @@ import { useAuthStore } from "@/store";
 import axios from "axios";
 import { useCallback, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Loader from "@/components/Loader";
 
 export default function App({ children }: { children: React.ReactNode }) {
   const apiUrl = process.env.NEXT_PUBLIC_SERVER_ENDPOINT;
-  const { login } = useAuthStore();
+  const { login, loadingTime, setloadingTime } = useAuthStore();
   const queryClient = new QueryClient();
 
   const checkLoginState = useCallback(async () => {
+    setloadingTime(true);
     try {
       const {
         data: { user },
@@ -21,6 +23,7 @@ export default function App({ children }: { children: React.ReactNode }) {
     } catch (err) {
       console.log(err);
     }
+    setloadingTime(false);
   }, [apiUrl, login]);
 
   useEffect(() => {
@@ -28,6 +31,9 @@ export default function App({ children }: { children: React.ReactNode }) {
   }, [checkLoginState]);
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {loadingTime && <Loader />}
+      {children}
+    </QueryClientProvider>
   );
 }

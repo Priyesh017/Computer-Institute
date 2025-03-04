@@ -1,4 +1,5 @@
 "use client";
+import { Loader2 } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import {
@@ -15,6 +16,7 @@ import { toast } from "react-toastify";
 import StudentReportCard from "./StudentReportCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuthStore } from "@/store";
 
 type Mark = {
   subject: string;
@@ -48,6 +50,7 @@ export type MarksWithEnrollment = {
     };
   };
 };
+
 const PAGE_SIZE = 5;
 
 const ExamForm = () => {
@@ -59,6 +62,7 @@ const ExamForm = () => {
   const [isNew, setIsNew] = useState(true);
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const { temploading, settemploading } = useAuthStore();
 
   const fetchfn = async () => {
     const data = await fetcherWc("/marksheetfetch", "GET");
@@ -99,37 +103,24 @@ const ExamForm = () => {
     setIsGenerateModalOpen(true);
   };
 
-  const handleDownload = async (type: "marksheet" | "certificate") => {
+  const handleGenerate = async (
+    type: "marksheet" | "certificate",
+    selectedEnrollment: MarksWithEnrollment
+  ) => {
     if (!selectedEnrollment) return;
 
     const endpoint =
-      type === "marksheet" ? "/download-marksheet" : "/download-certificate";
-
+      type === "marksheet" ? "/generateMarksheet" : "/generateCertificate";
+    settemploading(true);
     try {
       const response = await fetcherWc(endpoint, "POST", {
-        enrollmentNo: selectedEnrollment.EnrollmentNo,
+        data: selectedEnrollment,
       });
-
-      if (!response.ok) throw new Error("Download failed");
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${selectedEnrollment.EnrollmentNo}-${type}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-
-      toast.success(
-        `${
-          type.charAt(0).toUpperCase() + type.slice(1)
-        } downloaded successfully!`
-      );
+      settemploading(false);
+      if (!response.ok) toast.error("failed");
+      else toast.success("success");
     } catch (error) {
-      console.error("Download error:", error);
-      toast.error("Failed to download, try again!");
+      toast.error("some error, try again!");
     }
   };
 
@@ -255,20 +246,26 @@ const ExamForm = () => {
             >
               <X size={24} className="hover:text-red-600" />
             </button>
-            <h2 className="text-xl font-bold mb-4">Download Options</h2>
+            <h2 className="text-xl font-bold mb-4">Generate Options</h2>
             <p className="text-gray-600 mb-4">Select an option below:</p>
             <div className="flex gap-4">
               <Button
                 className="bg-blue-600 hover:bg-blue-700 flex-1"
-                onClick={() => handleDownload("marksheet")}
+                onClick={() => handleGenerate("marksheet", selectedEnrollment)}
+                disabled={temploading}
               >
                 Generate Marksheet
+                {temploading && <Loader2 className="animate-spin" />}
               </Button>
               <Button
                 className="bg-green-600 hover:bg-green-700 flex-1"
-                onClick={() => handleDownload("certificate")}
+                disabled={temploading}
+                onClick={() =>
+                  handleGenerate("certificate", selectedEnrollment)
+                }
               >
                 Generate Certificate
+                {temploading && <Loader2 className="animate-spin" />}
               </Button>
             </div>
           </div>

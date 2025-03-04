@@ -23,10 +23,9 @@ export default function GalleryInsertion() {
   const [images, setImages] = useState<
     { category: string; src: string; file: File }[]
   >([]);
+  console.log(images);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const allCategories = [...categories];
 
   const onDrop = (acceptedFiles: File[], category: string) => {
     acceptedFiles.forEach((file) => {
@@ -59,10 +58,10 @@ export default function GalleryInsertion() {
     try {
       for (const image of images) {
         const { url } = await fetcherWc(
-          `/generate-presigned-url?fileName=${image.file.name}&fileType=${image.file.type}&catagory=${image.category}`,
+          `/generate-presigned-url?fileName=${image.file.name}&fileType=${image.file.type}&category=${image.category}`,
           "GET"
         );
-
+        // console.log(image.category);
         if (!url) throw new Error("Failed to generate pre-signed URL");
 
         const uploadResponse = await fetch(url, {
@@ -72,7 +71,7 @@ export default function GalleryInsertion() {
             "Content-Type": image.file.type,
           },
         });
-
+        console.log(uploadResponse);
         if (!uploadResponse.ok) throw new Error("Upload failed");
 
         console.log(`Uploaded ${image.file.name} successfully!`);
@@ -88,7 +87,7 @@ export default function GalleryInsertion() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-6 bg-white text-gray-900 rounded-lg">
-      {allCategories.map((category) => (
+      {categories.map((category) => (
         <div
           key={category}
           className="border p-4 rounded-lg shadow-md bg-gray-100 text-gray-900 relative"

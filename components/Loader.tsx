@@ -1,34 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import anime from "animejs";
 
 const Loader = () => {
-  const [loading, setLoading] = useState(false);
-  const pathname = usePathname();
-
-  useEffect(() => {
-    setLoading(true);
-    const timer = setTimeout(() => setLoading(false), 1000); // Simulate loading
-
-    return () => clearTimeout(timer);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (loading) {
-      anime({
-        targets: ".loader div",
-        rotate: "1turn",
-        easing: "linear",
-        duration: 1000,
-        loop: true,
-      });
-    }
-  }, [loading]);
-
-  if (!loading) return null;
+  anime({
+    targets: ".loader div",
+    rotate: "1turn",
+    easing: "linear",
+    duration: 1000,
+    loop: true,
+  });
 
   return (
     <motion.div

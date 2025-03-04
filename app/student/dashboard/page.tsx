@@ -54,6 +54,7 @@ export default function Menu() {
 
   const logouthandler = async () => {
     await fetcherWc("/logout", "GET");
+    setActiveSection("");
     logout();
   };
   return (
