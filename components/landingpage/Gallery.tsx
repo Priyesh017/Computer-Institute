@@ -91,7 +91,7 @@ const GalleryWall = () => {
             alt="Fullscreen View"
             width={800}
             height={600}
-            className="max-w-full max-h-full rounded-lg"
+            className="max-w-fit max-h-fit rounded-lg"
             priority
           />
         </div>
