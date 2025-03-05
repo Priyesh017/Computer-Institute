@@ -63,9 +63,9 @@ const ExamForm = () => {
   const [isNew, setIsNew] = useState(true);
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const { temploading, settemploading, loadingTime, setloadingTime } =
-    useAuthStore();
+  const { setloadingTime } = useAuthStore();
 
+  const [temploading, settemploading] = useState(false);
   const fetchfn = async () => {
     try {
       setloadingTime(true);

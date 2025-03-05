@@ -11,19 +11,9 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store";
 import { data } from "@/data";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, isSidebarOpen } = useAuthStore();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!user || !user.role) {
-      router.push("/");
-      return;
-    }
-  }, [user, router]);
 
   if (!user || !user.role) {
     return;

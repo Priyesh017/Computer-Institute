@@ -29,7 +29,7 @@ export default function StudentLogin() {
 
   useEffect(() => {
     if (user) {
-      router.push("/student/dashboard");
+      router.push("/student/dashboard"); // FIXME
       return;
     }
   }, [user, router]);
