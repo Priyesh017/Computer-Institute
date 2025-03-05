@@ -20,8 +20,8 @@ interface userAuthState {
   setSelectedComponent: (component: string) => void;
   loadingTime: boolean;
   setloadingTime: (val: boolean) => void;
-  temploading: boolean;
-  settemploading: (val: boolean) => void;
+  loading: boolean;
+  setLoading: (val: boolean) => void;
 }
 
 const useAuthStore = create<userAuthState>((set) => ({
@@ -35,14 +35,14 @@ const useAuthStore = create<userAuthState>((set) => ({
   setUtype: (s) => set({ utype: s }),
   user: null,
   login: (userData: usertype) => set({ user: userData }),
-  logout: () => set({ user: null, selectedComponent: "" }),
+  logout: () => set({ user: null, selectedComponent: "", loading: false }),
   loadingTime: false,
   setloadingTime(val) {
     set({ loadingTime: val });
   },
-  temploading: false, // default state
-  settemploading(val) {
-    set({ temploading: val });
+  loading: true,
+  setLoading(val) {
+    set({ loading: val });
   },
 }));
 

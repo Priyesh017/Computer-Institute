@@ -37,8 +37,8 @@ const EnrollmentList = () => {
     useState<Enrollment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const { temploading, settemploading } = useAuthStore();
   const [totalEnrollments, setTotalEnrollments] = useState(0); // Track total count
+  const [temploading, settemploading] = useState(false);
 
   const fetchEnrollments = async () => {
     try {

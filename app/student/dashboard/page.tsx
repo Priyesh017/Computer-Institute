@@ -18,15 +18,15 @@ import { Download, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store";
 import { fetcherWc } from "@/helper";
-import { useRouter } from "next/navigation";
 import Downloads from "@/components/studentdashboard/Downloads";
 import Profile, {
   StudentProfileProps,
 } from "@/components/studentdashboard/Profile";
 import { toast } from "react-toastify";
+import Loader from "@/components/Loader";
 
 export default function Menu() {
-  const { user, logout } = useAuthStore();
+  const { user, logout, loading } = useAuthStore();
   const student = useAuthStore().user as unknown as StudentProfileProps;
 
   const defaultOpen = useState(true)[0];
@@ -44,14 +44,7 @@ export default function Menu() {
   ];
   const [activeSection, setActiveSection] = useState(sideMenu[0].name);
 
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!user) {
-      router.push("/checkupdates");
-      return;
-    }
-  }, [user, router]);
+  if (loading) return <Loader />;
 
   const logouthandler = async () => {
     try {

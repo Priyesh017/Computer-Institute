@@ -3,8 +3,7 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import dynamic from "next/dynamic";
 import Loader from "@/components/Loader";
@@ -13,45 +12,39 @@ const EnrollmentList = dynamic(() => import("@/app/_components/enrollments"), {
   loading: () => <Loader />,
 });
 const AddStudent = dynamic(() => import("@/app/_components/studentEntry"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <Loader />,
 });
 const Marksheet = dynamic(() => import("@/admincomponents/Marksheet"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <Loader />,
 });
 const Form = dynamic(() => import("@/admincomponents/ExamRegForm"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <Loader />,
 });
 const ExamForms = dynamic(() => import("@/app/_components/examforms"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <Loader />,
 });
 const Marksheets = dynamic(() => import("@/app/_components/marksheets"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <Loader />,
 });
 const AllDownloads = dynamic(() => import("@/admincomponents/AllDownloads"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <Loader />,
 });
 const CourseFee = dynamic(() => import("@/components/fees/CourseFee"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <Loader />,
 });
 const Enquiry = dynamic(() => import("@/app/_components/enquiry"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <Loader />,
 });
 const Gallery = dynamic(() => import("@/components/GalleryForm"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => <Loader />,
 });
 
 export default function AdminDashboard() {
   const selectedComponent = useAuthStore((state) => state.selectedComponent);
-  const { user, isSidebarOpen, setSidebarOpen } = useAuthStore();
-  const router = useRouter();
+  const { isSidebarOpen, setSidebarOpen, loading } = useAuthStore();
   const defaultOpen = useState(true)[0];
 
-  useEffect(() => {
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-  }, [user, router]);
+  if (loading) return <Loader />;
 
   const renderComponent = () => {
     switch (selectedComponent) {
