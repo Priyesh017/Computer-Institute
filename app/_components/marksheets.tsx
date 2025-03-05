@@ -67,10 +67,14 @@ const ExamForm = () => {
     useAuthStore();
 
   const fetchfn = async () => {
-    setloadingTime(true);
-    const data = await fetcherWc("/marksheetfetch", "GET");
-    setEnrollments(data.data);
-    setloadingTime(false);
+    try {
+      setloadingTime(true);
+      const data = await fetcherWc("/marksheetfetch", "GET");
+      setEnrollments(data.data);
+      setloadingTime(false);
+    } catch (error) {
+      toast("some error happened");
+    }
   };
 
   useEffect(() => {
@@ -80,26 +84,30 @@ const ExamForm = () => {
   const toggleActivation = async ({ verified, id }: MarksWithEnrollment) => {
     toast("plz wait");
 
-    if (verified) {
-      const data = await fetcherWc("/exmmarksDisApprove", "POST", { id });
-      console.log(data);
+    try {
+      if (verified) {
+        const data = await fetcherWc("/exmmarksDisApprove", "POST", { id });
+
+        if (data.success) {
+          setEnrollments((prev) =>
+            prev.map((p) => (p.id === id ? { ...p, verified: false } : p))
+          );
+        }
+        toast(data.success ? "success" : "failed");
+        return;
+      }
+
+      const data = await fetcherWc("/exmmarksApprove", "POST", { id });
+
       if (data.success) {
         setEnrollments((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, verified: false } : p))
+          prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
         );
       }
       toast(data.success ? "success" : "failed");
-      return;
+    } catch (error) {
+      toast("some error happened");
     }
-
-    const data = await fetcherWc("/exmmarksApprove", "POST", { id });
-    console.log(data);
-    if (data.success) {
-      setEnrollments((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
-      );
-    }
-    toast(data.success ? "success" : "failed");
   };
 
   const handleGenerateClick = (enrollment: MarksWithEnrollment) => {

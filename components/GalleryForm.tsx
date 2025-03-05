@@ -61,7 +61,6 @@ export default function GalleryInsertion() {
           `/generate-presigned-url?fileName=${image.file.name}&fileType=${image.file.type}&category=${image.category}`,
           "GET"
         );
-        // console.log(image.category);
         if (!url) throw new Error("Failed to generate pre-signed URL");
 
         const uploadResponse = await fetch(url, {
@@ -71,10 +70,8 @@ export default function GalleryInsertion() {
             "Content-Type": image.file.type,
           },
         });
-        console.log(uploadResponse);
-        if (!uploadResponse.success) throw new Error("Upload failed");
 
-        console.log(`Uploaded ${image.file.name} successfully!`);
+        if (!uploadResponse.ok) throw new Error("Upload failed");
       }
 
       setImages([]); // Clear images after successful upload

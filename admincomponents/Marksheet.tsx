@@ -97,12 +97,16 @@ const Marksheet = () => {
   ];
 
   const fetchData = async () => {
-    const data = (await fetcherWc("/exmformfillupDatafetch", "POST", {
-      enrollmentNo,
-    })) as ApiResponse;
-    if (data.success && data.data == null) toast("invalid enrollment id");
+    try {
+      const data = (await fetcherWc("/exmformfillupDatafetch", "POST", {
+        enrollmentNo,
+      })) as ApiResponse;
+      if (data.success && data.data == null) toast("invalid enrollment id");
 
-    setfd(data.data);
+      setfd(data.data);
+    } catch (error) {
+      toast("error happened");
+    }
   };
   const check = () =>
     !allFieldsFilled || !fd?.name || year === "" || selected === "Select";

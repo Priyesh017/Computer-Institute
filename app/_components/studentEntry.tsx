@@ -142,7 +142,9 @@ const formSchema = z.object({
 
 const AddStudent: React.FC = () => {
   const [loader, setLoader] = useState(false);
-  const [images, setImages] = useState<{ src: string; file: File }[]>([]);
+  const [images, setImages] = useState<{ src: string; file: File } | null>(
+    null
+  );
 
   const [fd, setfd] = useState({
     name: "",
@@ -175,25 +177,23 @@ const AddStudent: React.FC = () => {
     });
   }
 
-  const onDrop = (acceptedFiles: File[]) => {
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImages((prev) => [...prev, { src: reader.result as string, file }]);
-        anime({
-          targets: ".gallery-item",
-          opacity: [0, 1],
-          translateY: [50, 0],
-          easing: "easeOutElastic(1, .8)",
-          duration: 1000,
-        });
-      };
-      reader.readAsDataURL(file);
-    });
+  const onDrop = (acceptedFile: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImages({ src: reader.result as string, file: acceptedFile });
+      anime({
+        targets: ".gallery-item",
+        opacity: [0, 1],
+        translateY: [50, 0],
+        easing: "easeOutElastic(1, .8)",
+        duration: 1000,
+      });
+    };
+    reader.readAsDataURL(acceptedFile);
   };
 
-  const handleDeleteImage = (src: string) => {
-    setImages(images.filter((img) => img.src !== src));
+  const handleDeleteImage = () => {
+    setImages(null);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -208,12 +208,41 @@ const AddStudent: React.FC = () => {
       toast("some error happend");
       console.log(errorMessages);
     } else {
-      setLoader(true);
+      try {
+        setLoader(true);
+        if (!images) return;
 
-      const data = await fetcherWc("/createEnrollment", "POST", fd);
+        const { url } = await fetcherWc(
+          `/generate-presigned-url?fileName=${images.file.name}&fileType=${images.file.type}&category=face`,
+          "GET"
+        );
+        if (!url) {
+          toast("didnot generate url");
+          return;
+        }
+
+        const uploadResponse = await fetch(url, {
+          method: "PUT",
+          body: images.file,
+          headers: {
+            "Content-Type": images.file.type,
+          },
+        });
+
+        if (!uploadResponse.ok) throw new Error("Upload failed");
+
+        const imageUrl = url.split("?")[0];
+        console.log(imageUrl);
+
+        const data = await fetcherWc("/createEnrollment", "POST", {
+          ...fd,
+          imageUrl,
+        });
+        toast(data.success);
+      } catch (error) {
+        toast("some error happened");
+      }
       setLoader(false);
-
-      toast(data.success);
     }
   };
 
@@ -257,24 +286,26 @@ const AddStudent: React.FC = () => {
               <Dropzone onDrop={(files) => onDrop(files)} />
             </div>
             <div className="flex-1 mt-2 gap-4 min-w-fit">
-              {images.map((img) => (
-                <div key={img.src} className="relative">
-                  <motion.img
-                    src={img.src}
-                    alt="student_image"
-                    className="gallery-item w-fit h-32 object-cover rounded-md"
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  />
-                  <button
-                    onClick={() => handleDeleteImage(img.src)}
-                    className="absolute top-0 right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-700"
-                  >
-                    <X size={24} />
-                  </button>
-                </div>
-              ))}
+              <div className="relative">
+                {images && (
+                  <>
+                    <motion.img
+                      src={images.src}
+                      alt="student_image"
+                      className="gallery-item w-fit h-32 object-cover rounded-md"
+                      initial={{ opacity: 0, y: 50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    />
+                    <button
+                      onClick={() => handleDeleteImage()}
+                      className="absolute top-0 right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-700"
+                    >
+                      <X size={24} />
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
           <div>
@@ -471,8 +502,16 @@ const AddStudent: React.FC = () => {
 
 export default AddStudent;
 
-function Dropzone({ onDrop }: { onDrop: (files: File[]) => void }) {
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+function Dropzone({ onDrop }: { onDrop: (files: File) => void }) {
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        onDrop(acceptedFiles[0]); // Only take the first file
+      }
+    },
+    accept: { "image/*": [] }, // Only allow images
+    multiple: false, // Prevent multiple file selection
+  });
 
   return (
     <div

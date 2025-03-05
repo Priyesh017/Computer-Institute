@@ -11,6 +11,7 @@ import {
 import { fetcherWc } from "@/helper";
 import { X } from "lucide-react";
 import AllDownloads from "@/components/studentdashboard/Downloads";
+import { toast } from "react-toastify";
 
 export interface EnrollmentType {
   Enrollmentno: string;
@@ -36,9 +37,13 @@ const ExamForm = () => {
   const [isNew, setIsNew] = useState(true);
 
   const fetchfn = async () => {
-    const data = await fetcherWc("/AllEnrollments", "GET");
+    try {
+      const data = await fetcherWc("/AllEnrollments", "GET");
 
-    setexmforms(data);
+      setexmforms(data);
+    } catch (error) {
+      toast("some error happened");
+    }
   };
 
   console.log(exmforms);

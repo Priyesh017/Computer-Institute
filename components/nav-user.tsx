@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import { fetcherWc } from "@/helper";
 import { useAuthStore } from "@/store";
+import { toast } from "react-toastify";
 
 export function NavUser({
   user,
@@ -33,8 +34,12 @@ export function NavUser({
   const { isMobile } = useSidebar();
   const { logout } = useAuthStore();
   const logouthandler = async () => {
-    await fetcherWc("/logout", "GET");
-    logout();
+    try {
+      await fetcherWc("/logout", "GET");
+      logout();
+    } catch (error) {
+      toast("some error happened");
+    }
   };
   return (
     <SidebarMenu>

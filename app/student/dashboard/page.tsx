@@ -23,6 +23,7 @@ import Downloads from "@/components/studentdashboard/Downloads";
 import Profile, {
   StudentProfileProps,
 } from "@/components/studentdashboard/Profile";
+import { toast } from "react-toastify";
 
 export default function Menu() {
   const { user, logout } = useAuthStore();
@@ -53,9 +54,13 @@ export default function Menu() {
   }, [user, router]);
 
   const logouthandler = async () => {
-    await fetcherWc("/logout", "GET");
-    setActiveSection("");
-    logout();
+    try {
+      await fetcherWc("/logout", "GET");
+      setActiveSection("");
+      logout();
+    } catch (error) {
+      toast("error happened");
+    }
   };
   return (
     <div className="flex min-h-screen">

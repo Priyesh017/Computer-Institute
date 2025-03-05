@@ -31,23 +31,27 @@ export default function LoginPage() {
     event.preventDefault();
     setLoader(true);
     setloadingTime(true);
-    const data = await fetcherWc("/loginRoute", "POST", {
-      email: fd.email,
-      password: fd.password,
-    });
+    try {
+      const data = await fetcherWc("/loginRoute", "POST", {
+        email: fd.email,
+        password: fd.password,
+      });
 
-    setLoader(false);
-    setloadingTime(false);
-    if (data.message === "Login successful") {
-      if (data.user.role.toLowerCase() !== utype) {
-        toast(`u r not authorised`);
-        return;
+      setLoader(false);
+      setloadingTime(false);
+      if (data.message === "Login successful") {
+        if (data.user.role.toLowerCase() !== utype) {
+          toast(`u r not authorised`);
+          return;
+        }
+        login(data.user);
+        toast("Login Successfully");
+        router.push("/admin/dashboard");
+      } else {
+        toast(data.error);
       }
-      login(data.user);
-      toast("Login Successfully");
-      router.push("/admin/dashboard");
-    } else {
-      toast(data.error);
+    } catch (error) {
+      toast("some error happened");
     }
   }
 

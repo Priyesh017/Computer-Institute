@@ -4,13 +4,18 @@ import { fetcherWc } from "@/helper";
 import { useAuthStore } from "@/store";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { logout } = useAuthStore();
   const logouthandler = async () => {
-    await fetcherWc("/logout", "GET");
-    logout();
+    try {
+      await fetcherWc("/logout", "GET");
+      logout();
+    } catch (error) {
+      toast("some error happened");
+    }
   };
   return (
     <nav className="bg-purple-900 w-full text-white shadow-lg">

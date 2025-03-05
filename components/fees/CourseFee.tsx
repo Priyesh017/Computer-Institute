@@ -37,9 +37,13 @@ const ExamFee = () => {
 
   useEffect(() => {
     const fetchEnrollments = async () => {
-      const data = await fetcherWc("/amountFetch", "POST");
-      setEnrollments(data.data);
-      setreload(false);
+      try {
+        const data = await fetcherWc("/amountFetch", "POST");
+        setEnrollments(data.data);
+        setreload(false);
+      } catch (error) {
+        toast("some error happened");
+      }
     };
 
     fetchEnrollments();
@@ -58,15 +62,19 @@ const ExamFee = () => {
   ) => {
     toast("wait for some time...");
     const amountPaid = feesPaid[id] || 0;
-    const data = await fetcherWc("/amountEdit", "POST", {
-      EnrollmentNo: enrollmentNo,
-      tp: amountPaid,
-      ar: remainingAmount - amountPaid,
-    });
-    if (data.success) {
-      toast("ok");
-      setreload(true);
-    } else toast("not ok");
+    try {
+      const data = await fetcherWc("/amountEdit", "POST", {
+        EnrollmentNo: enrollmentNo,
+        tp: amountPaid,
+        ar: remainingAmount - amountPaid,
+      });
+      if (data.success) {
+        toast("ok");
+        setreload(true);
+      } else toast("not ok");
+    } catch (error) {
+      toast("some error happened");
+    }
   };
 
   return (

@@ -62,26 +62,36 @@ const EnrollmentList = () => {
     const endpoint = enrollment.activated
       ? "/deActivateEnrollment"
       : "/ActivateEnrollment";
-    const data = await fetcherWc(endpoint, "POST", { id: enrollment.id });
+    try {
+      const data = await fetcherWc(endpoint, "POST", { id: enrollment.id });
 
-    if (data.success) {
-      setEnrollments((prev) =>
-        prev.map((p) =>
-          p.id === enrollment.id ? { ...p, activated: !p.activated } : p
-        )
-      );
-      toast("Success");
-    } else {
-      toast("Failed");
+      if (data.success) {
+        setEnrollments((prev) =>
+          prev.map((p) =>
+            p.id === enrollment.id ? { ...p, activated: !p.activated } : p
+          )
+        );
+        toast("Success");
+      } else {
+        toast("Failed");
+      }
+    } catch (error) {
+      toast("some error happened");
     }
   };
 
   const generateHandler = async (Enrollmentno: string) => {
-    toast("Generating ID...");
-    settemploading(true);
-    const data = await fetcherWc("/generateId", "POST", { Enrollmentno });
-    settemploading(false);
-    toast(data.success ? "ID generated successfully" : "ID generation failed");
+    try {
+      toast("Generating ID...");
+      settemploading(true);
+      const data = await fetcherWc("/generateId", "POST", { Enrollmentno });
+      settemploading(false);
+      toast(
+        data.success ? "ID generated successfully" : "ID generation failed"
+      );
+    } catch (error) {
+      toast("some error happened");
+    }
   };
 
   const filteredEnrollment = enrollments.filter((enrollment) =>

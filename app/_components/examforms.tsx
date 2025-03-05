@@ -50,9 +50,13 @@ const ExamForm = () => {
   const [search, setSearch] = useState("");
 
   const fetchfn = async () => {
-    const data = await fetcherWc("/exmformsfetch", "GET");
+    try {
+      const data = await fetcherWc("/exmformsfetch", "GET");
 
-    setexmforms(data.data);
+      setexmforms(data.data);
+    } catch (error) {
+      toast("some error happened");
+    }
   };
 
   console.log(exmforms);
@@ -61,27 +65,31 @@ const ExamForm = () => {
   }, []);
 
   const toggleActivation = async ({ verified, id }: DataItem) => {
-    toast("plz wait");
-    if (verified) {
-      const data = await fetcherWc("/exmformDisApprove", "POST", { id });
+    try {
+      toast("plz wait");
+      if (verified) {
+        const data = await fetcherWc("/exmformDisApprove", "POST", { id });
+
+        if (data.success) {
+          setexmforms((prev) =>
+            prev.map((p) => (p.id === id ? { ...p, verified: false } : p))
+          );
+        }
+        toast(data.success ? "success" : "failed");
+        return;
+      }
+
+      const data = await fetcherWc("/exmformApprove", "POST", { id });
       console.log(data);
       if (data.success) {
         setexmforms((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, verified: false } : p))
+          prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
         );
       }
       toast(data.success ? "success" : "failed");
-      return;
+    } catch (error) {
+      toast("some error happened");
     }
-
-    const data = await fetcherWc("/exmformApprove", "POST", { id });
-    console.log(data);
-    if (data.success) {
-      setexmforms((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
-      );
-    }
-    toast(data.success ? "success" : "failed");
   };
 
   const filteredEnrollment = exmforms.filter((enrollment) =>

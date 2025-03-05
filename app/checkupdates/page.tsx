@@ -42,18 +42,21 @@ export default function StudentLogin() {
       return;
     }
 
-    const data = await fetcherWc("/studentLogin", "POST", {
-      enrollmentNo: enrollmentNo,
-      password,
-    });
+    try {
+      const data = await fetcherWc("/studentLogin", "POST", {
+        enrollmentNo: enrollmentNo,
+        password,
+      });
+      if (data.success) {
+        toast("login successful");
+        login(data.data);
 
-    if (data.success) {
-      toast("login successful");
-      login(data.data);
-
-      router.push("/student/dashboard");
-    } else {
-      setError("Invalid Enrollment No. or Password.");
+        router.push("/student/dashboard");
+      } else {
+        setError("Invalid Enrollment No. or Password.");
+      }
+    } catch (error) {
+      toast("error happened");
     }
   };
 
