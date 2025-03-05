@@ -11,26 +11,105 @@ import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import anime from "animejs";
 
-const frameworks = [
+const frameworksCourse = [
   {
-    value: "next.js",
-    label: "Next.js",
+    label: "DOAP",
+    value: "15",
   },
   {
-    value: "sveltekit",
-    label: "SvelteKit",
+    label: "DITA",
+    value: "16",
   },
   {
-    value: "nuxt.js",
-    label: "Nuxt.js",
+    label: "ADCA",
+    value: "17",
   },
   {
-    value: "remix",
-    label: "Remix",
+    label: "ADOAP",
+    value: "18",
   },
   {
-    value: "astro",
-    label: "Astro",
+    label: "WEBSITE DESIGNING & DEVELOPMENT",
+    value: "19",
+  },
+  {
+    label: "COMPUTER HARDWARE & NETWORKING",
+    value: "14",
+  },
+  {
+    label: "DCA",
+    value: "13",
+  },
+  {
+    label: "TYPING",
+    value: "12",
+  },
+  {
+    label: "DTP",
+    value: "11",
+  },
+  {
+    label: "KNOWLEDGE ON C/C++ PROGRAMMING",
+    value: "7",
+  },
+  {
+    label: "CCTV INSTALLATION & MAINTENANCE",
+    value: "10",
+  },
+  {
+    label: "ADVANCE EXCEL",
+    value: "9",
+  },
+  {
+    label: "PYTHON",
+    value: "8",
+  },
+  {
+    label: "Knowledge on LINUX",
+    value: "6",
+  },
+  {
+    label: "CITA",
+    value: "5",
+  },
+  {
+    label: "CCA",
+    value: "4",
+  },
+  {
+    label: "BASIC HARDWARE MAINTENANCE",
+    value: "3",
+  },
+  {
+    label: "TALLY",
+    value: "2",
+  },
+  {
+    label: "OFFICE MANAGEMENT",
+    value: "",
+  },
+  {
+    label: "BASIC COMPUTER CONCEPT",
+    value: "1",
+  },
+];
+
+const frameworksEdu = [
+  {
+    value: "8th Pass",
+    label: "8th Pass",
+  },
+  {
+    value: "10th Pass",
+    label: "10th Pass",
+  },
+  {
+    value: "12th Pass",
+    label: "12th Pass",
+  },
+  {
+    value: "Graduation",
+    label: "Graduation",
   },
 ];
 export interface tfd {
@@ -41,10 +120,10 @@ export interface tfd {
   dob: Date;
   mobile: string;
   wapp: string;
-  courseName: string;
   idno: string;
   enrollmentNo: string;
   eduqualification: string;
+  courseid: string;
 }
 
 const formSchema = z.object({
@@ -53,17 +132,19 @@ const formSchema = z.object({
   motherName: z.string().min(1, "Mother's name is required"),
   Address: z.string().min(5, "Address must be at least 5 characters long"),
   idno: z.string(),
-  courseName: z.string(),
   enrollmentNo: z.string(),
   dob: z.date(),
   eduqualification: z.string(),
+  courseid: z.string(),
   mobile: z.string().regex(/^\d{10}$/, "Invalid mobile number"),
   wapp: z.string().regex(/^\d{10}$/, "Invalid WhatsApp number"),
 });
 
 const AddStudent: React.FC = () => {
   const [loader, setLoader] = useState(false);
-  const [images, setImages] = useState<{ src: string; file: File }[]>([]);
+  const [images, setImages] = useState<{ src: string; file: File } | null>(
+    null
+  );
 
   const [fd, setfd] = useState({
     name: "",
@@ -73,8 +154,8 @@ const AddStudent: React.FC = () => {
     dob: new Date(),
     mobile: "",
     wapp: "",
-    courseName: "",
     eduqualification: "",
+    courseid: "",
     idno: "",
     enrollmentNo: "",
   });
@@ -96,25 +177,23 @@ const AddStudent: React.FC = () => {
     });
   }
 
-  const onDrop = (acceptedFiles: File[]) => {
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImages((prev) => [...prev, { src: reader.result as string, file }]);
-        anime({
-          targets: ".gallery-item",
-          opacity: [0, 1],
-          translateY: [50, 0],
-          easing: "easeOutElastic(1, .8)",
-          duration: 1000,
-        });
-      };
-      reader.readAsDataURL(file);
-    });
+  const onDrop = (acceptedFile: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImages({ src: reader.result as string, file: acceptedFile });
+      anime({
+        targets: ".gallery-item",
+        opacity: [0, 1],
+        translateY: [50, 0],
+        easing: "easeOutElastic(1, .8)",
+        duration: 1000,
+      });
+    };
+    reader.readAsDataURL(acceptedFile);
   };
 
-  const handleDeleteImage = (src: string) => {
-    setImages(images.filter((img) => img.src !== src));
+  const handleDeleteImage = () => {
+    setImages(null);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -129,12 +208,41 @@ const AddStudent: React.FC = () => {
       toast("some error happend");
       console.log(errorMessages);
     } else {
-      setLoader(true);
+      try {
+        setLoader(true);
+        if (!images) return;
 
-      const data = await fetcherWc("/createEnrollment", "POST", fd);
+        const { url } = await fetcherWc(
+          `/generate-presigned-url?fileName=${images.file.name}&fileType=${images.file.type}&category=face`,
+          "GET"
+        );
+        if (!url) {
+          toast("didnot generate url");
+          return;
+        }
+
+        const uploadResponse = await fetch(url, {
+          method: "PUT",
+          body: images.file,
+          headers: {
+            "Content-Type": images.file.type,
+          },
+        });
+
+        if (!uploadResponse.ok) throw new Error("Upload failed");
+
+        const imageUrl = url.split("?")[0];
+        console.log(imageUrl);
+
+        const data = await fetcherWc("/createEnrollment", "POST", {
+          ...fd,
+          imageUrl,
+        });
+        toast(data.success);
+      } catch (error) {
+        toast("some error happened");
+      }
       setLoader(false);
-
-      toast(data.success);
     }
   };
 
@@ -178,24 +286,26 @@ const AddStudent: React.FC = () => {
               <Dropzone onDrop={(files) => onDrop(files)} />
             </div>
             <div className="flex-1 mt-2 gap-4 min-w-fit">
-              {images.map((img) => (
-                <div key={img.src} className="relative">
-                  <motion.img
-                    src={img.src}
-                    alt="student_image"
-                    className="gallery-item w-fit h-32 object-cover rounded-md"
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  />
-                  <button
-                    onClick={() => handleDeleteImage(img.src)}
-                    className="absolute top-0 right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-700"
-                  >
-                    <X size={24} />
-                  </button>
-                </div>
-              ))}
+              <div className="relative">
+                {images && (
+                  <>
+                    <motion.img
+                      src={images.src}
+                      alt="student_image"
+                      className="gallery-item w-fit h-32 object-cover rounded-md"
+                      initial={{ opacity: 0, y: 50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    />
+                    <button
+                      onClick={() => handleDeleteImage()}
+                      className="absolute top-0 right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-700"
+                    >
+                      <X size={24} />
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
           <div>
@@ -352,11 +462,11 @@ const AddStudent: React.FC = () => {
               Course Name
             </label>
             <ComboboxDemo
-              frameworks={frameworks}
+              frameworks={frameworksCourse}
               heading={"Select Course"}
-              value={fd.courseName}
+              value={fd.courseid}
               setValue={setfd}
-              data="courseName"
+              data="courseid"
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -367,7 +477,7 @@ const AddStudent: React.FC = () => {
               Educational Qualification
             </label>
             <ComboboxDemo
-              frameworks={frameworks}
+              frameworks={frameworksEdu}
               heading={"Select Educational Qualification"}
               value={fd.eduqualification}
               setValue={setfd}
@@ -392,8 +502,16 @@ const AddStudent: React.FC = () => {
 
 export default AddStudent;
 
-function Dropzone({ onDrop }: { onDrop: (files: File[]) => void }) {
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+function Dropzone({ onDrop }: { onDrop: (files: File) => void }) {
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        onDrop(acceptedFiles[0]); // Only take the first file
+      }
+    },
+    accept: { "image/*": [] }, // Only allow images
+    multiple: false, // Prevent multiple file selection
+  });
 
   return (
     <div
