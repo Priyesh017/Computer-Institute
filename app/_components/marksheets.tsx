@@ -17,6 +17,7 @@ import StudentReportCard from "./StudentReportCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store";
+import Loader from "@/components/Loader";
 
 type Mark = {
   subject: string;
@@ -62,11 +63,18 @@ const ExamForm = () => {
   const [isNew, setIsNew] = useState(true);
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const { temploading, settemploading } = useAuthStore();
+  const { temploading, settemploading, loadingTime, setloadingTime } =
+    useAuthStore();
 
   const fetchfn = async () => {
-    const data = await fetcherWc("/marksheetfetch", "GET");
-    setEnrollments(data.data);
+    try {
+      setloadingTime(true);
+      const data = await fetcherWc("/marksheetfetch", "GET");
+      setEnrollments(data.data);
+      setloadingTime(false);
+    } catch (error) {
+      toast("some error happened");
+    }
   };
 
   useEffect(() => {
@@ -76,26 +84,30 @@ const ExamForm = () => {
   const toggleActivation = async ({ verified, id }: MarksWithEnrollment) => {
     toast("plz wait");
 
-    if (verified) {
-      const data = await fetcherWc("/exmmarksDisApprove", "POST", { id });
-      console.log(data);
-      if (data.ok) {
+    try {
+      if (verified) {
+        const data = await fetcherWc("/exmmarksDisApprove", "POST", { id });
+
+        if (data.success) {
+          setEnrollments((prev) =>
+            prev.map((p) => (p.id === id ? { ...p, verified: false } : p))
+          );
+        }
+        toast(data.success ? "success" : "failed");
+        return;
+      }
+
+      const data = await fetcherWc("/exmmarksApprove", "POST", { id });
+
+      if (data.success) {
         setEnrollments((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, verified: false } : p))
+          prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
         );
       }
-      toast(data.ok ? "success" : "failed");
-      return;
+      toast(data.success ? "success" : "failed");
+    } catch (error) {
+      toast("some error happened");
     }
-
-    const data = await fetcherWc("/exmmarksApprove", "POST", { id });
-    console.log(data);
-    if (data.ok) {
-      setEnrollments((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
-      );
-    }
-    toast(data.ok ? "success" : "failed");
   };
 
   const handleGenerateClick = (enrollment: MarksWithEnrollment) => {
@@ -117,7 +129,7 @@ const ExamForm = () => {
         data: selectedEnrollment,
       });
       settemploading(false);
-      if (!response.ok) toast.error("failed");
+      if (!response.success) toast.error("failed");
       else toast.success("success");
     } catch (error) {
       toast.error("some error, try again!");

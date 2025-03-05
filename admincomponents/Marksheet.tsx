@@ -97,12 +97,19 @@ const Marksheet = () => {
   ];
 
   const fetchData = async () => {
-    const data = (await fetcherWc("/exmformfillupDatafetch", "POST", {
-      enrollmentNo,
-    })) as ApiResponse;
-    setfd(data.data);
-  };
+    try {
+      const data = (await fetcherWc("/exmformfillupDatafetch", "POST", {
+        enrollmentNo,
+      })) as ApiResponse;
+      if (data.success && data.data == null) toast("invalid enrollment id");
 
+      setfd(data.data);
+    } catch (error) {
+      toast("error happened");
+    }
+  };
+  const check = () =>
+    !allFieldsFilled || !fd?.name || year === "" || selected === "Select";
   const handleChange3 = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -168,7 +175,7 @@ const Marksheet = () => {
   };
 
   const handleSubmit = async () => {
-    if (!allFieldsFilled) {
+    if (check()) {
       toast("Please fill all fields before submitting!");
       return;
     }
@@ -181,7 +188,7 @@ const Marksheet = () => {
       totalMarks,
       year,
     });
-    data.ok
+    data.success
       ? toast("Marksheet submitted successfully!")
       : toast("error happened");
   };
@@ -279,6 +286,7 @@ const Marksheet = () => {
                 type={items.type}
                 pattern={items.pattern}
                 placeholder={items.placeholder}
+                value={item[items.name as keyof Subject]}
                 onChange={(e) =>
                   handleChange(
                     index,
@@ -356,11 +364,16 @@ const Marksheet = () => {
         <button
           onClick={handleSubmit}
           className={`w-1/2 p-2 rounded text-white font-bold ${
-            allFieldsFilled
+            !check()
               ? "bg-green-600 hover:bg-green-700"
               : "bg-gray-500 cursor-not-allowed"
           }`}
-          disabled={!allFieldsFilled}
+          disabled={
+            !allFieldsFilled ||
+            !fd?.name ||
+            year === "" ||
+            selected === "Select"
+          }
         >
           Submit
         </button>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store";
+import Loader from "@/components/Loader";
 
 export default function StudentLogin() {
   const router = useRouter();
@@ -12,6 +13,19 @@ export default function StudentLogin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { user, login } = useAuthStore();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const handleComplete = () => setLoading(false);
+
+    if (document.readyState === "complete") {
+      handleComplete(); // If already loaded
+    } else {
+      window.addEventListener("load", handleComplete);
+    }
+
+    return () => window.removeEventListener("load", handleComplete);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -19,7 +33,7 @@ export default function StudentLogin() {
       return;
     }
   }, [user, router]);
-
+  if (loading) return <Loader />;
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -28,18 +42,21 @@ export default function StudentLogin() {
       return;
     }
 
-    const data = await fetcherWc("/studentLogin", "POST", {
-      enrollmentNo: enrollmentNo,
-      password,
-    });
+    try {
+      const data = await fetcherWc("/studentLogin", "POST", {
+        enrollmentNo: enrollmentNo,
+        password,
+      });
+      if (data.success) {
+        toast("login successful");
+        login(data.data);
 
-    if (data.success) {
-      toast("login successful");
-      login(data.data);
-
-      router.push("/student/dashboard");
-    } else {
-      setError("Invalid Enrollment No. or Password.");
+        router.push("/student/dashboard");
+      } else {
+        setError("Invalid Enrollment No. or Password.");
+      }
+    } catch (error) {
+      toast("error happened");
     }
   };
 

@@ -2,15 +2,18 @@
 
 import { motion } from "framer-motion";
 import anime from "animejs";
+import { useEffect } from "react";
 
 const Loader = () => {
-  anime({
-    targets: ".loader div",
-    rotate: "1turn",
-    easing: "linear",
-    duration: 1000,
-    loop: true,
-  });
+  useEffect(() => {
+    anime({
+      targets: ".loader div",
+      rotate: "1turn",
+      easing: "linear",
+      duration: 1000,
+      loop: true,
+    });
+  }, []);
 
   return (
     <motion.div

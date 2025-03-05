@@ -296,7 +296,7 @@ export const marks = [
   {
     name: "subject",
     type: "text",
-    value: "",
+
     placeholder: "Subject",
     pattern: "[A-Za-z ]*",
   },
@@ -304,25 +304,25 @@ export const marks = [
     name: "theoryFullMarks",
     type: "number",
     pattern: "[0-9]*",
-    value: "",
+
     placeholder: "Theory Full Marks",
   },
   {
     name: "practicalFullMarks",
     type: "number",
-    value: "",
+
     placeholder: "Practical Full Marks",
   },
   {
     name: "theoryMarks",
     type: "number",
-    value: "",
+
     placeholder: "Theory Marks",
   },
   {
     name: "practicalMarks",
     type: "number",
-    value: "",
+
     placeholder: "Practical Marks",
   },
 ];

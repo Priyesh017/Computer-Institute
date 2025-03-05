@@ -42,6 +42,7 @@ export type ApiResponse = {
 const ExamForm = () => {
   const [fd, setfd] = useState<EnrollmentData>();
   const [loading, setLoading] = useState(false);
+
   const [enrollmentNo, setEnrollmentNo] = useState<string>("");
   const [ATI_CODE, setATI_CODE] = useState<string>("");
   const [ExamCenterCode, setExamCenterCode] = useState<string>("");
@@ -69,11 +70,16 @@ const ExamForm = () => {
   ];
 
   const fetchData = async () => {
-    const data = (await fetcherWc("/exmformfillupDatafetch", "POST", {
-      enrollmentNo,
-    })) as ApiResponse;
+    try {
+      const data = (await fetcherWc("/exmformfillupDatafetch", "POST", {
+        enrollmentNo,
+      })) as ApiResponse;
 
-    setfd(data.data);
+      if (data.success && data.data == null) toast("invalid enrollment id");
+      setfd(data.data);
+    } catch (error) {
+      toast("error happened");
+    }
   };
 
   useEffect(() => {
@@ -104,7 +110,7 @@ const ExamForm = () => {
       lprn: lastpaymentR,
     });
 
-    if (response.ok) {
+    if (response.success) {
       toast("success");
     } else {
       toast("failed");
@@ -224,7 +230,7 @@ const ExamForm = () => {
             <input
               type="text"
               value={SemNo}
-              placeholder="dd/mm/yy"
+              placeholder="hh:mm"
               onChange={(e) => setSemNo(e.target.value)}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
@@ -237,7 +243,7 @@ const ExamForm = () => {
             <input
               type="text"
               value={SemNo}
-              placeholder="dd/mm/yy"
+              placeholder="hh:mm"
               onChange={(e) => setSemNo(e.target.value)}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
