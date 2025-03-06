@@ -1,4 +1,5 @@
 import axios from "axios";
+import { DataItem } from "./app/_components/examforms";
 
 interface iDatatype {
   email?: string;
@@ -22,6 +23,7 @@ interface iDatatype {
   Enrollmentno?: string;
   data?: any;
   imageUrl?: string;
+  enrollment?: DataItem;
 }
 
 const ApiEnd = axios.create({

@@ -21,6 +21,7 @@ interface Enrollment {
   dob: string; // or Date if you want to parse it
   idCardLink: string;
   marksheetLink: string;
+  imageLink: string;
   name: string;
   createdAt: string; // or Date
   Enrollmentno: string;
