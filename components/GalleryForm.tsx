@@ -23,7 +23,7 @@ export default function GalleryInsertion() {
   const [images, setImages] = useState<
     { category: string; src: string; file: File }[]
   >([]);
-  console.log(images);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 

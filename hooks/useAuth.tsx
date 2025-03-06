@@ -36,7 +36,13 @@ export function useAuth() {
   }, [router]);
 
   useEffect(() => {
-    const allowedRoutes = ["/", "/chooseuser"];
+    const allowedRoutes = [
+      "/",
+      "/chooseuser",
+      "/signup",
+      "/login",
+      "/studentlogin",
+    ];
 
     if (!loading && !user && !allowedRoutes.includes(pathname)) {
       router.replace("/login");

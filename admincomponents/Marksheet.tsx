@@ -179,18 +179,23 @@ const Marksheet = () => {
       toast("Please fill all fields before submitting!");
       return;
     }
-    const data = await fetcherWc("/exmmarksentry", "POST", {
-      EnrollmentNo: enrollmentNo,
-      marks: subjects,
-      remarks: selected,
-      grade,
-      percentage,
-      totalMarks,
-      year,
-    });
-    data.success
-      ? toast("Marksheet submitted successfully!")
-      : toast("error happened");
+    try {
+      const data = await fetcherWc("/exmmarksentry", "POST", {
+        EnrollmentNo: enrollmentNo,
+        marks: subjects,
+        remarks: selected,
+        grade,
+        percentage,
+        totalMarks,
+        year,
+      });
+
+      toast(
+        data.success ? "Marksheet submitted successfully!" : "error happened"
+      );
+    } catch (error) {
+      toast("error happend");
+    }
   };
 
   const handlePreview = () => {
