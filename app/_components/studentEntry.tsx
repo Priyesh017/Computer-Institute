@@ -206,7 +206,6 @@ const AddStudent: React.FC = () => {
         errorMessages[issue.path[0] as string] = issue.message;
       });
       toast("some error happend");
-      console.log(errorMessages);
     } else {
       try {
         setLoader(true);
@@ -232,7 +231,6 @@ const AddStudent: React.FC = () => {
         if (!uploadResponse.ok) throw new Error("Upload failed");
 
         const imageUrl = url.split("?")[0];
-        console.log(imageUrl);
 
         const data = await fetcherWc("/createEnrollment", "POST", {
           ...fd,

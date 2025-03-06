@@ -54,7 +54,7 @@ const ChooseUser = () => {
 
         {/* Student Login */}
         <div className="p-5 text-center bg-gray-800 text-gray-400 cursor-pointer rounded-lg shadow-lg hover:bg-gray-700 hover:text-white transition w-80">
-          <button onClick={() => router.push("/checkupdates")}>
+          <button onClick={() => router.push("/studentlogin")}>
             <div>
               <div className="mb-4 flex justify-center">
                 <School className="text-5xl" />

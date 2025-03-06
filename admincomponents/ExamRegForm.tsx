@@ -44,11 +44,23 @@ const ExamForm = () => {
   const [loading, setLoading] = useState(false);
 
   const [enrollmentNo, setEnrollmentNo] = useState<string>("");
-  const [ATI_CODE, setATI_CODE] = useState<string>("");
-  const [ExamCenterCode, setExamCenterCode] = useState<string>("");
-  const [lastpaymentR, setlastpaymentR] = useState<string>("");
-  const [SemNo, setSemNo] = useState<string>("");
 
+  const [remain, setremain] = useState({
+    ATI_CODE: "",
+    ExamCenterCode: "",
+    lastpaymentR: "",
+    SemNo: "",
+    ted: "",
+    ped: "",
+    tet: "",
+    pet: "",
+  });
+
+  const handleChange2 = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setremain((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
   const examFields = [
     { key: "firstName", label: "Name", value: fd?.name || "" },
 
@@ -101,22 +113,29 @@ const ExamForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const response = await fetcherWc("/examFormFillup", "POST", {
-      enrollmentNo,
-      ATI_CODE,
-      ExamCenterCode,
-      lprn: lastpaymentR,
-    });
+      const response = await fetcherWc("/examFormFillup", "POST", {
+        enrollmentNo,
+        ...remain,
+      });
 
-    if (response.success) {
-      toast("success");
-    } else {
-      toast("failed");
+      if (response.success) {
+        toast("✅ Success!");
+      } else {
+        if (response.error?.code === "P2002") {
+          toast("❌ EnrollmentNo already exists!");
+        } else {
+          toast("❌ Submission failed!");
+        }
+      }
+    } catch (error: any) {
+      console.error("Error:", error);
+      toast("⚠️ Some error happened");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -164,8 +183,9 @@ const ExamForm = () => {
             <label className="text-sm font-medium mb-1">ATI Code</label>
             <input
               type="text"
-              value={ATI_CODE}
-              onChange={(e) => setATI_CODE(e.target.value)}
+              name="ATI_CODE"
+              value={remain.ATI_CODE}
+              onChange={handleChange2}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
           </div>
@@ -174,8 +194,9 @@ const ExamForm = () => {
             <label className="text-sm font-medium mb-1">ExamCenter Code</label>
             <input
               type="text"
-              value={ExamCenterCode}
-              onChange={(e) => setExamCenterCode(e.target.value)}
+              name="ExamCenterCode"
+              value={remain.ExamCenterCode}
+              onChange={handleChange2}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
           </div>
@@ -185,8 +206,9 @@ const ExamForm = () => {
             </label>
             <input
               type="text"
-              value={lastpaymentR}
-              onChange={(e) => setlastpaymentR(e.target.value)}
+              name="lastpaymentR"
+              value={remain.lastpaymentR}
+              onChange={handleChange2}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
           </div>
@@ -195,8 +217,9 @@ const ExamForm = () => {
             <label className="text-sm font-medium mb-1">Semester No</label>
             <input
               type="text"
-              value={SemNo}
-              onChange={(e) => setSemNo(e.target.value)}
+              name="SemNo"
+              value={remain.SemNo}
+              onChange={handleChange2}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
           </div>
@@ -205,8 +228,9 @@ const ExamForm = () => {
             <label className="text-sm font-medium mb-1">Theory Exam Date</label>
             <input
               type="text"
-              value={SemNo}
-              onChange={(e) => setSemNo(e.target.value)}
+              name="ted"
+              value={remain.ted}
+              onChange={handleChange2}
               placeholder="dd/mm/yy"
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
@@ -218,9 +242,10 @@ const ExamForm = () => {
             </label>
             <input
               type="text"
-              value={SemNo}
+              name="ped"
+              value={remain.ped}
               placeholder="dd/mm/yy"
-              onChange={(e) => setSemNo(e.target.value)}
+              onChange={handleChange2}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
           </div>
@@ -229,9 +254,10 @@ const ExamForm = () => {
             <label className="text-sm font-medium mb-1">Theory Exam Time</label>
             <input
               type="text"
-              value={SemNo}
+              name="tet"
+              value={remain.tet}
               placeholder="hh:mm"
-              onChange={(e) => setSemNo(e.target.value)}
+              onChange={handleChange2}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
           </div>
@@ -242,9 +268,10 @@ const ExamForm = () => {
             </label>
             <input
               type="text"
-              value={SemNo}
+              name="pet"
+              value={remain.pet}
               placeholder="hh:mm"
-              onChange={(e) => setSemNo(e.target.value)}
+              onChange={handleChange2}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
           </div>

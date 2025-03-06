@@ -38,15 +38,14 @@ const ExamForm = () => {
 
   const fetchfn = async () => {
     try {
-      const data = await fetcherWc("/AllEnrollments", "GET");
+      const { enrollments } = await fetcherWc("/AllEnrollments", "GET");
 
-      setexmforms(data);
+      setexmforms(enrollments);
     } catch (error) {
       toast("some error happened");
     }
   };
 
-  console.log(exmforms);
   useEffect(() => {
     fetchfn();
   }, []);

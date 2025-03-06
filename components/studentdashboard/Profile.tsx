@@ -9,7 +9,7 @@ import { useAuthStore } from "@/store";
 export interface StudentProfileProps {
   name: string;
   Enrollmentno: string;
-  image: string;
+  imageLink: string;
   IdCardNo: string;
   mobileNo: string;
   wpNo: string;
@@ -83,9 +83,9 @@ const StudentProfile: React.FC = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <div className="flex items-center gap-6 mb-10">
-        {student.image ? (
+        {student.imageLink ? (
           <Image
-            src={student.image}
+            src={student.imageLink}
             alt="Student Image"
             width={96}
             height={96}

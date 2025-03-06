@@ -20,7 +20,6 @@ const ForgetPassword = () => {
       return;
     }
     setError("");
-    console.log("Password changed successfully");
   };
 
   const animateError = () => {

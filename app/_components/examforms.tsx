@@ -59,7 +59,6 @@ const ExamForm = () => {
     }
   };
 
-  console.log(exmforms);
   useEffect(() => {
     fetchfn();
   }, []);
@@ -80,7 +79,6 @@ const ExamForm = () => {
       }
 
       const data = await fetcherWc("/exmformApprove", "POST", { id });
-      console.log(data);
       if (data.success) {
         setexmforms((prev) =>
           prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
