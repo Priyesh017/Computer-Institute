@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import anime from "animejs";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
@@ -14,15 +12,8 @@ import {
 
 const OTPComponent = () => {
   const [otp, setOtp] = useState("");
-  const [generatedOtp, setGeneratedOtp] = useState("");
 
-  const verifyOtp = () => {
-    if (otp === generatedOtp) {
-      alert("OTP Verified Successfully!");
-    } else {
-      alert("Invalid OTP, please try again.");
-    }
-  };
+  const verifyOtp = () => {};
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6">

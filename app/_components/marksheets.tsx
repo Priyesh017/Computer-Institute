@@ -1,7 +1,7 @@
 "use client";
 import { Loader2 } from "lucide-react";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -17,7 +17,6 @@ import StudentReportCard from "./StudentReportCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store";
-import Loader from "@/components/Loader";
 
 type Mark = {
   subject: string;
@@ -72,20 +71,22 @@ const ExamForm = () => {
 
   const [temploading, settemploading] = useState(false);
   const [temploading2, settemploading2] = useState(false);
-  const fetchfn = async () => {
+
+  const fetchfn = useCallback(async () => {
     try {
       setloadingTime(true);
       const data = await fetcherWc("/marksheetfetch", "GET");
       setEnrollments(data.data);
       setloadingTime(false);
     } catch (error) {
+      console.log(error);
       toast("some error happened");
     }
-  };
+  }, [setloadingTime]);
 
   useEffect(() => {
     fetchfn();
-  }, []);
+  }, [fetchfn]);
 
   const toggleActivation = async ({ verified, id }: MarksWithEnrollment) => {
     toast("plz wait");
@@ -112,6 +113,7 @@ const ExamForm = () => {
       }
       toast(data.success ? "success" : "failed");
     } catch (error) {
+      console.log(error);
       toast("some error happened");
     }
   };
@@ -129,20 +131,24 @@ const ExamForm = () => {
 
     const endpoint =
       type === "marksheet" ? "/generateMarksheet" : "/generateCertificate";
-    type === "marksheet" ? settemploading(true) : settemploading2(true);
-    console.log(selectedEnrollment);
+    if (type === "marksheet") settemploading(true);
+    else settemploading2(true);
+
     try {
       const response = await fetcherWc(endpoint, "POST", {
         data: selectedEnrollment,
       });
-      type === "marksheet" ? settemploading(false) : settemploading2(false);
+      if (type === "marksheet") settemploading(false);
+      else settemploading2(false);
 
       if (!response.success) toast.error("failed");
       else toast.success("success");
     } catch (error) {
+      console.log(error);
       toast.error("some error, try again!");
     } finally {
-      type === "marksheet" ? settemploading(false) : settemploading2(false);
+      if (type === "marksheet") settemploading(false);
+      else settemploading2(false);
     }
   };
 

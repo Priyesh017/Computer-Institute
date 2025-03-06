@@ -51,6 +51,7 @@ export default function LoginPage() {
         toast(data.error);
       }
     } catch (error) {
+      console.log(error);
       toast("some error happened");
     }
   }

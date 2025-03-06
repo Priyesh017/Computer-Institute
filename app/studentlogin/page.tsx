@@ -56,6 +56,7 @@ export default function StudentLogin() {
         setError("Invalid Enrollment No. or Password.");
       }
     } catch (error) {
+      console.log(error);
       toast("error happened");
     }
   };

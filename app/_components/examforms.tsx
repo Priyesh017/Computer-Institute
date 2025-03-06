@@ -64,6 +64,7 @@ const ExamForm = () => {
 
       setexmforms(data.data);
     } catch (error) {
+      console.log(error);
       toast("some error happened");
     }
   };
@@ -95,6 +96,7 @@ const ExamForm = () => {
       }
       toast(data.success ? "success" : "failed");
     } catch (error) {
+      console.log(error);
       toast("some error happened");
     }
   };

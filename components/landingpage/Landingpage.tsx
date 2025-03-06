@@ -7,7 +7,6 @@ import { menuItems } from "@/data";
 import Navbar from "@/components/landingpage/Navbar";
 import { fetcher } from "@/helper";
 import { toast } from "react-toastify";
-import { useAuthStore } from "@/store";
 import Loader from "../Loader";
 
 interface etype {
@@ -65,6 +64,7 @@ export default function Home() {
       if (data.success) toast("form submitted successfully");
       else toast("failed to submit");
     } catch (error) {
+      console.log(error);
       toast.error("fatal error");
     }
   };
