@@ -32,6 +32,7 @@ export type DataItem = {
     mobileNo: string;
     wpNo: string;
     Enrollmentno: string;
+    imageLink: string;
     address: string;
     center: {
       Centername: string;
@@ -108,6 +109,7 @@ const ExamForm = () => {
     startIndex + PAGE_SIZE
   );
   const generateAdmit = async (enrollment: DataItem) => {
+    toast("plz wait");
     const data = await fetcherWc("/generateadmit", "POST", {
       enrollment,
     });
