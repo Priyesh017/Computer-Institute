@@ -38,16 +38,20 @@ export type MarksWithEnrollment = {
   verified: boolean;
   createdAt: Date;
   year: string;
+  serialNo: number;
   enrollment: {
     name: string;
     father: string;
     dob: Date;
+    imageLink: string;
     course: {
       CName: string;
+      Duration: number;
     };
     center: {
       Centername: string;
       address: string;
+      code: string;
     };
   };
 };
@@ -56,6 +60,7 @@ const PAGE_SIZE = 5;
 
 const ExamForm = () => {
   const [enrollments, setEnrollments] = useState<MarksWithEnrollment[]>([]);
+  console.log(enrollments);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedEnrollment, setSelectedEnrollment] =
     useState<MarksWithEnrollment | null>(null);
@@ -66,6 +71,7 @@ const ExamForm = () => {
   const { setloadingTime } = useAuthStore();
 
   const [temploading, settemploading] = useState(false);
+  const [temploading2, settemploading2] = useState(false);
   const fetchfn = async () => {
     try {
       setloadingTime(true);
@@ -123,16 +129,20 @@ const ExamForm = () => {
 
     const endpoint =
       type === "marksheet" ? "/generateMarksheet" : "/generateCertificate";
-    settemploading(true);
+    type === "marksheet" ? settemploading(true) : settemploading2(true);
+    console.log(selectedEnrollment);
     try {
       const response = await fetcherWc(endpoint, "POST", {
         data: selectedEnrollment,
       });
-      settemploading(false);
+      type === "marksheet" ? settemploading(false) : settemploading2(false);
+
       if (!response.success) toast.error("failed");
       else toast.success("success");
     } catch (error) {
       toast.error("some error, try again!");
+    } finally {
+      type === "marksheet" ? settemploading(false) : settemploading2(false);
     }
   };
 
@@ -271,13 +281,13 @@ const ExamForm = () => {
               </Button>
               <Button
                 className="bg-green-600 hover:bg-green-700 flex-1"
-                disabled={temploading}
+                disabled={temploading2}
                 onClick={() =>
                   handleGenerate("certificate", selectedEnrollment)
                 }
               >
                 Generate Certificate
-                {temploading && <Loader2 className="animate-spin" />}
+                {temploading2 && <Loader2 className="animate-spin" />}
               </Button>
             </div>
           </div>

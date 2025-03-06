@@ -108,7 +108,7 @@ const ExamForm = () => {
     startIndex + PAGE_SIZE
   );
   const generateAdmit = async (enrollment: DataItem) => {
-    const data = await fetcherWc("/", "POST", {
+    const data = await fetcherWc("/generateadmit", "POST", {
       enrollment,
     });
 
