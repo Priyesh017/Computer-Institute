@@ -15,11 +15,18 @@ import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-type DataItem = {
+export type DataItem = {
   id: number;
   EnrollmentNo: string;
   verified: boolean;
   createdAt: string;
+  ExamCenterCode: string;
+  ATI_CODE: string;
+  practExmdate: string;
+  theoryExamdate: string;
+  practExmtime: string;
+  theoryExmtime: string;
+  sem: string;
   enrollment: {
     name: string;
     mobileNo: string;
@@ -29,6 +36,7 @@ type DataItem = {
     center: {
       Centername: string;
     };
+    father: string;
     IdCardNo: string;
     amount: {
       lastPaymentRecieptno: string;
@@ -99,7 +107,14 @@ const ExamForm = () => {
     startIndex,
     startIndex + PAGE_SIZE
   );
-  const generateAdmit = () => {};
+  const generateAdmit = async (enrollment: DataItem) => {
+    const data = await fetcherWc("/", "POST", {
+      enrollment,
+    });
+
+    toast(data.success ? "generated" : "error");
+  };
+
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
       <div className="flex justify-between items-center px-4 py-2">
@@ -156,7 +171,7 @@ const ExamForm = () => {
                   ? "bg-purple-600 hover:bg-purple-700"
                   : "bg-gray-400 cursor-not-allowed"
               }`}
-              onClick={() => generateAdmit()}
+              onClick={() => generateAdmit(enrollment)}
               disabled={!enrollment.verified} // Disable if not verified
             >
               Generate Admit
