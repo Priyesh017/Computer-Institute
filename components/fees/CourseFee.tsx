@@ -42,6 +42,7 @@ const ExamFee = () => {
         setEnrollments(data.data);
         setreload(false);
       } catch (error) {
+        console.log(error);
         toast("some error happened");
       }
     };
@@ -73,6 +74,7 @@ const ExamFee = () => {
         setreload(true);
       } else toast("not ok");
     } catch (error) {
+      console.log(error);
       toast("some error happened");
     }
   };

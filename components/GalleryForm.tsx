@@ -75,8 +75,9 @@ export default function GalleryInsertion() {
       }
 
       setImages([]); // Clear images after successful upload
-    } catch (err: any) {
-      setError(err.message || "Something went wrong");
+    } catch (err) {
+      console.log(err);
+      setError("Something went wrong");
     } finally {
       setLoading(false);
     }

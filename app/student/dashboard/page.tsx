@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -52,6 +52,7 @@ export default function Menu() {
       setActiveSection("");
       logout();
     } catch (error) {
+      console.log(error);
       toast("error happened");
     }
   };

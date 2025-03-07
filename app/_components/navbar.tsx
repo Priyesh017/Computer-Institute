@@ -14,6 +14,7 @@ const Navbar = () => {
       await fetcherWc("/logout", "GET");
       logout();
     } catch (error) {
+      console.log(error);
       toast("some error happened");
     }
   };

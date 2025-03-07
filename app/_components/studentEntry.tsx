@@ -238,6 +238,7 @@ const AddStudent: React.FC = () => {
         });
         toast(data.success);
       } catch (error) {
+        console.log(error);
         toast("some error happened");
       }
       setLoader(false);

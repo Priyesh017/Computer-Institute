@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -13,7 +13,6 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuthStore } from "@/store";
 
 interface Enrollment {
   admitLink: string;
@@ -41,7 +40,7 @@ const EnrollmentList = () => {
   const [totalEnrollments, setTotalEnrollments] = useState(0); // Track total count
   const [temploading, settemploading] = useState(false);
 
-  const fetchEnrollments = async () => {
+  const fetchEnrollments = useCallback(async () => {
     try {
       const { enrollments, total } = await fetcherWc(
         `/AllEnrollments?page=${currentPage}&limit=${PAGE_SIZE}`,
@@ -52,11 +51,11 @@ const EnrollmentList = () => {
     } catch (error) {
       console.error("Failed to fetch enrollments:", error);
     }
-  };
+  }, [currentPage]);
 
   useEffect(() => {
     fetchEnrollments();
-  }, [currentPage]);
+  }, [currentPage, fetchEnrollments]);
 
   const toggleActivation = async (enrollment: Enrollment) => {
     toast("Please wait...");
@@ -77,6 +76,7 @@ const EnrollmentList = () => {
         toast("Failed");
       }
     } catch (error) {
+      console.log(error);
       toast("some error happened");
     }
   };
@@ -91,6 +91,7 @@ const EnrollmentList = () => {
         data.success ? "ID generated successfully" : "ID generation failed"
       );
     } catch (error) {
+      console.log(error);
       toast("some error happened");
     }
   };

@@ -55,7 +55,7 @@ const GalleryWall = () => {
     };
 
     fetchGalleryImages();
-  }, [folder, bucketName, bucketRegion]);
+  }, [folder, bucketName, setloadingTime]);
 
   useEffect(() => {
     if (!gridRef.current) return;
