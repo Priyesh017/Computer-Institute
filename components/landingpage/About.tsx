@@ -76,7 +76,7 @@ const AboutInfo = () => {
           </div>
           <div className="flex-1 justify-items-end">
             <Image
-              src="/logo.jpg"
+              src="/Logo.png"
               alt="About us"
               width={500}
               height={300}

@@ -54,7 +54,7 @@ export default function Navbar() {
     >
       <div className="flex justify-center items-center ml-6 gap-2">
         <Image
-          src="/Logo.jpg"
+          src="/logo.jpg"
           alt="Student"
           width={50}
           height={50}
