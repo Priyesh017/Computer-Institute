@@ -232,7 +232,7 @@ const Marksheet = () => {
   const grandTotal = totalTheoryMarks + totalPracticalMarks;
 
   return (
-    <div className="max-w-4xl mx-auto my-10 p-10 bg-white text-black rounded-lg shadow-lg">
+    <div className="max-w-4xl mx-auto my-10 p-3 md:p-10 bg-white text-black rounded-lg shadow-lg">
       <h2 className="text-3xl font-bold mb-2 text-center">Marksheet</h2>
       <p className="text-gray-500 text-center mb-6">
         Clearly fill the form below
@@ -250,7 +250,7 @@ const Marksheet = () => {
         {details.map((item, index) => (
           <div key={index} className="flex flex-col">
             <label className="text-sm font-medium mb-1">{item.label}</label>
-            <div className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none">
+            <div className="p-2 h-fit md:h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none">
               {item.value}
             </div>
           </div>
@@ -266,7 +266,7 @@ const Marksheet = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-7 gap-2 text-center font-bold bg-gray-200 p-3 rounded-lg">
+      <div className="grid grid-cols-7 gap-2 text-center text-xs md:text-lg font-bold bg-gray-200 p-3 rounded-lg">
         <span>Subject</span>
         <span>Theory Full Marks</span>
         <span>Practical Full Marks</span>
@@ -279,7 +279,7 @@ const Marksheet = () => {
         {subjects.map((item, index) => (
           <motion.div
             key={index}
-            className="marks-row grid grid-cols-7 gap-2 p-2 bg-gray-100 border border-gray-300 rounded-lg items-center"
+            className="marks-row grid md:grid-cols-7 gap-2 p-2 bg-gray-100 border border-gray-300 rounded-lg items-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
@@ -342,7 +342,7 @@ const Marksheet = () => {
         </button>
       </div>
 
-      <div className="grid grid-cols-4 items-center justify-center gap-2 mt-6 text-center">
+      <div className="grid md:grid-cols-4 items-center justify-center gap-2 mt-6 text-center">
         <motion.p className="text-lg font-semibold">
           Grand Total: <span className="text-blue-500">{totalMarks}</span>
         </motion.p>

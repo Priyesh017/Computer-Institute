@@ -100,7 +100,7 @@ const GalleryWall = () => {
       {folder ? (
         <div>
           <h2 className="text-xl font-bold mb-4 text-center">{folder}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-4 gap-6">
             {galleryImages.map((src, index) => (
               <motion.div
                 key={index}
@@ -127,7 +127,7 @@ const GalleryWall = () => {
           </button>
         </div>
       ) : (
-        <div ref={gridRef} className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div ref={gridRef} className="grid md:grid-cols-4 gap-6">
           {images?.map((image, index) => (
             <motion.div
               key={index}

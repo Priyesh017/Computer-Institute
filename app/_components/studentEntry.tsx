@@ -246,7 +246,7 @@ const AddStudent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 md:px-8">
       <form
         className="w-full min-w-md bg-white shadow-lg rounded-2xl p-6 space-y-6"
         onSubmit={handleSubmit}

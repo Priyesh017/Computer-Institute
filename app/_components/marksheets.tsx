@@ -185,7 +185,7 @@ const ExamForm = () => {
         {currentEnrollments.map((d, index: number) => (
           <div
             key={index}
-            className={`click grid grid-cols-5 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer ${
+            className={`click grid md:grid-cols-5 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer ${
               isNew ? "bg-rose-100" : "bg-gray-200"
             } hover:bg-blue-100`}
           >

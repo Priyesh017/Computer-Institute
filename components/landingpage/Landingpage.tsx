@@ -83,7 +83,7 @@ export default function Home() {
           </section>
         ))}
 
-        <footer className="text-center py-4 bg-gray-800 text-white">
+        <footer className="text-center p-4 bg-gray-800 text-white">
           <span> Copyright &copy; 2015-2025 | All Right Reserved - </span>
           <span className="text-purple-500">
             PMK National Youth Computer Centre
@@ -91,7 +91,7 @@ export default function Home() {
         </footer>
 
         <div className="fixed bottom-8 right-2 flex flex-col items-center z-40">
-          <div className="flex flex-row">
+          <div className="flex flex-col md:flex-row">
             {/* Scroll to Top Arrow Button */}
             {showScrollButton && (
               <motion.div
@@ -138,7 +138,9 @@ export default function Home() {
                 {isModalOpen ? (
                   <FaTimes size={24} />
                 ) : (
-                  <p className="text-lg font-bold">Enquiry</p>
+                  <p className="text-sm md:text-lg font-bold">
+                    Enquiry
+                  </p>
                 )}
               </motion.button>
             </motion.div>

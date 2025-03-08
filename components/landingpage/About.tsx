@@ -43,7 +43,7 @@ const AboutInfo = () => {
             <h2 className="relative top-[-40] text-5xl py-2 font-bold">
               About Us
             </h2>
-            <div className="flex gap-10 mb-4">
+            <div className="flex gap-10 mb-6">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
                   <span id={`stat-${index}`} className="text-3xl font-bold">
@@ -55,14 +55,14 @@ const AboutInfo = () => {
                 </div>
               ))}
             </div>
-            <div className="text-gray-700 text-lg mb-4">
+            <div className="text-gray-700 text-lg text-justify mb-4">
               At Mission National Youth Computer Center, we provide top-quality
               training in cutting-edge technology. With expert instructors,
               modern labs, and industry-focused courses, we equip students with
               the skills needed for success in the digital world. Whether
               you&apos;re a beginner or an advanced learner, our programs help
               you stay ahead in technology.{" "}
-              <p className="font-bold text-center">
+              <p className="mt-5 font-bold text-center">
                 Join us and build your future today!
               </p>
             </div>

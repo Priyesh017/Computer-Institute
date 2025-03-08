@@ -123,14 +123,14 @@ export default function CourseCategories() {
 
       {/* Filters */}
       <div className="md:my-1 my-4">
-        <div className="flex justify-between items-center my-1">
+        <div className="flex justify-between items-center my-1 gap-2">
           {/* Search Bar */}
           <Input
             type="text"
             placeholder="Search courses..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-1/3 p-2 border border-gray-400 rounded-lg"
+            className="w-1/3 h-fit p-2 border border-gray-400 rounded-lg"
           />
 
           {/* Sorting */}
@@ -144,7 +144,7 @@ export default function CourseCategories() {
                   }
                   setSortedBy(option);
                 }}
-                className={`px-2 py-2 flex items-center gap-1 transition-all duration-300 ${
+                className={`px-1 md:px-2 py-2 flex items-center gap-1 transition-all duration-300 ${
                   sortedBy === option
                     ? "bg-violet-600 text-white"
                     : "bg-gray-200"

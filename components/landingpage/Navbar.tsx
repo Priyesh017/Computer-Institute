@@ -52,7 +52,7 @@ export default function Navbar() {
         showNavbar ? "translate-y-0" : "-translate-y-full"
       }`}
     >
-      <div className="flex justify-center items-center ml-6 gap-2">
+      <div className="flex justify-center items-center md:ml-10 gap-2">
         <Image
           src="/logo.jpg"
           alt="Student"
@@ -65,7 +65,9 @@ export default function Navbar() {
       <div className="md:hidden flex justify-center z-50 ">
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="text-gray-900 text-2xl"
+          className={`text-2xl ${
+            isMenuOpen ? "text-red-600" : "text-gray-800"
+          }`}
         >
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>

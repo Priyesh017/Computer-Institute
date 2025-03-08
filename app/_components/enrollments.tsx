@@ -114,50 +114,49 @@ const EnrollmentList = () => {
       </div>
       <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
-        <span>Email ID</span>
+        <span>Enrollment No.</span>
         <span>Date</span>
         <span>Approval</span>
         <span>Generate</span>
       </div>
-      <div>
-        {filteredEnrollment.map((enrollment) => (
+
+      {filteredEnrollment.map((enrollment) => (
+        <div
+          key={enrollment.id}
+          className="click grid md:grid-cols-5 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer bg-gray-200 hover:bg-blue-100"
+        >
           <div
-            key={enrollment.id}
-            className="click grid grid-cols-5 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer bg-gray-200 hover:bg-blue-100"
+            className="hover:text-violet-800"
+            onClick={() => {
+              setSelectedEnrollment(enrollment);
+              setIsModalOpen(true);
+            }}
           >
-            <div
-              className="hover:text-violet-800"
-              onClick={() => {
-                setSelectedEnrollment(enrollment);
-                setIsModalOpen(true);
-              }}
-            >
-              {enrollment.name}
-            </div>
-            <div>{enrollment.Enrollmentno}</div>
-            <span>{new Date(enrollment.createdAt).toDateString()}</span>
-            <div className="flex items-center justify-center gap-2">
-              <Switch
-                id={`activation-${enrollment.id}`}
-                checked={enrollment.activated}
-                onCheckedChange={() => toggleActivation(enrollment)}
-                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
-              />
-            </div>
-            <Button
-              className={`mx-4 ${
-                enrollment.activated
-                  ? "bg-purple-600 hover:bg-purple-700"
-                  : "bg-gray-400 cursor-not-allowed"
-              }`}
-              onClick={() => generateHandler(enrollment.Enrollmentno)}
-              disabled={!enrollment.activated || temploading}
-            >
-              Generate ID
-            </Button>
+            {enrollment.name}
           </div>
-        ))}
-      </div>
+          <div>{enrollment.Enrollmentno}</div>
+          <span>{new Date(enrollment.createdAt).toDateString()}</span>
+          <div className="flex items-center justify-center gap-2">
+            <Switch
+              id={`activation-${enrollment.id}`}
+              checked={enrollment.activated}
+              onCheckedChange={() => toggleActivation(enrollment)}
+              className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+            />
+          </div>
+          <Button
+            className={`mx-4 ${
+              enrollment.activated
+                ? "bg-purple-600 hover:bg-purple-700"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
+            onClick={() => generateHandler(enrollment.Enrollmentno)}
+            disabled={!enrollment.activated || temploading}
+          >
+            Generate ID
+          </Button>
+        </div>
+      ))}
 
       {/* Pagination */}
       <Pagination className="mt-4">

@@ -42,7 +42,7 @@ const Banner = () => {
         className="absolute w-full h-full z-0"
       />
       <div className="relative w-full min-h-screen flex flex-col-reverse md:flex-row items-center justify-between p-2 md:p-12 bg-gradient-to-r from-grad-2/80 via-grad-3/60 to-grad-8/50">
-        <div className="space-y-5 p-4 mt-20">
+        <div className="space-y-5 p-4 md:mt-20">
           <motion.div
             initial={{ x: -50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}

@@ -56,7 +56,7 @@ const MapComponent = () => {
       zoom={8}
       scrollWheelZoom={true}
       style={{ height: "500px", width: "70%" }}
-      className="relative top-[-20] md:min-w-[50%] min-w-fit z-10"
+      className="relative top-5 md:top-[-20] md:min-w-[50%] min-w-fit max-h-72 md:max-h-full z-10"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -82,7 +82,7 @@ const ExamFee = () => {
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
       <h2 className="text-xl text-center font-bold mb-6">All Course Fees</h2>
-      <div className="grid grid-cols-7 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <div className="grid grid-cols-7 text-xs md:text-lg text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
         <span>Date</span>
@@ -98,7 +98,7 @@ const ExamFee = () => {
           return (
             <div
               key={enrollment.id}
-              className="grid grid-cols-7 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer hover:bg-blue-100"
+              className="grid md:grid-cols-7 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer hover:bg-blue-100"
             >
               <div className="hover:text-violet-800">{enrollment.name}</div>
               <div>{enrollment.Enrollmentno}</div>

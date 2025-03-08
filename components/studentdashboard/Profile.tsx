@@ -77,7 +77,7 @@ const StudentProfile: React.FC = () => {
   return (
     <motion.div
       ref={cardRef}
-      className="max-w-5xl mx-auto my-5 bg-white shadow-lg rounded-2xl p-6 border border-gray-300"
+      className="max-w-4xl mx-auto my-10 bg-white shadow-lg rounded-2xl p-6 border border-gray-300"
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
@@ -89,7 +89,7 @@ const StudentProfile: React.FC = () => {
             alt="Student Image"
             width={96}
             height={96}
-            className="w-24 h-24 rounded-full shadow-lg border-2 border-purple-500"
+            className="w-36 h-36 rounded-full shadow-lg border-2 border-purple-500"
           />
         ) : (
           <p className="text-gray-500">No Image Available</p>

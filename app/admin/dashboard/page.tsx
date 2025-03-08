@@ -41,7 +41,7 @@ const Gallery = dynamic(() => import("@/components/GalleryForm"), {
 
 export default function AdminDashboard() {
   const selectedComponent = useAuthStore((state) => state.selectedComponent);
-  const { isSidebarOpen, setSidebarOpen, loading } = useAuthStore();
+  const { isSidebarOpen, setSidebarOpen, loading, user } = useAuthStore();
   const defaultOpen = useState(true)[0];
 
   if (loading) return <Loader />;
@@ -85,7 +85,18 @@ export default function AdminDashboard() {
           <AppSidebar />
           {/* Main Content */}
           <main className="flex-col gap-4 lg:p-6 overflow-y-auto w-screen">
-            {renderComponent()}
+            {renderComponent() ||
+              (user ? (
+                <div className="w-full h-full flex flex-col justify-center items-center">
+                  <h1 className="text-2xl font-bold text-center">
+                    Welcome Back, {user.name.toString().toUpperCase()}! 😊
+                  </h1>
+                  <p className="text-center text-lg">
+                    We appreciate your dedication. Wishing you a productive and
+                    successful day ahead!
+                  </p>
+                </div>
+              ) : null)}
           </main>
         </div>
       </div>
