@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { fetcherWc } from "@/helper";
 import Loader from "@/components/Loader";
+import { Button } from "@/components/ui/button";
 interface idata {
   data: Notification[];
 }
@@ -77,23 +78,30 @@ export default function Notifications() {
           exit={{ opacity: 0 }}
           onClick={() => setSelectedNotification(null)}
         >
-          <div className="bg-white p-6 rounded-lg max-w-[70%] relative">
-            <button
-              className="absolute top-2 right-2"
-              onClick={() => setSelectedNotification(null)}
-            >
-              <X className="w-5 h-5 text-gray-600 hover:text-red-500" />
-            </button>
-            <p className="font-semibold text-red-600">
-              {selectedNotification.name}
-            </p>
-            <h3 className="text-lg font-bold">{selectedNotification.email}</h3>
-            <p className="mt-2 text-gray-600 dark:text-gray-300">
-              {selectedNotification.message}
-            </p>
-            <p className="mt-2 text-xs text-gray-400">
-              {new Date(selectedNotification.createdAt).toDateString()}
-            </p>
+          <div className="flex flex-col justify-center items-center bg-white p-6 rounded-lg max-w-[70%] relative">
+            <div>
+              <button
+                className="absolute top-2 right-2"
+                onClick={() => setSelectedNotification(null)}
+              >
+                <X className="w-5 h-5 text-gray-600 hover:text-red-500" />
+              </button>
+              <p className="font-semibold text-red-600">
+                {selectedNotification.name}
+              </p>
+              <h3 className="text-lg font-bold">
+                {selectedNotification.email}
+              </h3>
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
+                {selectedNotification.message}
+              </p>
+              <p className="mt-2 text-xs text-gray-400">
+                {new Date(selectedNotification.createdAt).toDateString()}
+              </p>
+            </div>
+            <Button className="mt-5 bg-purple-700 hover:bg-purple-800">
+              Verify
+            </Button>
           </div>
         </motion.div>
       )}
