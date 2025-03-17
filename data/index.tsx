@@ -71,6 +71,19 @@ export const data = {
       ],
     },
     {
+      title: "Student Info",
+      url: "#",
+      role: "admin",
+      icon: SquareTerminal,
+      isActive: true,
+      items: [
+        {
+          title: "Student Info",
+          url: "#",
+        },
+      ],
+    },
+    {
       title: "Education",
       role: "center",
       url: "#",
