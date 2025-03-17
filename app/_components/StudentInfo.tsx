@@ -92,10 +92,24 @@ const EnrollmentList = () => {
           >
             {enrollment.name}
           </div>
-          <div className="border-gray-500 border-x">
-            {enrollment.Enrollmentno}
+          <div
+            className="border-gray-500 border-x hover:text-violet-800"
+            onClick={() => {
+              setSelectedEnrollment(enrollment);
+              setIsModalOpen(true);
+            }}
+          >
+            {enrollment.name}
           </div>
-          <span>{new Date(enrollment.createdAt).toDateString()}</span>
+          <div
+            className="hover:text-violet-800"
+            onClick={() => {
+              setSelectedEnrollment(enrollment);
+              setIsModalOpen(true);
+            }}
+          >
+            {enrollment.name}
+          </div>
         </div>
       ))}
 
