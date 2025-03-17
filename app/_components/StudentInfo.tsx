@@ -9,9 +9,6 @@ import {
   PaginationNext,
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
-import { Switch } from "@/components/ui/switch";
-import { toast } from "react-toastify";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface Enrollment {
