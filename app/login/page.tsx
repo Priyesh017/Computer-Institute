@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaArrowLeft } from "react-icons/fa6";
+import Modal from "@/components/Modal";
+import { Input } from "@/components/ui/input";
 
 export default function LoginPage() {
   const { utype, user, login, setloadingTime } = useAuthStore();
@@ -16,6 +18,7 @@ export default function LoginPage() {
     password: "",
   });
 
+  const [isOpen, setIsOpen] = useState(false);
   const [loader, setLoader] = useState(false);
 
   useEffect(() => {
@@ -59,6 +62,11 @@ export default function LoginPage() {
   function handleInputChange(e: ChangeEvent<HTMLInputElement>): void {
     setfd({ ...fd, [e.target.name]: e.target.value });
   }
+
+  const handleForgotPassword = () => {
+    router.push("/otp");
+    setIsOpen(false);
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -125,7 +133,11 @@ export default function LoginPage() {
               />
               Remember me
             </label>
-            <a href="#" className="text-sm text-purple-600 hover:underline">
+            <a
+              href="#"
+              className="text-sm text-purple-600 hover:underline"
+              onClick={() => setIsOpen(true)}
+            >
               Forgot password?
             </a>
           </div>
@@ -154,6 +166,25 @@ export default function LoginPage() {
           )}
         </form>
       </div>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Enter Your Correct Email ID"
+      >
+        <Input
+          type="email"
+          id="email"
+          placeholder="Enter Your Email ID"
+          className="mt-6"
+        />
+        <Button
+          className="mt-4 bg-purple-600 hover:bg-purple-700"
+          onClick={handleForgotPassword}
+        >
+          Reset Password
+        </Button>
+      </Modal>
 
       {/* Right Side: Background Image */}
       <div className="hidden md:flex flex-grow bg-cover bg-center bg-[url('/designlogin.jpg')]"></div>

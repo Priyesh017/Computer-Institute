@@ -9,11 +9,14 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import router from "next/router";
 
 const OTPComponent = () => {
   const [otp, setOtp] = useState("");
 
-  const verifyOtp = () => {};
+  const verifyOtp = () => {
+    router.push("/resetpassword");
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6">

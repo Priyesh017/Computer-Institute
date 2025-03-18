@@ -6,7 +6,6 @@ import anime from "animejs";
 import { Button } from "@/components/ui/button";
 
 const ForgetPassword = () => {
-  const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -40,18 +39,9 @@ const ForgetPassword = () => {
         className="w-96 p-8 bg-gray-900 text-white rounded-2xl shadow-lg"
       >
         <h2 className="text-xl font-semibold text-center mb-6">
-          Reset Password
+          Change Password
         </h2>
         <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-          <motion.input
-            type="password"
-            placeholder="Old Password"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            className="p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
-            whileFocus={{ scale: 1.05 }}
-          />
-
           <motion.input
             type="password"
             placeholder="New Password"
