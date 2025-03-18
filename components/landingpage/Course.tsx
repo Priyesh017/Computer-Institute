@@ -5,66 +5,12 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { Input } from "@/components/ui/input";
-import { ChevronsDown } from "lucide-react"; // Better Sort Icon
+import { ChevronsDown } from "lucide-react";
 import { FaClock, FaBook } from "react-icons/fa";
+import { courses } from "@/data/index";
 
-const categories = ["All", "Published", "Upcoming"];
-const sortOptions = ["Recency", "Alphabetically"];
-
-const courses = [
-  {
-    id: 1,
-    category: "Published",
-    title: "Fear Of Driving And Automatic Negative Thoughts",
-    description: "Fear Of Driving And Automatic Negative Thoughts",
-    lessons: 12,
-    duration: "3 hr 30 min",
-    image: "/project.png",
-    price: "$49.99",
-  },
-  {
-    id: 2,
-    category: "Upcoming",
-    title: "Work more, Earn more while sitting at your home",
-    description: "Fear Of Driving And Automatic Negative Thoughts",
-    lessons: 23,
-    duration: "1 hr 30 min",
-    image: "/project.png",
-    price: "$49.99",
-  },
-  {
-    id: 3,
-    category: "Published",
-    title: "Foundation course to understand about Software",
-    description: "Fear Of Driving And Automatic Negative Thoughts",
-    lessons: 23,
-    duration: "1 hr 30 min",
-    image: "/project.png",
-    price: "$49.99",
-    badge: "new",
-  },
-  {
-    id: 4,
-    category: "Published",
-    title: "Advanced JavaScript Course",
-    description: "Master JavaScript with in-depth knowledge",
-    lessons: 18,
-    duration: "2 hr 45 min",
-    image: "/project.png",
-    price: "$59.99",
-    badge: "new",
-  },
-  {
-    id: 5,
-    category: "Upcoming",
-    title: "Python for Beginners",
-    description: "Learn Python from scratch",
-    lessons: 30,
-    duration: "5 hr 10 min",
-    image: "/project.png",
-    price: "$39.99",
-  },
-];
+const categories = ["All", "Published"];
+const sortOptions = ["Alphabetically"];
 
 export default function CourseCategories() {
   const [search, setSearch] = useState("");
@@ -104,11 +50,22 @@ export default function CourseCategories() {
       );
     } else if (sortedBy === "Recency") {
       // Show only courses with the "new" badge
-      filtered = filtered.filter((course) => course.badge === "new");
+      // filtered = filtered.filter((course) => course.badge === "new");
     }
 
     setFilteredCourses(filtered);
   }, [search, selectedCategory, sortedBy, isDescending]);
+
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleShowAll = () => {
+    setShowAll((prev) => !prev);
+    if (showAll) {
+      scrollToSection("course");
+    }
+  };
 
   return (
     <div className="container py-14 xl:pt-24 px-6">
@@ -210,35 +167,35 @@ export default function CourseCategories() {
                     {course.description}
                   </p>
                   <div className="flex justify-between items-center mt-2 text-sm text-gray-600 dark:text-gray-300">
-                    <span className="flex items-center gap-1">
+                    {/* <span className="flex items-center gap-1">
                       <FaBook className="text-pink-500" /> {course.lessons}{" "}
                       Lessons
-                    </span>
+                    </span> */}
                     <span className="flex items-center gap-1">
                       <FaClock className="text-pink-500" /> {course.duration}
                     </span>
                   </div>
                   <div className="mt-2 text-lg font-bold text-violet-600 dark:text-violet-400">
-                    {course.price}
+                    &#8377;{course.price}
                   </div>
-                  {course.badge && (
+                  {/* {course.badge && (
                     <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                       {course.badge}
                     </span>
-                  )}
+                  )} */}
                 </div>
               </motion.div>
             ))}
         </div>
         {/* Show More Button */}
-        {!showAll && filteredCourses.length > 3 && (
+        {filteredCourses.length > 3 && (
           <div className="text-center mt-4">
             <motion.button
-              onClick={() => setShowAll(true)}
+              onClick={() => handleShowAll()}
               className="px-4 py-2 bg-violet-600 text-white rounded-lg"
               whileTap={{ scale: 0.95 }}
             >
-              Show More
+              {showAll ? "Show Less" : "Show More"}
             </motion.button>
           </div>
         )}
