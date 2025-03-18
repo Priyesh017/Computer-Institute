@@ -38,6 +38,9 @@ const Enquiry = dynamic(() => import("@/app/_components/enquiry"), {
 const Gallery = dynamic(() => import("@/components/GalleryForm"), {
   loading: () => <Loader />,
 });
+const StudentInfo = dynamic(() => import("@/app/_components/StudentInfo"), {
+  loading: () => <Loader />,
+});
 
 export default function AdminDashboard() {
   const selectedComponent = useAuthStore((state) => state.selectedComponent);
@@ -69,6 +72,8 @@ export default function AdminDashboard() {
         return <Enquiry />;
       case "GALLERY INSERTION":
         return <Gallery />;
+      case "STUDENT INFO":
+        return <StudentInfo />;
     }
   };
 

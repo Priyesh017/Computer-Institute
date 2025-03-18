@@ -2,23 +2,14 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import anime from "animejs";
-import { FaArrowUp, FaTimes } from "react-icons/fa";
+import { FaArrowUp } from "react-icons/fa";
 import { menuItems } from "@/data";
 import Navbar from "@/components/landingpage/Navbar";
-import { fetcher } from "@/helper";
-import { toast } from "react-toastify";
 import Loader from "../Loader";
-
-interface etype {
-  name: string;
-  email: string;
-  message: string;
-}
+import Link from "next/link";
 
 export default function Home() {
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [fd, setfd] = useState<etype>({ name: "", email: "", message: "" });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -57,16 +48,6 @@ export default function Home() {
   if (loading) return <Loader />;
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-  const handleSubmit = async () => {
-    try {
-      const data = await fetcher("/TakeEnquiry", "POST", fd);
-      if (data.success) toast("form submitted successfully");
-      else toast("failed to submit");
-    } catch (error) {
-      console.log(error);
-      toast.error("fatal error");
-    }
   };
   return (
     <div className="bg-white text-white">
@@ -129,58 +110,15 @@ export default function Home() {
               }}
             >
               <motion.button
-                className="bg-red-600 text-white p-4 rounded-full shadow-lg hover:bg-red-500 transition-all"
-                onClick={() => setIsModalOpen(!isModalOpen)}
+                className="bg-red-600 text-white text-sm md:text-lg font-bold p-4 rounded-full shadow-lg hover:bg-red-500 transition-all"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.1 }}
               >
-                {isModalOpen ? (
-                  <FaTimes size={24} />
-                ) : (
-                  <p className="text-sm md:text-lg font-bold">
-                    Enquiry
-                  </p>
-                )}
+                <Link href="/enquiry">Enquiry</Link>
               </motion.button>
             </motion.div>
           </div>
-
-          {/* Enquiry Form */}
-          {isModalOpen && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: 20 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="absolute bottom-24 right-2 w-64 p-5 bg-white text-gray-900 rounded-2xl shadow-xl border border-gray-300"
-            >
-              <h2 className="text-lg font-semibold mb-3">Enquiry Form</h2>
-              <input
-                type="text"
-                placeholder="Your Name"
-                onChange={(e) => setfd({ ...fd, name: e.target.value })}
-                className="w-full p-2 mb-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-400"
-              />
-              <input
-                type="email"
-                onChange={(e) => setfd({ ...fd, email: e.target.value })}
-                placeholder="Your Email"
-                className="w-full p-2 mb-3 bg-gray-100 text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-400"
-              />
-              <textarea
-                placeholder="Your Message"
-                onChange={(e) => setfd({ ...fd, message: e.target.value })}
-                className="w-full p-2 bg-gray-100 text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-violet-400"
-              />
-              <button
-                className="w-full mt-3 bg-violet-600 hover:bg-violet-500 text-gray-100 font-semibold py-2 rounded-lg"
-                onClick={handleSubmit}
-              >
-                Submit
-              </button>
-            </motion.div>
-          )}
         </div>
       </div>
     </div>

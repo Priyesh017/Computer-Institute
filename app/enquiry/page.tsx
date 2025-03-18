@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -46,11 +48,11 @@ const FranchiseForm = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="max-w-2xl mx-auto p-6 bg-white shadow-xl rounded-2xl"
+      className="max-w-4xl mx-auto my-10 p-6 bg-white border border-1 shadow-2xl rounded-2xl"
     >
-      <h2 className="text-xl font-bold text-center mb-4 text-gray-800">
+      <h1 className="text-3xl font-bold text-center mb-4 text-gray-800">
         Franchise Application Form
-      </h2>
+      </h1>
       <form className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           {[
@@ -82,7 +84,7 @@ const FranchiseForm = () => {
                     [field.key as FormDataKey]: e.target.value,
                   })
                 }
-                className="w-full border rounded-md p-2"
+                className="w-full border rounded-md p-5"
               />
             </div>
           ))}
@@ -167,7 +169,7 @@ const FranchiseForm = () => {
             </DropdownMenu>
           </div>
         </div>
-        <Button className="w-1/3 mx-auto block bg-violet-600 hover:bg-violet-700 text-white py-2 rounded-xl mt-4">
+        <Button className="w-1/3 mx-auto block bg-violet-600 hover:bg-violet-700 text-white rounded-lg mt-4">
           Submit
         </Button>
       </form>
