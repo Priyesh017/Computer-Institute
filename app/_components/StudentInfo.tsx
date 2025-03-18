@@ -10,6 +10,12 @@ import {
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Enrollment {
   admitLink: string;
@@ -34,7 +40,8 @@ const EnrollmentList = () => {
     useState<Enrollment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [totalEnrollments, setTotalEnrollments] = useState(0); // Track total count
+  const [totalEnrollments, setTotalEnrollments] = useState(0);
+  const [status, setStatus] = useState("Pending");
 
   const fetchEnrollments = useCallback(async () => {
     try {
@@ -70,9 +77,9 @@ const EnrollmentList = () => {
         />
       </div>
       <div className="grid grid-cols-3 text-center gap-2 font-bold py-2 border-b border-gray-500">
-        <span>Pending</span>
-        <span>Pass Out</span>
-        <span>Drop Out</span>
+        <span>Name</span>
+        <span>Enrollment</span>
+        <span>Status</span>
       </div>
 
       {filteredEnrollment.map((enrollment) => (
@@ -89,24 +96,24 @@ const EnrollmentList = () => {
           >
             {enrollment.name}
           </div>
-          <div
-            className="border-gray-500 border-x hover:text-violet-800"
-            onClick={() => {
-              setSelectedEnrollment(enrollment);
-              setIsModalOpen(true);
-            }}
-          >
-            {enrollment.name}
+          <div className="border-gray-500 border-x">
+            {enrollment.Enrollmentno}
           </div>
-          <div
-            className="hover:text-violet-800"
-            onClick={() => {
-              setSelectedEnrollment(enrollment);
-              setIsModalOpen(true);
-            }}
-          >
-            {enrollment.name}
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="w-full border rounded-md p-2">
+              {status}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {["Pending", "Pass Out", "Drop Out"].map((option) => (
+                <DropdownMenuItem
+                  key={option}
+                  onClick={() => setStatus(option)}
+                >
+                  {option}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       ))}
 
