@@ -38,8 +38,8 @@ const ExamFee = () => {
   useEffect(() => {
     const fetchEnrollments = async () => {
       try {
-        const data = await fetcherWc("/amountFetch", "POST");
-        setEnrollments(data.data);
+        const { data } = await fetcherWc("/amountFetch", "POST");
+        if (data) setEnrollments(data);
         setreload(false);
       } catch (error) {
         console.log(error);

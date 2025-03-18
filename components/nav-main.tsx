@@ -16,6 +16,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store";
 
@@ -37,7 +38,16 @@ export function NavMain({
   const setSelectedComponent = useAuthStore(
     (state) => state.setSelectedComponent
   );
+  const {
+    openMobile,
 
+    toggleSidebar,
+  } = useSidebar();
+
+  const handler = (subItem: { title: string; url: string }) => {
+    setSelectedComponent(subItem.title.toUpperCase());
+    if (openMobile) toggleSidebar();
+  };
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Actions</SidebarGroupLabel>
@@ -63,9 +73,7 @@ export function NavMain({
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
                         <div
-                          onClick={() =>
-                            setSelectedComponent(subItem.title.toUpperCase())
-                          }
+                          onClick={() => handler(subItem)}
                           className=" cursor-pointer"
                         >
                           <span>{subItem.title}</span>

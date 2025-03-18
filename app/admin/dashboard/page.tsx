@@ -47,6 +47,7 @@ export default function AdminDashboard() {
   const { isSidebarOpen, setSidebarOpen, loading, user } = useAuthStore();
   const defaultOpen = useState(true)[0];
 
+  console.log("admin dashboard renders");
   if (loading) return <Loader />;
 
   const renderComponent = () => {

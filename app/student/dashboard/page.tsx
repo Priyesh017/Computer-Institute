@@ -14,7 +14,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import { Download, LogOut, User } from "lucide-react";
+import { Download, Loader2, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store";
 import { fetcherWc } from "@/helper";
@@ -28,6 +28,7 @@ import Loader from "@/components/Loader";
 export default function Menu() {
   const { user, logout, loading } = useAuthStore();
   const student = useAuthStore().user as unknown as StudentProfileProps;
+  const [temploading, settemploading] = useState(false);
 
   const defaultOpen = useState(true)[0];
   const sideMenu = [
@@ -47,6 +48,7 @@ export default function Menu() {
   if (loading) return <Loader />;
 
   const logouthandler = async () => {
+    settemploading(true);
     try {
       await fetcherWc("/logout", "GET");
       setActiveSection("");
@@ -54,6 +56,8 @@ export default function Menu() {
     } catch (error) {
       console.log(error);
       toast("error happened");
+    } finally {
+      settemploading(false);
     }
   };
   return (
@@ -89,10 +93,12 @@ export default function Menu() {
               <Button
                 className="flex items-center gap-2 text-left w-full border border-gray-700 p-2"
                 variant="destructive"
+                disabled={temploading}
                 onClick={logouthandler}
               >
                 Logout
                 <LogOut size={20} />
+                {temploading && <Loader2 className="animate-spin" />}
               </Button>
             </div>
           </SidebarContent>
