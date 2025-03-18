@@ -6,6 +6,8 @@ import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import { useAuthStore } from "@/store";
 import Loader from "@/components/Loader";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 export default function StudentLogin() {
   const router = useRouter();
@@ -14,6 +16,7 @@ export default function StudentLogin() {
   const [error, setError] = useState("");
   const { user, login } = useAuthStore();
   const [loading, setLoading] = useState(true);
+  const [temploading, settemploading] = useState(false);
 
   useEffect(() => {
     const handleComplete = () => setLoading(false);
@@ -41,7 +44,7 @@ export default function StudentLogin() {
       setError("Please enter both Enrollment No. and Password.");
       return;
     }
-
+    settemploading(true);
     try {
       const data = await fetcherWc("/studentLogin", "POST", {
         enrollmentNo: enrollmentNo,
@@ -58,6 +61,8 @@ export default function StudentLogin() {
     } catch (error) {
       console.log(error);
       toast("error happened");
+    } finally {
+      settemploading(false);
     }
   };
 
@@ -89,12 +94,14 @@ export default function StudentLogin() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button
+          <Button
             type="submit"
+            disabled={temploading}
             className="w-full px-4 py-2 text-white bg-violet-600 rounded-md hover:bg-violet-700 transition duration-300"
           >
             Login
-          </button>
+            {temploading && <Loader2 className="animate-spin" />}
+          </Button>
         </form>
         <button
           onClick={() => router.push("/")}

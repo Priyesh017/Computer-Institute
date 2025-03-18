@@ -80,7 +80,7 @@ const EnrollmentList = () => {
       toast("some error happened");
     }
   };
-
+  console.log("enrollemnt renders");
   const generateHandler = async (Enrollmentno: string) => {
     try {
       toast("Generating ID...");
