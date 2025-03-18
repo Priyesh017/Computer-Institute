@@ -39,8 +39,7 @@ const ExamForm = () => {
   const fetchfn = async () => {
     try {
       const { enrollments } = await fetcherWc("/AllEnrollments", "GET");
-
-      setexmforms(enrollments);
+      if (enrollments) setexmforms(enrollments);
     } catch (error) {
       toast("some error happened");
     }

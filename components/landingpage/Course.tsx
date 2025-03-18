@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import anime from "animejs";
 import { Input } from "@/components/ui/input";
 import { ChevronsDown } from "lucide-react";
-import { FaClock, FaBook } from "react-icons/fa";
+import { FaClock } from "react-icons/fa";
 import { courses } from "@/data/index";
 
 const categories = ["All", "Published"];

@@ -112,6 +112,76 @@ const frameworksEdu = [
     label: "Graduation",
   },
 ];
+
+const sexValue = [
+  {
+    value: "Male",
+    label: "Male",
+  },
+  {
+    value: "Female",
+    label: "Female",
+  },
+  {
+    value: "Transgender",
+    label: "Transgender",
+  },
+];
+
+const IdCardType = [
+  {
+    value: "Aadhar",
+    label: "Aadhar",
+  },
+  {
+    value: "Voter",
+    label: "Voter",
+  },
+  {
+    value: "DrivingLicense",
+    label: "DrivingLicense",
+  },
+];
+
+const Nationality = [
+  {
+    value: "Indian",
+    label: "Indian",
+  },
+  {
+    value: "Foreigner",
+    label: "Foreigner",
+  },
+];
+
+const CategoryValue = [
+  {
+    value: "SC",
+    label: "SC",
+  },
+  {
+    value: "ST",
+    label: "ST",
+  },
+  {
+    value: "GENERAL",
+    label: "GENERAL",
+  },
+  {
+    value: "OBC",
+    label: "OBC",
+  },
+
+  {
+    value: "PH",
+    label: "PH",
+  },
+  {
+    value: "OTHERS",
+    label: "OTHERS",
+  },
+];
+
 export interface tfd {
   name: string;
   fatherName: string;
@@ -124,6 +194,11 @@ export interface tfd {
   enrollmentNo: string;
   eduqualification: string;
   courseid: string;
+  category: string;
+  nationality: string;
+  sex: string;
+  idtype: string;
+  idProofNo: string;
 }
 
 const formSchema = z.object({
@@ -135,7 +210,12 @@ const formSchema = z.object({
   enrollmentNo: z.string(),
   dob: z.date(),
   eduqualification: z.string(),
+  category: z.string(),
   courseid: z.string(),
+  idtype: z.string(),
+  idProofNo: z.string(),
+  nationality: z.string(),
+  sex: z.string(),
   mobile: z.string().regex(/^\d{10}$/, "Invalid mobile number"),
   wapp: z.string().regex(/^\d{10}$/, "Invalid WhatsApp number"),
 });
@@ -146,7 +226,7 @@ const AddStudent: React.FC = () => {
     null
   );
 
-  const [fd, setfd] = useState({
+  const [fd, setfd] = useState<tfd>({
     name: "",
     fatherName: "",
     motherName: "",
@@ -157,7 +237,12 @@ const AddStudent: React.FC = () => {
     eduqualification: "",
     courseid: "",
     idno: "",
+    category: "",
+    nationality: "",
     enrollmentNo: "",
+    sex: "",
+    idProofNo: "",
+    idtype: "",
   });
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>): void {
@@ -481,6 +566,86 @@ const AddStudent: React.FC = () => {
               value={fd.eduqualification}
               setValue={setfd}
               data="eduqualification"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="className"
+              className="text-sm font-semibold text-gray-700 dark:text-gray-200"
+            >
+              Nationality
+            </label>
+            <ComboboxDemo
+              frameworks={Nationality}
+              heading={"Select Nationality"}
+              value={fd.nationality}
+              setValue={setfd}
+              data="nationality"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="className"
+              className="text-sm font-semibold text-gray-700 dark:text-gray-200"
+            >
+              Select Category
+            </label>
+            <ComboboxDemo
+              frameworks={CategoryValue}
+              heading={"Select Category"}
+              value={fd.category}
+              setValue={setfd}
+              data="category"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="className"
+              className="text-sm font-semibold text-gray-700 dark:text-gray-200"
+            >
+              Sex
+            </label>
+            <ComboboxDemo
+              frameworks={sexValue}
+              heading={"Sex"}
+              value={fd.sex}
+              setValue={setfd}
+              data="sex"
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="className"
+              className="text-sm font-semibold text-gray-700 dark:text-gray-200"
+            >
+              Id Card Type
+            </label>
+            <ComboboxDemo
+              frameworks={IdCardType}
+              heading={"Id Card Type"}
+              value={fd.idtype}
+              setValue={setfd}
+              data="idtype"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
+              ID Proof No.
+            </label>
+            <input
+              id="idProofNo"
+              type="text"
+              placeholder="Enter ID Proof No."
+              value={fd.idProofNo}
+              onChange={handleInputChange}
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              autoComplete="name"
+              required
             />
           </div>
         </div>

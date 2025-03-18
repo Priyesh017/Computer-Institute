@@ -42,6 +42,7 @@ export function useAuth() {
       "/signup",
       "/login",
       "/studentlogin",
+      "/enquiry",
     ];
 
     if (!loading && !user && !allowedRoutes.includes(pathname)) {

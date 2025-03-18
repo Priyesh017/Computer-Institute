@@ -46,7 +46,7 @@ export function NavMain({
 
   const handler = (subItem: { title: string; url: string }) => {
     setSelectedComponent(subItem.title.toUpperCase());
-    openMobile && toggleSidebar();
+    if (openMobile) toggleSidebar();
   };
   return (
     <SidebarGroup>
