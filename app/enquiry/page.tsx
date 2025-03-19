@@ -47,7 +47,7 @@ const initialFormData = {
   father: "",
   coName: "",
   dob: "",
-  gender: "",
+  sex: "",
   category: "",
   nationality: "",
   mobileNo: "",
@@ -59,7 +59,7 @@ const initialFormData = {
     pin: "",
     state: "",
   },
-  education: "",
+  eduqualification: "",
   idProof: "",
   idProofNo: "",
   houseRoomNo: "",
@@ -274,7 +274,7 @@ const FranchiseForm = () => {
             <ComboboxDemo
               frameworks={sexValue}
               heading={"Select Gender"}
-              value={formData.gender}
+              value={formData.sex}
               setValue={setFormData}
               data="sex"
             />
@@ -364,7 +364,7 @@ const FranchiseForm = () => {
             <ComboboxDemo
               frameworks={frameworksEdu}
               heading={"Select Bathroom"}
-              value={formData.education}
+              value={formData.eduqualification}
               setValue={setFormData}
               data="eduqualification"
             />
