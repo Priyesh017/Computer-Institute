@@ -15,8 +15,8 @@ const FranchiseForm = () => {
   type FormDataKey = keyof typeof initialFormData;
 
   const initialFormData = {
-    applicantName: "",
-    fatherName: "",
+    name: "",
+    father: "",
     coName: "",
     dob: "",
     sex: "",
@@ -42,7 +42,9 @@ const FranchiseForm = () => {
 
   const [formData, setFormData] =
     useState<typeof initialFormData>(initialFormData);
-
+  const submitHandler = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -56,8 +58,8 @@ const FranchiseForm = () => {
       <form className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           {[
-            { label: "Applicant’s Name", key: "applicantName" },
-            { label: "Father’s Name", key: "fatherName" },
+            { label: `Applicant's Name`, key: "name" },
+            { label: "Father's Name", key: "father" },
             { label: "C/O Name", key: "coName" },
             { label: "Date of Birth", key: "dob", type: "date" },
             { label: "Mobile No", key: "mobileNo", type: "tel" },
@@ -169,7 +171,11 @@ const FranchiseForm = () => {
             </DropdownMenu>
           </div>
         </div>
-        <Button className="w-1/3 mx-auto block bg-violet-600 hover:bg-violet-700 text-white rounded-lg mt-4">
+        <Button
+          type="submit"
+          onClick={submitHandler}
+          className="w-1/3 mx-auto block bg-violet-600 hover:bg-violet-700 text-white rounded-lg mt-4"
+        >
           Submit
         </Button>
       </form>
