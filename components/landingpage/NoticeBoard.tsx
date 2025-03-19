@@ -62,28 +62,28 @@ export default function NoticeBoard() {
   }, [expanded]);
 
   return (
-    <div className="relative w-full max-w-6xl mx-auto py-6 px-10 bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 backdrop-blur-lg">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-gray-800">Notice to All</h2>
+    <div className="relative md:w-full md:max-w-6xl md:mx-auto mx-2 md:py-6 md:px-10 p-4 bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 backdrop-blur-lg">
+      <div className="flex justify-between items-center md:mb-4 mb-2">
+        <h2 className="md:text-2xl text-xl font-bold text-gray-800">Notice to All</h2>
         <img src="/logo.png" alt="Logo" className="w-12 h-12" />
       </div>
       <motion.div
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 100 }}
-        className="bg-gray-100 p-5 rounded-lg shadow-md"
+        className="bg-gray-100 p-5 rounded-md shadow-md"
       >
         <div className="flex justify-start items-center mb-4 gap-5">
           <span className="w-fit bg-blue-100 text-blue-500 p-2 rounded-full">
             📌
           </span>
-          <span className="text-3xl">Announcement</span>
+          <span className="md:text-3xl text-2xl">Announcement</span>
         </div>
         {!expanded ? (
           <div className="relative flex flex-col gap-2">
             <motion.h3
               key={index}
-              className="notice-text text-xl font-semibold text-gray-900"
+              className="notice-text md:text-xl text-lg font-semibold text-gray-900"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -91,7 +91,9 @@ export default function NoticeBoard() {
             >
               {notices[index].subject}
             </motion.h3>
-            <p className="text-gray-700 text-lg">{notices[index].details}</p>
+            <p className="text-gray-700 md:text-lg text-md">
+              {notices[index].details}
+            </p>
             <span className="text-sm text-gray-500">{notices[index].date}</span>
           </div>
         ) : (
