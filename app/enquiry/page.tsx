@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ComboboxDemo } from "@/app/_components/combo"; // Ensure this path is correct
 import { useDropzone } from "react-dropzone";
+import anime from "animejs";
 
 const category = ["General", "SC", "ST", "OBC", "PH", "Others"];
 const gender = ["Male", "Female", "Others"];
@@ -66,6 +67,9 @@ const FranchiseForm = () => {
     tradeLicense: "",
     bathroom: "",
   });
+  const [images, setImages] = useState<{ src: string; file: File } | null>(
+    null
+  );
 
   const onDrop = (acceptedFile: File) => {
     const reader = new FileReader();
