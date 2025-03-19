@@ -42,9 +42,11 @@ export interface efd {
 }
 
 const FranchiseForm = () => {
-  const [formData, setFormData] = useState<efd>({
-    applicantName: "",
-    fatherName: "",
+  type FormDataKey = keyof typeof initialFormData;
+
+  const initialFormData = {
+    name: "",
+    father: "",
     coName: "",
     dob: "",
     gender: "",
@@ -86,6 +88,13 @@ const FranchiseForm = () => {
     reader.readAsDataURL(acceptedFile);
   };
 
+  };
+
+  const [formData, setFormData] =
+    useState<typeof initialFormData>(initialFormData);
+  const submitHandler = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -398,6 +407,7 @@ const FranchiseForm = () => {
         </div>
         <Button
           type="submit"
+          onClick={submitHandler}
           className="w-1/3 mx-auto block bg-violet-600 hover:bg-violet-700 text-white rounded-lg mt-4"
         >
           Submit
