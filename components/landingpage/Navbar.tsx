@@ -106,8 +106,16 @@ export default function Navbar() {
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.3 }}
       >
-        <Link href={user ? "admin/dashboard" : "/chooseuser"}>
-          {user?.role ? "Dashboard" : "Login"}
+        <Link
+          href={
+            user
+              ? user.role
+                ? "admin/dashboard"
+                : "student/dashboard"
+              : "/chooseuser"
+          }
+        >
+          {user ? "Dashboard" : "Login"}
         </Link>
       </motion.button>
 
@@ -125,7 +133,15 @@ export default function Navbar() {
           ))}
           <li>
             <button className="px-6 py-2 bg-white text-indigo-800 font-bold rounded-xl shadow-lg transition-all transform hover:scale-105">
-              <Link href={user ? "admin/dashboard" : "/chooseuser"}>
+              <Link
+                href={
+                  user
+                    ? user.role
+                      ? "admin/dashboard"
+                      : "student/dashboard"
+                    : "/chooseuser"
+                }
+              >
                 {user ? "Dashboard" : "Login"}
               </Link>
             </button>

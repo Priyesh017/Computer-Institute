@@ -8,12 +8,14 @@ import { ComboboxDemo } from "@/app/_components/combo"; // Ensure this path is c
 import { useDropzone } from "react-dropzone";
 import { X } from "lucide-react";
 import anime from "animejs";
+import {
+  CategoryValue,
+  frameworksEdu,
+  IdCardType,
+  Nationality,
+  sexValue,
+} from "@/data";
 
-const category = ["General", "SC", "ST", "OBC", "PH", "Others"];
-const gender = ["Male", "Female", "Others"];
-const nationality = ["Indian", "Foreigner"];
-const idProof = ["Aadhaar Card", "Voter Card", "Pan Card", "Driving License"];
-const education = ["8th Pass", "Madhyamik", "Higher Secondary", "Graduate"];
 const bathroom = ["Yes", "No"];
 
 export interface efd {
@@ -41,33 +43,34 @@ export interface efd {
   tradeLicense: string;
   bathroom: string;
 }
+const initialFormData = {
+  name: "",
+  father: "",
+  coName: "",
+  dob: "",
+  sex: "",
+  category: "",
+  nationality: "",
+  mobileNo: "",
+  address: {
+    vill: "",
+    po: "",
+    ps: "",
+    dist: "",
+    pin: "",
+    state: "",
+  },
+  eduqualification: "",
+  idProof: "",
+  idProofNo: "",
+  houseRoomNo: "",
+  squareFit: "",
+  tradeLicense: "",
+  bathroom: "",
+};
+export type FormDataKey = typeof initialFormData;
 
 const FranchiseForm = () => {
-  const [formData, setFormData] = useState<efd>({
-    applicantName: "",
-    fatherName: "",
-    coName: "",
-    dob: "",
-    gender: "",
-    category: "",
-    nationality: "",
-    mobileNo: "",
-    address: {
-      vill: "",
-      po: "",
-      ps: "",
-      dist: "",
-      pin: "",
-      state: "",
-    },
-    education: "",
-    idProof: "",
-    idProofNo: "",
-    houseRoomNo: "",
-    squareFit: "",
-    tradeLicense: "",
-    bathroom: "",
-  });
   const [images, setImages] = useState<{ src: string; file: File } | null>(
     null
   );
@@ -91,6 +94,11 @@ const FranchiseForm = () => {
     reader.readAsDataURL(acceptedFile);
   };
 
+  const [formData, setFormData] = useState<FormDataKey>(initialFormData);
+
+  const submitHandler = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -108,9 +116,9 @@ const FranchiseForm = () => {
             <Input
               type="text"
               name="applicantName"
-              value={formData.applicantName}
+              value={formData.name}
               onChange={(e) =>
-                setFormData({ ...formData, applicantName: e.target.value })
+                setFormData({ ...formData, name: e.target.value })
               }
               className="w-full border rounded-md p-2"
             />
@@ -120,9 +128,9 @@ const FranchiseForm = () => {
             <Input
               type="text"
               name="fatherName"
-              value={formData.fatherName}
+              value={formData.father}
               onChange={(e) =>
-                setFormData({ ...formData, fatherName: e.target.value })
+                setFormData({ ...formData, father: e.target.value })
               }
               className="w-full border rounded-md p-2"
             />
@@ -269,20 +277,17 @@ const FranchiseForm = () => {
           <div>
             <label className="block text-gray-700 mb-1">Gender</label>
             <ComboboxDemo
-              frameworks={gender.map((item) => ({ value: item, label: item }))}
+              frameworks={sexValue}
               heading={"Select Gender"}
-              value={formData.gender}
+              value={formData.sex}
               setValue={setFormData}
-              data="gender"
+              data="sex"
             />
           </div>
           <div>
             <label className="block text-gray-700 mb-1">Category</label>
             <ComboboxDemo
-              frameworks={category.map((item) => ({
-                value: item,
-                label: item,
-              }))}
+              frameworks={CategoryValue}
               heading={"Select Category"}
               value={formData.category}
               setValue={setFormData}
@@ -292,10 +297,7 @@ const FranchiseForm = () => {
           <div>
             <label className="block text-gray-700 mb-1">Nationality</label>
             <ComboboxDemo
-              frameworks={nationality.map((item) => ({
-                value: item,
-                label: item,
-              }))}
+              frameworks={Nationality}
               heading={"Select Nationality"}
               value={formData.nationality}
               setValue={setFormData}
@@ -317,14 +319,11 @@ const FranchiseForm = () => {
           <div>
             <label className="block text-gray-700 mb-1">ID Proof</label>
             <ComboboxDemo
-              frameworks={idProof.map((item) => ({
-                value: item,
-                label: item,
-              }))}
+              frameworks={IdCardType}
               heading={"Select ID Proof"}
               value={formData.idProof}
               setValue={setFormData}
-              data="idProof"
+              data="idtype"
             />
           </div>
           <div>
@@ -368,14 +367,11 @@ const FranchiseForm = () => {
               Education Qualification
             </label>
             <ComboboxDemo
-              frameworks={education.map((item) => ({
-                value: item,
-                label: item,
-              }))}
+              frameworks={frameworksEdu}
               heading={"Select Bathroom"}
-              value={formData.education}
+              value={formData.eduqualification}
               setValue={setFormData}
-              data="education"
+              data="eduqualification"
             />
           </div>
           <div>
@@ -427,6 +423,7 @@ const FranchiseForm = () => {
         </div>
         <Button
           type="submit"
+          onClick={submitHandler}
           className="w-1/3 mx-auto block bg-violet-600 hover:bg-violet-700 text-white rounded-lg mt-4"
         >
           Submit
@@ -435,8 +432,6 @@ const FranchiseForm = () => {
     </motion.div>
   );
 };
-
-export default FranchiseForm;
 
 function Dropzone({ onDrop }: { onDrop: (files: File) => void }) {
   const { getRootProps, getInputProps } = useDropzone({
@@ -461,3 +456,5 @@ function Dropzone({ onDrop }: { onDrop: (files: File) => void }) {
     </div>
   );
 }
+
+export default FranchiseForm;

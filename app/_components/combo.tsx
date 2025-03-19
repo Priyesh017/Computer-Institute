@@ -18,7 +18,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { tfd } from "./studentEntry";
 
 type ftype = {
   value: string;
@@ -29,14 +28,15 @@ interface proptype {
   heading: string;
   frameworks: ftype;
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<tfd>>;
+  setValue: any; //FIXME
   data:
     | "eduqualification"
     | "courseid"
     | "category"
     | "nationality"
     | "sex"
-    | "idtype";
+    | "idtype"
+    | "bathroom";
 }
 
 export function ComboboxDemo({
@@ -74,7 +74,7 @@ export function ComboboxDemo({
                   key={framework.value}
                   value={framework.value}
                   onSelect={(currentValue) => {
-                    setValue((val) => ({ ...val, [data]: currentValue }));
+                    setValue((val: any) => ({ ...val, [data]: currentValue }));
                     setOpen(false);
                   }}
                 >

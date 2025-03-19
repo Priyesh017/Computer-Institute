@@ -506,3 +506,88 @@ export const marks = [
     placeholder: "Practical Marks",
   },
 ];
+
+export const frameworksEdu = [
+  {
+    value: "8th Pass",
+    label: "8th Pass",
+  },
+  {
+    value: "10th Pass",
+    label: "10th Pass",
+  },
+  {
+    value: "12th Pass",
+    label: "12th Pass",
+  },
+  {
+    value: "Graduation",
+    label: "Graduation",
+  },
+];
+export const Nationality = [
+  {
+    value: "Indian",
+    label: "Indian",
+  },
+  {
+    value: "Foreigner",
+    label: "Foreigner",
+  },
+];
+export const sexValue = [
+  {
+    value: "Male",
+    label: "Male",
+  },
+  {
+    value: "Female",
+    label: "Female",
+  },
+  {
+    value: "Transgender",
+    label: "Transgender",
+  },
+];
+
+export const CategoryValue = [
+  {
+    value: "SC",
+    label: "SC",
+  },
+  {
+    value: "ST",
+    label: "ST",
+  },
+  {
+    value: "GENERAL",
+    label: "GENERAL",
+  },
+  {
+    value: "OBC",
+    label: "OBC",
+  },
+
+  {
+    value: "PH",
+    label: "PH",
+  },
+  {
+    value: "OTHERS",
+    label: "OTHERS",
+  },
+];
+export const IdCardType = [
+  {
+    value: "Aadhar",
+    label: "Aadhar",
+  },
+  {
+    value: "Voter",
+    label: "Voter",
+  },
+  {
+    value: "DrivingLicense",
+    label: "DrivingLicense",
+  },
+];
