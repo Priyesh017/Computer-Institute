@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ComboboxDemo } from "@/app/_components/combo"; // Ensure this path is correct
 import { useDropzone } from "react-dropzone";
+import { X } from "lucide-react";
 import anime from "animejs";
 
 const category = ["General", "SC", "ST", "OBC", "PH", "Others"];
@@ -70,6 +71,10 @@ const FranchiseForm = () => {
   const [images, setImages] = useState<{ src: string; file: File } | null>(
     null
   );
+
+  const handleDeleteImage = () => {
+    setImages(null);
+  };
 
   const onDrop = (acceptedFile: File) => {
     const reader = new FileReader();
@@ -386,14 +391,38 @@ const FranchiseForm = () => {
               data="bathroom"
             />
           </div>
-          <div>
-            <label
-              htmlFor="image"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Signature/Photo Copy
-            </label>
-            <Dropzone onDrop={(files) => onDrop(files)} />
+          <div className="flex-row md:flex w-full gap-2">
+            <div>
+              <label
+                htmlFor="image"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Applicant Image
+              </label>
+              <Dropzone onDrop={(files) => onDrop(files)} />
+            </div>
+            <div className="flex-1 mt-2 gap-4 min-w-fit">
+              <div className="relative">
+                {images && (
+                  <>
+                    <motion.img
+                      src={images.src}
+                      alt="student_image"
+                      className="gallery-item w-fit h-32 object-cover rounded-md"
+                      initial={{ opacity: 0, y: 50 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    />
+                    <button
+                      onClick={() => handleDeleteImage()}
+                      className="absolute top-0 right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-700"
+                    >
+                      <X size={24} />
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
           </div>
         </div>
         <Button
