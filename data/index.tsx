@@ -84,6 +84,54 @@ export const data = {
       ],
     },
     {
+      title: "Notice",
+      role: "center",
+      url: "#",
+      icon: Settings2,
+      items: [
+        {
+          title: "Notice Writing",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Notes",
+      role: "center",
+      url: "#",
+      icon: Settings2,
+      items: [
+        {
+          title: "Upload Notes",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Video",
+      role: "center",
+      url: "#",
+      icon: Settings2,
+      items: [
+        {
+          title: "Upload Video",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Subject Entry",
+      role: "center",
+      url: "#",
+      icon: Settings2,
+      items: [
+        {
+          title: "Subject Entry",
+          url: "#",
+        },
+      ],
+    },
+    {
       title: "Education",
       role: "center",
       url: "#",

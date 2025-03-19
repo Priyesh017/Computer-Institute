@@ -41,6 +41,18 @@ const Gallery = dynamic(() => import("@/components/GalleryForm"), {
 const StudentInfo = dynamic(() => import("@/app/_components/StudentInfo"), {
   loading: () => <Loader />,
 });
+const NoticeWriting = dynamic(() => import("@/app/_components/noticeWriting"), {
+  loading: () => <Loader />,
+});
+const Notes = dynamic(() => import("@/app/_components/notes"), {
+  loading: () => <Loader />,
+});
+const SubjectEntry = dynamic(() => import("@/app/_components/subjectEntry"), {
+  loading: () => <Loader />,
+});
+const UploadVideo = dynamic(() => import("@/app/_components/uploadVideo"), {
+  loading: () => <Loader />,
+});
 
 export default function AdminDashboard() {
   const selectedComponent = useAuthStore((state) => state.selectedComponent);
@@ -74,6 +86,14 @@ export default function AdminDashboard() {
         return <Gallery />;
       case "STUDENT INFO":
         return <StudentInfo />;
+      case "NOTICE WRITING":
+        return <NoticeWriting />;
+      case "UPLOAD NOTES":
+        return <Notes />;
+      case "SUBJECT ENTRY":
+        return <SubjectEntry />;
+      case "UPLOAD VIDEO":
+        return <UploadVideo />;
     }
   };
 
