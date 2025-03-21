@@ -38,9 +38,6 @@ const Enquiry = dynamic(() => import("@/app/_components/enquiry"), {
 const Gallery = dynamic(() => import("@/components/GalleryForm"), {
   loading: () => <Loader />,
 });
-const StudentInfo = dynamic(() => import("@/app/_components/StudentInfo"), {
-  loading: () => <Loader />,
-});
 const NoticeWriting = dynamic(() => import("@/app/_components/noticeWriting"), {
   loading: () => <Loader />,
 });
@@ -83,8 +80,6 @@ export default function AdminDashboard() {
         return <Enquiry />;
       case "GALLERY INSERTION":
         return <Gallery />;
-      case "STUDENT INFO":
-        return <StudentInfo />;
       case "NOTICE WRITING":
         return <NoticeWriting />;
       case "UPLOAD NOTES":
