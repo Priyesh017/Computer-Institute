@@ -36,7 +36,10 @@ interface proptype {
     | "nationality"
     | "sex"
     | "idtype"
-    | "bathroom";
+    | "idProof"
+    | "bathroom"
+    | "state"
+    | "dist";
 }
 
 export function ComboboxDemo({
@@ -65,7 +68,7 @@ export function ComboboxDemo({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
+          <CommandInput placeholder="Search " className="h-9" />
           <CommandList>
             <CommandEmpty>No Data Found.</CommandEmpty>
             <CommandGroup>
@@ -74,7 +77,10 @@ export function ComboboxDemo({
                   key={framework.value}
                   value={framework.value}
                   onSelect={(currentValue) => {
-                    setValue((val: any) => ({ ...val, [data]: currentValue }));
+                    setValue((val: any) => ({
+                      ...val,
+                      [data]: currentValue,
+                    }));
                     setOpen(false);
                   }}
                 >

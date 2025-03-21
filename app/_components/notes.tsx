@@ -44,8 +44,6 @@ export default function UploadNotes() {
     formData.append("subject", subject);
     formData.append("description", description);
     formData.append("image", images.file);
-
-    console.log("Uploading:", { subject, description, image: images.file });
   };
 
   return (

@@ -61,7 +61,9 @@ const EnrollmentList = () => {
   }, [currentPage, fetchEnrollments]);
 
   const filteredEnrollment = enrollments.filter((enrollment) =>
-    enrollment.Enrollmentno?.toLowerCase().includes(search.toLowerCase())
+    enrollment.Enrollmentno.toString()
+      .toLowerCase()
+      .includes(search.toLowerCase())
   );
 
   return (
@@ -69,7 +71,7 @@ const EnrollmentList = () => {
       <div className="flex justify-between items-center px-4 py-2">
         <h2 className="text-xl font-bold">Student Info</h2>
         <Input
-          type="text"
+          type="number"
           placeholder="Search enrollment..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}

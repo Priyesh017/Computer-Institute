@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetcherWc } from "@/helper";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
+import { toast } from "react-toastify";
 interface idata {
   data: Notification[];
 }
@@ -25,15 +26,50 @@ export default function Notifications() {
     queryKey: ["repoData"],
     queryFn: () => fetcherWc("/FetchAllEnquiry", "GET"),
   });
+
   if (isPending) {
     <Loader />;
     return;
   }
+
   if (error) return;
 
   const notifications = data.data;
   const openNotification = (notif: Notification) => {
     setSelectedNotification(notif);
+  };
+
+  const verifyhandler = async () => {
+    const email = selectedNotification!.email;
+    const name = selectedNotification!.name;
+
+    const eventSource = new EventSource(
+      `http://localhost:3001/VerifyEnquiry?email=${email}&name=${name}`,
+      { withCredentials: true }
+    );
+
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        toast(`Step ${data.step}: ${data.message}`);
+
+        // Handle completion case
+        if (data.step === 2) {
+          toast("Process completed, closing connection.");
+          eventSource.close();
+        }
+      } catch (error) {
+        console.error("Error parsing SSE data:", error);
+      }
+    };
+
+    eventSource.onerror = (error) => {
+      console.error("SSE error:", error);
+      eventSource.close();
+    };
+    return () => {
+      eventSource.close();
+    };
   };
 
   return (
@@ -99,7 +135,10 @@ export default function Notifications() {
                 {new Date(selectedNotification.createdAt).toDateString()}
               </p>
             </div>
-            <Button className="mt-5 bg-purple-700 hover:bg-purple-800">
+            <Button
+              className="mt-5 bg-purple-700 hover:bg-purple-800"
+              onClick={verifyhandler}
+            >
               Verify
             </Button>
           </div>
