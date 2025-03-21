@@ -24,6 +24,8 @@ import Profile, {
 } from "@/components/studentdashboard/Profile";
 import { toast } from "react-toastify";
 import Loader from "@/components/Loader";
+import Notes from "@/components/studentdashboard/Notes";
+import Videos from "@/components/studentdashboard/Video";
 
 export default function Menu() {
   const { user, logout, loading } = useAuthStore();
@@ -42,6 +44,16 @@ export default function Menu() {
       name: "Downloads",
       section: <Downloads enrollment={student} />,
     },
+    {
+      icon: <Download size={24} />,
+      name: "Notes",
+      section: <Notes />
+    },
+    {
+      icon: <Download size={24} />,
+      name: "Videos",
+      section: <Videos />
+    }
   ];
   const [activeSection, setActiveSection] = useState(sideMenu[0].name);
 
