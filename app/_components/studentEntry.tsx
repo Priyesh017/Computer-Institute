@@ -109,8 +109,6 @@ export interface tfd {
   dob: Date;
   mobile: string;
   wapp: string;
-  idno: string;
-  enrollmentNo: string;
   eduqualification: string;
   courseid: string;
   category: string;
@@ -125,8 +123,6 @@ const formSchema = z.object({
   fatherName: z.string().min(1, "Father's name is required"),
   motherName: z.string().min(1, "Mother's name is required"),
   Address: z.string().min(5, "Address must be at least 5 characters long"),
-  idno: z.string(),
-  enrollmentNo: z.string(),
   dob: z.date(),
   eduqualification: z.string(),
   category: z.string(),
@@ -155,10 +151,8 @@ const AddStudent: React.FC = () => {
     wapp: "",
     eduqualification: "",
     courseid: "",
-    idno: "",
     category: "",
     nationality: "",
-    enrollmentNo: "",
     sex: "",
     idProofNo: "",
     idtype: "",
@@ -359,43 +353,6 @@ const AddStudent: React.FC = () => {
               type="text"
               placeholder="Enter Address..."
               value={fd.Address}
-              onChange={handleInputChange}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              autoComplete="name"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Enrollment No
-            </label>
-            <input
-              id="enrollmentNo"
-              type="text"
-              placeholder="Enter enrollment No."
-              value={fd.enrollmentNo}
-              onChange={handleInputChange}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              autoComplete="name"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              ID Card No.
-            </label>
-            <input
-              id="idno"
-              type="text"
-              placeholder="Enter ID Card No."
-              value={fd.idno}
               onChange={handleInputChange}
               className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               autoComplete="name"

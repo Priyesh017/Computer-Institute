@@ -80,7 +80,7 @@ const EnrollmentList = () => {
       toast("some error happened");
     }
   };
-  console.log("enrollemnt renders");
+
   const generateHandler = async (Enrollmentno: string) => {
     try {
       toast("Generating ID...");
@@ -97,7 +97,9 @@ const EnrollmentList = () => {
   };
 
   const filteredEnrollment = enrollments.filter((enrollment) =>
-    enrollment.Enrollmentno?.toLowerCase().includes(search.toLowerCase())
+    enrollment.Enrollmentno.toString()
+      .toLowerCase()
+      .includes(search.toLowerCase())
   );
 
   return (

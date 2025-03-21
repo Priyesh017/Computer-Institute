@@ -57,7 +57,7 @@ const ExamForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNew, setIsNew] = useState(true);
   const [search, setSearch] = useState("");
-  console.log("exam form renders");
+
   const fetchfn = async () => {
     try {
       const data = await fetcherWc("/exmformsfetch", "GET");

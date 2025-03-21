@@ -59,7 +59,6 @@ const PAGE_SIZE = 5;
 
 const ExamForm = () => {
   const [enrollments, setEnrollments] = useState<MarksWithEnrollment[]>([]);
-  console.log(enrollments);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedEnrollment, setSelectedEnrollment] =
     useState<MarksWithEnrollment | null>(null);

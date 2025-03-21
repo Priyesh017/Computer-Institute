@@ -113,7 +113,6 @@ const SubjectEntry = () => {
       duration: 500,
       easing: "easeInOutQuad",
     });
-    console.log("Submitted Courses:", courses);
   };
 
   return (

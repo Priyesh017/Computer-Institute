@@ -6,60 +6,43 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ComboboxDemo } from "@/app/_components/combo"; // Ensure this path is correct
 import { useDropzone } from "react-dropzone";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import anime from "animejs";
 import {
   CategoryValue,
   frameworksEdu,
   IdCardType,
+  indianStatesWithDistricts,
   Nationality,
   sexValue,
 } from "@/data";
+import { fetcher } from "@/helper";
+import { toast } from "react-toastify";
 
 const bathroom = ["Yes", "No"];
 
-export interface efd {
-  applicantName: string;
-  fatherName: string;
-  coName: string;
-  dob: string;
-  gender: string;
-  category: string;
-  nationality: string;
-  mobileNo: string;
-  address: {
-    vill: string;
-    po: string;
-    ps: string;
-    dist: string;
-    pin: string;
-    state: string;
-  };
-  education: string;
-  idProof: string;
-  idProofNo: string;
-  houseRoomNo: string;
-  squareFit: string;
-  tradeLicense: string;
-  bathroom: string;
-}
 const initialFormData = {
   name: "",
   father: "",
   coName: "",
+  email: "",
   dob: "",
   sex: "",
   category: "",
   nationality: "",
   mobileNo: "",
+  stateCoordinator: "",
+  districtCoordinator: "",
+  subdistrictCoordinator: "",
   address: {
+    AddressLine: "",
     vill: "",
     po: "",
     ps: "",
-    dist: "",
     pin: "",
-    state: "",
   },
+  state: "",
+  dist: "",
   eduqualification: "",
   idProof: "",
   idProofNo: "",
@@ -74,9 +57,21 @@ const FranchiseForm = () => {
   const [images, setImages] = useState<{ src: string; file: File } | null>(
     null
   );
-
   const handleDeleteImage = () => {
     setImages(null);
+  };
+
+  const filterfn = () => {
+    const data = indianStatesWithDistricts.find(
+      (val) => val.label == formData.state
+    );
+    if (data == undefined) return;
+
+    const arr = data.districts.map((district) => ({
+      value: district,
+      label: district,
+    }));
+    return arr;
   };
 
   const onDrop = (acceptedFile: File) => {
@@ -95,9 +90,47 @@ const FranchiseForm = () => {
   };
 
   const [formData, setFormData] = useState<FormDataKey>(initialFormData);
+  const [loading, setloading] = useState(false);
 
-  const submitHandler = (e: React.FormEvent) => {
+  const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
+    setloading(true);
+
+    try {
+      if (!images) return;
+
+      const { url } = await fetcher(
+        `/generate-presigned-url?fileName=${images.file.name}&fileType=${images.file.type}&category=enquiry`,
+        "GET"
+      );
+      if (!url) {
+        toast("didnot generate url");
+        return;
+      }
+
+      const uploadResponse = await fetch(url, {
+        method: "PUT",
+        body: images.file,
+        headers: {
+          "Content-Type": images.file.type,
+        },
+      });
+
+      if (!uploadResponse.ok) throw new Error("Upload failed");
+
+      const signatureLink = url.split("?")[0];
+
+      const { success } = await fetcher("/TakeEnquiry", "POST", {
+        ...formData,
+        signatureLink,
+      });
+
+      if (success) toast("success");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setloading(false);
+    }
   };
   return (
     <motion.div
@@ -112,7 +145,7 @@ const FranchiseForm = () => {
       <form className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-gray-700 mb-1">Applicant’s Name</label>
+            <label className="block text-gray-700 mb-1">Applicant's Name</label>
             <Input
               type="text"
               name="applicantName"
@@ -124,7 +157,19 @@ const FranchiseForm = () => {
             />
           </div>
           <div>
-            <label className="block text-gray-700 mb-1">Father’s Name</label>
+            <label className="block text-gray-700 mb-1">Email</label>
+            <Input
+              type="text"
+              name="applicantName"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              className="w-full border rounded-md p-2"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-1">Father's Name</label>
             <Input
               type="text"
               name="fatherName"
@@ -163,6 +208,26 @@ const FranchiseForm = () => {
             <label className="block font-bold text-lg text-gray-700 mb-1">
               Address
             </label>
+
+            <label className="block text-gray-700 ml-5 mb-1">
+              Address Line 1
+            </label>
+            <Input
+              type="text"
+              name="address"
+              placeholder="address line "
+              value={formData.address.AddressLine}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  address: {
+                    ...formData.address,
+                    AddressLine: e.target.value,
+                  },
+                })
+              }
+              className="w-[95%] border rounded-md ml-5 p-2"
+            />
             <label className="block text-gray-700 ml-5 mb-1">Village</label>
             <Input
               type="text"
@@ -222,20 +287,12 @@ const FranchiseForm = () => {
           </div>
           <div>
             <label className="block text-gray-700 mr-5 mb-1">District</label>
-            <Input
-              type="text"
-              name="address"
-              value={formData.address.dist}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  address: {
-                    ...formData.address,
-                    dist: e.target.value,
-                  },
-                })
-              }
-              className="w-[95%] border rounded-md mr-5 p-2"
+            <ComboboxDemo
+              frameworks={filterfn() ?? []}
+              heading={"Select District"}
+              value={formData.dist}
+              setValue={setFormData}
+              data="dist"
             />
           </div>
           <div>
@@ -258,20 +315,13 @@ const FranchiseForm = () => {
           </div>
           <div>
             <label className="block text-gray-700 mr-5 mb-1">State</label>
-            <Input
-              type="text"
-              name="address"
-              value={formData.address.state}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  address: {
-                    ...formData.address,
-                    state: e.target.value,
-                  },
-                })
-              }
-              className="w-[95%] border rounded-md mr-5 p-2"
+
+            <ComboboxDemo
+              frameworks={indianStatesWithDistricts}
+              heading={"Select State"}
+              value={formData.state}
+              setValue={setFormData}
+              data="state"
             />
           </div>
           <div>
@@ -311,7 +361,10 @@ const FranchiseForm = () => {
               name="mobileNo"
               value={formData.mobileNo}
               onChange={(e) =>
-                setFormData({ ...formData, mobileNo: e.target.value })
+                setFormData({
+                  ...formData,
+                  mobileNo: e.target.value.slice(0, 10),
+                })
               }
               className="w-full border rounded-md p-2"
             />
@@ -323,7 +376,7 @@ const FranchiseForm = () => {
               heading={"Select ID Proof"}
               value={formData.idProof}
               setValue={setFormData}
-              data="idtype"
+              data="idProof"
             />
           </div>
           <div>
@@ -351,6 +404,18 @@ const FranchiseForm = () => {
             />
           </div>
           <div>
+            <label className="block text-gray-700 mb-1">trade License</label>
+            <Input
+              type="text"
+              name="tradeLicense"
+              value={formData.tradeLicense}
+              onChange={(e) =>
+                setFormData({ ...formData, tradeLicense: e.target.value })
+              }
+              className="w-full border rounded-md p-2"
+            />
+          </div>
+          <div>
             <label className="block text-gray-700 mb-1">Square Fit</label>
             <Input
               type="number"
@@ -368,7 +433,7 @@ const FranchiseForm = () => {
             </label>
             <ComboboxDemo
               frameworks={frameworksEdu}
-              heading={"Select Bathroom"}
+              heading={"Education Qualification"}
               value={formData.eduqualification}
               setValue={setFormData}
               data="eduqualification"
@@ -387,13 +452,61 @@ const FranchiseForm = () => {
               data="bathroom"
             />
           </div>
+          <div>
+            <label className="block text-gray-700 mb-1">
+              subdistrict Coordinator
+            </label>
+            <Input
+              type="text"
+              name="subdistrictCoordinator"
+              value={formData.subdistrictCoordinator}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  subdistrictCoordinator: e.target.value,
+                })
+              }
+              className="w-full border rounded-md p-2"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-1">
+              district Coordinator
+            </label>
+            <Input
+              type="text"
+              name="districtCoordinator"
+              value={formData.districtCoordinator}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  districtCoordinator: e.target.value,
+                })
+              }
+              className="w-full border rounded-md p-2"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-1">
+              state Coordinator
+            </label>
+            <Input
+              type="text"
+              name="stateCoordinator"
+              value={formData.stateCoordinator}
+              onChange={(e) =>
+                setFormData({ ...formData, stateCoordinator: e.target.value })
+              }
+              className="w-full border rounded-md p-2"
+            />
+          </div>
           <div className="flex-row md:flex w-full gap-2">
             <div>
               <label
                 htmlFor="image"
                 className="block text-sm font-medium text-gray-700"
               >
-                Applicant Image
+                Applicant's Signature
               </label>
               <Dropzone onDrop={(files) => onDrop(files)} />
             </div>
@@ -424,9 +537,11 @@ const FranchiseForm = () => {
         <Button
           type="submit"
           onClick={submitHandler}
+          disabled={loading}
           className="w-1/3 mx-auto block bg-violet-600 hover:bg-violet-700 text-white rounded-lg mt-4"
         >
           Submit
+          {loading && <Loader2 className="animate-spin" />}
         </Button>
       </form>
     </motion.div>

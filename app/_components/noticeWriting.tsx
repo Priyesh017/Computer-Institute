@@ -32,7 +32,6 @@ const NoticeWriting = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Notice Submitted:", form);
   };
 
   return (
