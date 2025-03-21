@@ -7,10 +7,12 @@ import { UploadCloud } from "lucide-react";
 
 const VideoUpload = () => {
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
+      setVideoFile(file);
       setVideoPreview(URL.createObjectURL(file));
     }
   }, []);
@@ -32,6 +34,15 @@ const VideoUpload = () => {
 
   const handleDeleteVideo = () => {
     setVideoPreview(null);
+    setVideoFile(null);
+  };
+
+  const handleSubmitVideo = () => {
+    if (videoFile) {
+      // Handle video submission logic here
+      console.log("Submitting video:", videoFile);
+      alert("Video submitted successfully!");
+    }
   };
 
   return (
@@ -64,12 +75,25 @@ const VideoUpload = () => {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           />
-          <button
-            onClick={handleDeleteVideo}
-            className="px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition"
-          >
-            Delete Video
-          </button>
+          <div className="flex space-x-4">
+            <button
+              onClick={handleDeleteVideo}
+              className="px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition"
+            >
+              Delete Video
+            </button>
+            <button
+              onClick={handleSubmitVideo}
+              className={`px-4 py-2 text-white rounded-lg shadow transition ${
+                videoFile
+                  ? "bg-green-500 hover:bg-green-600"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+              disabled={!videoFile}
+            >
+              Submit Video
+            </button>
+          </div>
         </div>
       )}
     </div>
