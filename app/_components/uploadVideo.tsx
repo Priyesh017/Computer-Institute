@@ -3,11 +3,18 @@
 import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { motion } from "framer-motion";
-import { UploadCloud } from "lucide-react";
+import { Loader2, UploadCloud } from "lucide-react";
+import { toast } from "react-toastify";
+import { fetcherWc } from "@/helper";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { Progress } from "@/components/ui/progress";
 
 const VideoUpload = () => {
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [loading, setloading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -37,11 +44,42 @@ const VideoUpload = () => {
     setVideoFile(null);
   };
 
-  const handleSubmitVideo = () => {
-    if (videoFile) {
-      // Handle video submission logic here
-      console.log("Submitting video:", videoFile);
-      alert("Video submitted successfully!");
+  const handleSubmitVideo = async () => {
+    if (!videoFile) return toast("no video found");
+
+    try {
+      setloading(true);
+      const { url } = await fetcherWc(
+        `/generate-presigned-url?fileName=${videoFile.name}&fileType=${videoFile.type}&category=temp`,
+        "GET"
+      );
+      if (!url) {
+        toast("didnot generate url");
+        return;
+      }
+
+      const data = await axios.put(url, videoFile, {
+        headers: {
+          "Content-Type": videoFile.type,
+        },
+        onUploadProgress: (progressEvent) => {
+          if (!progressEvent.total) {
+            toast.warn("Total file size is not available.");
+            return;
+          }
+          const percent = Math.round(
+            (progressEvent.loaded / progressEvent.total) * 100
+          );
+          setProgress(percent);
+        },
+      });
+
+      console.log(data);
+      toast("Upload successful");
+    } catch (error) {
+      toast("Upload failed with error");
+    } finally {
+      setloading(false);
     }
   };
 
@@ -82,20 +120,22 @@ const VideoUpload = () => {
             >
               Delete Video
             </button>
-            <button
+            <Button
               onClick={handleSubmitVideo}
               className={`px-4 py-2 text-white rounded-lg shadow transition ${
                 videoFile
                   ? "bg-green-500 hover:bg-green-600"
                   : "bg-gray-400 cursor-not-allowed"
               }`}
-              disabled={!videoFile}
+              disabled={loading}
             >
               Submit Video
-            </button>
+              {loading && <Loader2 className="animate-spin" />}
+            </Button>
           </div>
         </div>
       )}
+      {loading && <Progress value={progress} className="w-[60%]" />}
     </div>
   );
 };

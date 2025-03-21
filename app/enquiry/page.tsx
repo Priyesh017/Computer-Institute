@@ -116,7 +116,7 @@ const FranchiseForm = () => {
         },
       });
 
-      if (!uploadResponse.ok) throw new Error("Upload failed");
+      if (!uploadResponse.ok) return toast("Upload failed");
 
       const signatureLink = url.split("?")[0];
 
