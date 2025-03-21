@@ -13,6 +13,12 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Enrollment {
   admitLink: string;
@@ -26,6 +32,7 @@ interface Enrollment {
   Enrollmentno: string;
   id: number;
   activated: boolean;
+  status: string;
 }
 
 const PAGE_SIZE = 5;
@@ -39,7 +46,7 @@ const EnrollmentList = () => {
   const [search, setSearch] = useState("");
   const [totalEnrollments, setTotalEnrollments] = useState(0); // Track total count
   const [temploading, settemploading] = useState(false);
-
+  const [filterStatus, setFilterStatus] = useState("All");
   const fetchEnrollments = useCallback(async () => {
     try {
       const { enrollments, total } = await fetcherWc(
@@ -96,16 +103,33 @@ const EnrollmentList = () => {
     }
   };
 
-  const filteredEnrollment = enrollments.filter((enrollment) =>
-    enrollment.Enrollmentno.toString()
-      .toLowerCase()
-      .includes(search.toLowerCase())
+  const filteredEnrollment = enrollments.filter(
+    (enrollment) =>
+      enrollment.Enrollmentno.toString()
+        .toLowerCase()
+        .includes(search.toLowerCase()) &&
+      (filterStatus === "All" || enrollment.status === filterStatus)
   );
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
       <div className="flex justify-between items-center px-4 py-2">
         <h2 className="text-xl font-bold">Enrollment Verify</h2>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="w-40 border rounded-md p-1">
+            {filterStatus}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {["All", "Pending", "Pass Out", "Drop Out"].map((option) => (
+              <DropdownMenuItem
+                key={option}
+                onClick={() => setFilterStatus(option)}
+              >
+                {option}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
         <Input
           type="text"
           placeholder="Search enrollment..."
@@ -114,10 +138,11 @@ const EnrollmentList = () => {
           className="w-1/3 p-2 border border-gray-400 rounded-lg"
         />
       </div>
-      <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No.</span>
         <span>Date</span>
+        <span>Status</span>
         <span>Approval</span>
         <span>Generate</span>
       </div>
@@ -125,7 +150,7 @@ const EnrollmentList = () => {
       {filteredEnrollment.map((enrollment) => (
         <div
           key={enrollment.id}
-          className="click grid md:grid-cols-5 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer bg-gray-200 hover:bg-blue-100"
+          className="click grid md:grid-cols-6 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer bg-gray-200 hover:bg-blue-100"
         >
           <div
             className="hover:text-violet-800"
@@ -138,6 +163,9 @@ const EnrollmentList = () => {
           </div>
           <div>{enrollment.Enrollmentno}</div>
           <span>{new Date(enrollment.createdAt).toDateString()}</span>
+          <div className="w-full h-full p-2 mx-auto text-red-600 bg-white border border-gray-900 rounded-md">
+            {enrollment.status}
+          </div>
           <div className="flex items-center justify-center gap-2">
             <Switch
               id={`activation-${enrollment.id}`}
