@@ -18,17 +18,25 @@ interface Subject {
   practicalMarks: string;
 }
 
+const subjectName = [
+  "English Language and Literature",
+  "Science",
+  "Maths",
+  "Bengali",
+];
+
 const Marksheet = () => {
-  const [subjects, setSubjects] = useState<Subject[]>([
-    {
-      subject: "",
+  const [subjects, setSubjects] = useState<Subject[]>(
+    subjectName.map((name: string) => ({
+      subject: name,
       theoryFullMarks: "",
       practicalFullMarks: "",
       theoryMarks: "",
       practicalMarks: "",
-    },
-  ]);
+    }))
+  );
 
+  const [isPreviewOpen, setPreviewOpen] = useState(false);
   const [totalMarks, setTotalMarks] = useState<number>(0);
   const [percentage, setPercentage] = useState<number>(0);
   const [grade, setGrade] = useState<string>("N/A");
@@ -39,15 +47,15 @@ const Marksheet = () => {
     "Select"
   );
 
-  useEffect(() => {
-    anime({
-      targets: ".marks-row",
-      opacity: [0, 1],
-      translateY: [20, 0],
-      easing: "easeOutExpo",
-      duration: 500,
-    });
-  }, [subjects]);
+  // useEffect(() => {
+  //   anime({
+  //     targets: ".marks-row",
+  //     opacity: [0, 1],
+  //     translateY: [20, 0],
+  //     easing: "easeOutExpo",
+  //     duration: 500,
+  //   });
+  // }, [subjects]);
 
   useEffect(() => {
     const totalObtained = subjects.reduce(
@@ -139,29 +147,29 @@ const Marksheet = () => {
 
   const allFieldsFilled = subjects.every(
     (item) =>
-      item.subject.trim() !== "" &&
+      // item.subject.trim() !== "" &&
       item.theoryMarks.trim() !== "" &&
       item.practicalMarks.trim() !== "" &&
       item.theoryFullMarks.trim() !== "" &&
       item.practicalFullMarks.trim() !== ""
   );
 
-  const handleAddRow = () => {
-    if (!allFieldsFilled) {
-      alert("Please fill all fields before adding a new row!");
-      return;
-    }
-    setSubjects([
-      ...subjects,
-      {
-        subject: "",
-        theoryFullMarks: "",
-        practicalFullMarks: "",
-        theoryMarks: "",
-        practicalMarks: "",
-      },
-    ]);
-  };
+  // const handleAddRow = () => {
+  //   if (!allFieldsFilled) {
+  //     alert("Please fill all fields before adding a new row!");
+  //     return;
+  //   }
+  //   setSubjects([
+  //     ...subjects,
+  //     {
+  //       // subject: "",
+  //       theoryFullMarks: "",
+  //       practicalFullMarks: "",
+  //       theoryMarks: "",
+  //       practicalMarks: "",
+  //     },
+  //   ]);
+  // };
 
   const handleChange = (index: number, field: string, value: string) => {
     const newSubjects = [...subjects];
@@ -169,10 +177,10 @@ const Marksheet = () => {
     setSubjects(newSubjects);
   };
 
-  const handleDeleteRow = (index: number) => {
-    const newSubjects = subjects.filter((_, i) => i !== index);
-    setSubjects(newSubjects);
-  };
+  // const handleDeleteRow = (index: number) => {
+  //   const newSubjects = subjects.filter((_, i) => i !== index);
+  //   setSubjects(newSubjects);
+  // };
 
   const handleSubmit = async () => {
     if (check()) {
@@ -198,18 +206,26 @@ const Marksheet = () => {
     }
   };
 
+  // const handlePreview = () => {
+  //   if (!allFieldsFilled) {
+  //     alert("Please fill all fields before previewing!");
+  //     return;
+  //   }
+  //   alert(
+  //     `Preview:\n${JSON.stringify(
+  //       subjects,
+  //       null,
+  //       2
+  //     )}\nTotal Marks: ${totalMarks}\nPercentage: ${percentage}%\nGrade: ${grade}`
+  //   );
+  // };
+
   const handlePreview = () => {
     if (!allFieldsFilled) {
       alert("Please fill all fields before previewing!");
       return;
     }
-    alert(
-      `Preview:\n${JSON.stringify(
-        subjects,
-        null,
-        2
-      )}\nTotal Marks: ${totalMarks}\nPercentage: ${percentage}%\nGrade: ${grade}`
-    );
+    setPreviewOpen(true);
   };
 
   // Calculate totals
@@ -232,7 +248,7 @@ const Marksheet = () => {
   const grandTotal = totalTheoryMarks + totalPracticalMarks;
 
   return (
-    <div className="max-w-4xl mx-auto my-10 p-3 md:p-10 bg-white text-black rounded-lg shadow-lg">
+    <div className="max-w-full mx-auto my-10 p-3 md:p-10 bg-white text-black rounded-lg shadow-lg">
       <h2 className="text-3xl font-bold mb-2 text-center">Marksheet</h2>
       <p className="text-gray-500 text-center mb-6">
         Clearly fill the form below
@@ -266,24 +282,27 @@ const Marksheet = () => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-7 gap-2 text-center text-xs md:text-lg font-bold bg-gray-200 p-3 rounded-lg">
+      <div className="grid grid-cols-6 gap-2 text-center text-xs md:text-lg font-bold bg-gray-200 p-3 rounded-lg">
         <span>Subject</span>
         <span>Theory Full Marks</span>
         <span>Practical Full Marks</span>
         <span>Theory Marks</span>
         <span>Practical Marks</span>
         <span>Total</span>
-        <span>Action</span>
+        {/* <span>Action</span> */}
       </div>
       <div className="space-y-2 mt-2">
         {subjects.map((item, index) => (
           <motion.div
             key={index}
-            className="marks-row grid md:grid-cols-7 gap-2 p-2 bg-gray-100 border border-gray-300 rounded-lg items-center"
+            className="marks-row grid md:grid-cols-6 gap-2 p-2 bg-gray-100 border border-gray-300 rounded-lg items-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
+            <span className="w-full h-full p-2 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-center">
+              {item.subject}
+            </span>
             {marks.map((items, i) => (
               <input
                 key={i}
@@ -305,18 +324,18 @@ const Marksheet = () => {
             <p className="text-center font-bold text-blue-500">
               {parseInt(item.theoryMarks) + parseInt(item.practicalMarks) || 0}
             </p>
-            <button
+            {/* <button
               onClick={() => handleDeleteRow(index)}
               className="p-2 bg-red-500 hover:bg-red-600 transition rounded text-white"
             >
               <Trash2 className="mx-auto" size={20} />
-            </button>
+            </button> */}
           </motion.div>
         ))}
 
         {/* Totals Section */}
         <motion.div
-          className="mt-6 p-4 bg-gray-200 rounded-lg text-gray-800 font-semibold grid grid-cols-7 text-center"
+          className="mt-6 p-4 bg-gray-200 rounded-lg text-gray-800 font-semibold grid grid-cols-6 text-center"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
@@ -329,7 +348,7 @@ const Marksheet = () => {
           <p className="text-purple-600 pl-3">{grandTotal}</p>
         </motion.div>
 
-        <button
+        {/* <button
           onClick={handleAddRow}
           className={`w-full p-3 rounded text-white font-bold ${
             allFieldsFilled
@@ -339,7 +358,7 @@ const Marksheet = () => {
           disabled={!allFieldsFilled}
         >
           + Add New Row
-        </button>
+        </button> */}
       </div>
 
       <div className="grid md:grid-cols-4 items-center justify-center gap-2 mt-6 text-center">
@@ -383,8 +402,79 @@ const Marksheet = () => {
           Submit
         </button>
       </div>
+      <PreviewModal
+        isOpen={isPreviewOpen}
+        onClose={() => setPreviewOpen(false)}
+        subjects={subjects}
+        totalMarks={totalMarks}
+        percentage={percentage}
+        grade={grade}
+        result={selected}
+      />
     </div>
   );
 };
 
 export default Marksheet;
+
+interface PreviewModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  subjects: Subject[];
+  totalMarks: number;
+  percentage: number;
+  grade: string;
+  result: string;
+}
+
+const PreviewModal = ({
+  isOpen,
+  onClose,
+  subjects,
+  totalMarks,
+  percentage,
+  grade,
+  result,
+}: PreviewModalProps) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+      <div className="max-h-screen bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg max-w-lg w-full">
+        {/* Header */}
+        <div className="flex justify-between items-center pb-4 border-b border-gray-300 dark:border-gray-700">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            Preview
+          </h2>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition"
+          >
+            Close
+          </button>
+        </div>
+
+        {/* Scrollable JSON Preview */}
+        <div className="bg-gray-200 dark:bg-gray-800 p-4 rounded text-sm overflow-y-auto max-h-[300px] mt-4">
+          <pre className="whitespace-pre-wrap break-words">
+            {JSON.stringify(subjects, null, 2)}
+          </pre>
+        </div>
+
+        {/* Additional Info */}
+        <p className="mt-4 text-gray-700 dark:text-gray-300">
+          <strong>Grand Total:</strong> {totalMarks}
+        </p>
+        <p className="text-gray-700 dark:text-gray-300">
+          <strong>Percentage:</strong> {percentage}%
+        </p>
+        <p className="text-gray-700 dark:text-gray-300">
+          <strong>Grade:</strong> {grade}
+        </p>
+        <p className="text-gray-700 dark:text-gray-300">
+          <strong>Result:</strong> {result}
+        </p>
+      </div>
+    </div>
+  );
+};
