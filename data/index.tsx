@@ -460,13 +460,13 @@ export const admitFields = [
 ];
 
 export const marks = [
-  {
-    name: "subject",
-    type: "text",
+  // {
+  //   name: "subject",
+  //   type: "text",
 
-    placeholder: "Subject",
-    pattern: "[A-Za-z ]*",
-  },
+  //   placeholder: "Subject",
+  //   pattern: "[A-Za-z ]*",
+  // },
   {
     name: "theoryFullMarks",
     type: "number",
