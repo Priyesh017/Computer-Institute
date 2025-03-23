@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
+import { Loader2 } from "lucide-react";
 
 const NoticeWriting = () => {
   const [form, setForm] = useState({
@@ -103,6 +104,7 @@ const NoticeWriting = () => {
             className="w-full bg-violet-500 text-white py-2 rounded-md hover:bg-violet-600 transition"
           >
             Submit Notice
+            {loading && <Loader2 className="animate-spin" />}
           </Button>
         </div>
       </form>

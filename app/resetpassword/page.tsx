@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
 import { fetcher } from "@/helper";
 import { toast } from "react-toastify";
+import Loader from "@/components/Loader";
 
 const ForgetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -99,4 +100,8 @@ const ForgetPassword = () => {
   );
 };
 
-export default ForgetPassword;
+export default function FP() {
+  <Suspense fallback={<Loader />}>
+    <ForgetPassword />
+  </Suspense>;
+}

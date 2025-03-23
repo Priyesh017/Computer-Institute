@@ -50,7 +50,7 @@ export default function NoticeBoard() {
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [expanded]);
+  }, [expanded, notices]);
 
   if (isPending) return <Loader />;
   if (error) return <div>error happend...</div>;
