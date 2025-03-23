@@ -12,18 +12,7 @@ import { fetcherWc } from "@/helper";
 import { X } from "lucide-react";
 import AllDownloads from "@/components/studentdashboard/Downloads";
 import { toast } from "react-toastify";
-
-export interface EnrollmentType {
-  Enrollmentno: string;
-  IdCardNo: string;
-  idCardLink: string;
-  admitLink: string;
-  certificateLink: string;
-  marksheetLink: string;
-  name: string;
-  dob: string;
-  createdAt: string;
-}
+import { EnrollmentType } from "@/lib/typs";
 
 const PAGE_SIZE = 5;
 

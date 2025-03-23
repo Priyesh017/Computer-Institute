@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { fetcherWc } from "@/helper";
+import { fetcher, fetcherWc } from "@/helper";
 import { useAuthStore } from "@/store";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { FaArrowLeft } from "react-icons/fa6";
 import Modal from "@/components/Modal";
 import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const { utype, user, login, setloadingTime } = useAuthStore();
@@ -17,9 +18,10 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-
+  const [email, setemail] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [loading, setloading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -63,9 +65,18 @@ export default function LoginPage() {
     setfd({ ...fd, [e.target.name]: e.target.value });
   }
 
-  const handleForgotPassword = () => {
-    router.push("/otp");
+  const handleForgotPassword = async () => {
+    setloading(true);
+    const { success, message } = await fetcher("/SendResetLink", "POST", {
+      email,
+    });
+    setloading(false);
     setIsOpen(false);
+    if (!success) {
+      toast.error("some error happend");
+      return;
+    }
+    toast.success(message);
   };
 
   return (
@@ -177,12 +188,15 @@ export default function LoginPage() {
           id="email"
           placeholder="Enter Your Email ID"
           className="mt-6"
+          onChange={(e) => setemail(e.target.value)}
         />
         <Button
           className="mt-4 bg-purple-600 hover:bg-purple-700"
           onClick={handleForgotPassword}
+          disabled={loading}
         >
           Reset Password
+          {loading && <Loader2 className="animate-spin" />}
         </Button>
       </Modal>
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { useDropzone } from "react-dropzone";
+import Image from "next/image";
 
 export default function UploadNotes() {
   const [subject, setSubject] = useState("");
@@ -86,7 +87,7 @@ export default function UploadNotes() {
           </div>
           {images && (
             <div className="gallery-item relative mt-4">
-              <img
+              <Image
                 src={images.src}
                 alt="Uploaded Preview"
                 className="w-full rounded-lg shadow-md"

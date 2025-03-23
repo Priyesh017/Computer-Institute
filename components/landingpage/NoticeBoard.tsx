@@ -3,42 +3,32 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
+import Image from "next/image";
+import Loader from "../Loader";
+import { fetcher } from "@/helper";
+import { useQuery } from "@tanstack/react-query";
 
-const notices = [
-  {
-    subject: "🚀 Welcome Announcement",
-    details: "Welcome to our official website! Stay tuned for updates.",
-    date: "March 18, 2025",
-  },
-  {
-    subject: "📢 Admissions Open",
-    details: "Admissions for the new session are now open. Apply now!",
-    date: "March 15, 2025",
-  },
-  {
-    subject: "🎉 Annual Sports Day",
-    details: "Join us for the Annual Sports Day on March 25th. Don't miss out!",
-    date: "March 10, 2025",
-  },
-  {
-    subject: "📝 Exam Schedule Released",
-    details:
-      "The new exam schedule has been released. Check the portal for details.",
-    date: "March 8, 2025",
-  },
-  {
-    subject: "🔔 Latest Campus News",
-    details: "Stay updated with the latest campus news and announcements.",
-    date: "March 5, 2025",
-  },
-];
+interface inotice {
+  body: string;
+  heading: string;
+}
 
 export default function NoticeBoard() {
   const [index, setIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
 
+  const {
+    isPending,
+    error,
+    data: notices,
+  } = useQuery<inotice[]>({
+    queryKey: ["noticeData"],
+    queryFn: () => fetcher("/noticefetch", "GET"),
+  });
+
   useEffect(() => {
-    if (expanded) return;
+    if (expanded || !notices) return;
+
     const interval = setInterval(() => {
       anime({
         targets: ".notice-text",
@@ -58,14 +48,20 @@ export default function NoticeBoard() {
         },
       });
     }, 4000);
+
     return () => clearInterval(interval);
-  }, [expanded]);
+  }, [expanded, notices]);
+
+  if (isPending) return <Loader />;
+  if (error) return <div>error happend...</div>;
 
   return (
     <div className="relative md:w-full md:max-w-6xl md:mx-auto mx-2 md:py-6 md:px-10 p-4 bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 backdrop-blur-lg">
       <div className="flex justify-between items-center md:mb-4 mb-2">
-        <h2 className="md:text-2xl text-xl font-bold text-gray-800">Notice to All</h2>
-        <img src="/logo.png" alt="Logo" className="w-12 h-12" />
+        <h2 className="md:text-2xl text-xl font-bold text-gray-800">
+          Notice to All
+        </h2>
+        <Image src="/logo.png" alt="Logo" width={40} height={40} />
       </div>
       <motion.div
         initial={{ scale: 0.9 }}
@@ -89,12 +85,11 @@ export default function NoticeBoard() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.5 }}
             >
-              {notices[index].subject}
+              {notices[index].heading}
             </motion.h3>
             <p className="text-gray-700 md:text-lg text-md">
-              {notices[index].details}
+              {notices[index].body}
             </p>
-            <span className="text-sm text-gray-500">{notices[index].date}</span>
           </div>
         ) : (
           <div className="mt-4 space-y-3 max-h-72 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent">
@@ -106,9 +101,8 @@ export default function NoticeBoard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.1 }}
               >
-                <h3 className="text-lg font-semibold">{notice.subject}</h3>
-                <p className="text-gray-700">{notice.details}</p>
-                <span className="text-sm text-gray-500">{notice.date}</span>
+                <h3 className="text-lg font-semibold">{notice.heading}</h3>
+                <p className="text-gray-700">{notice.body}</p>
               </motion.div>
             ))}
           </div>

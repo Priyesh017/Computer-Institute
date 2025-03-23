@@ -18,14 +18,28 @@ import { Download, Loader2, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store";
 import { fetcherWc } from "@/helper";
-import Downloads from "@/components/studentdashboard/Downloads";
-import Profile, {
-  StudentProfileProps,
-} from "@/components/studentdashboard/Profile";
 import { toast } from "react-toastify";
+
+const Downloads = dynamic(
+  () => import("@/components/studentdashboard/Downloads"),
+  {
+    loading: () => <Loader />,
+  }
+);
+
+const Profile = dynamic(() => import("@/components/studentdashboard/Profile"), {
+  loading: () => <Loader />,
+});
+const Notes = dynamic(() => import("@/components/studentdashboard/Notes"), {
+  loading: () => <Loader />,
+});
+const Videos = dynamic(() => import("@/components/studentdashboard/Video"), {
+  loading: () => <Loader />,
+});
+
 import Loader from "@/components/Loader";
-import Notes from "@/components/studentdashboard/Notes";
-import Videos from "@/components/studentdashboard/Video";
+import dynamic from "next/dynamic";
+import { StudentProfileProps } from "@/lib/typs";
 
 export default function Menu() {
   const { user, logout, loading } = useAuthStore();
@@ -47,13 +61,13 @@ export default function Menu() {
     {
       icon: <Download size={24} />,
       name: "Notes",
-      section: <Notes />
+      section: <Notes />,
     },
     {
       icon: <Download size={24} />,
       name: "Videos",
-      section: <Videos />
-    }
+      section: <Videos />,
+    },
   ];
   const [activeSection, setActiveSection] = useState(sideMenu[0].name);
 

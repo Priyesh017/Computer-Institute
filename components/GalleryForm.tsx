@@ -61,6 +61,7 @@ export default function GalleryInsertion() {
           `/generate-presigned-url?fileName=${image.file.name}&fileType=${image.file.type}&category=${image.category}`,
           "GET"
         );
+        console.log(image.file.type);
         if (!url) throw new Error("Failed to generate pre-signed URL");
 
         const uploadResponse = await fetch(url, {

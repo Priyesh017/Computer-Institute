@@ -152,7 +152,9 @@ const ExamForm = () => {
   };
 
   const filteredEnrollment = enrollments.filter((enrollment) =>
-    enrollment.EnrollmentNo.toLowerCase().includes(search.toLowerCase())
+    enrollment.EnrollmentNo.toString()
+      .toLowerCase()
+      .includes(search.toLowerCase())
   );
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;

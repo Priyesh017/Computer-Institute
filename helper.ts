@@ -25,6 +25,12 @@ interface iDatatype {
   imageUrl?: string;
   enrollment?: DataItem;
   signatureLink?: string;
+  c?: string;
+  subject?: string;
+  details?: string;
+  expiryDate?: string;
+  oldPassword?: string;
+  newPassword?: string;
 }
 
 const ApiEnd = axios.create({
