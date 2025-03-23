@@ -4,14 +4,20 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/store";
+import { fetcherWc } from "@/helper";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const { user } = useAuthStore();
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
@@ -19,6 +25,20 @@ const ChangePassword = () => {
       animateError();
       return;
     }
+
+    const data = await fetcherWc("/ChangePassword", "POST", {
+      oldPassword,
+      email: user?.email,
+      newPassword,
+    });
+
+    if (!data.success) {
+      toast("failed to update");
+      return;
+    }
+
+    toast.success("successful");
+    router.replace("/admin/dashboard");
     setError("");
   };
 

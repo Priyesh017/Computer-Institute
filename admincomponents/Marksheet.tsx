@@ -9,6 +9,7 @@ import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import { ApiResponse, EnrollmentData } from "./ExamRegForm";
 import Dropdown from "@/components/DropDown";
+import { Button } from "@/components/ui/button";
 
 interface Subject {
   subject: string;
@@ -18,23 +19,8 @@ interface Subject {
   practicalMarks: string;
 }
 
-const subjectName = [
-  "English Language and Literature",
-  "Science",
-  "Maths",
-  "Bengali",
-];
-
 const Marksheet = () => {
-  const [subjects, setSubjects] = useState<Subject[]>(
-    subjectName.map((name: string) => ({
-      subject: name,
-      theoryFullMarks: "",
-      practicalFullMarks: "",
-      theoryMarks: "",
-      practicalMarks: "",
-    }))
-  );
+  const [subjects, setSubjects] = useState<Subject[]>([]);
 
   const [isPreviewOpen, setPreviewOpen] = useState(false);
   const [totalMarks, setTotalMarks] = useState<number>(0);
@@ -46,16 +32,6 @@ const Marksheet = () => {
   const [selected, setSelected] = useState<"PASS" | "FAIL" | "Select">(
     "Select"
   );
-
-  // useEffect(() => {
-  //   anime({
-  //     targets: ".marks-row",
-  //     opacity: [0, 1],
-  //     translateY: [20, 0],
-  //     easing: "easeOutExpo",
-  //     duration: 500,
-  //   });
-  // }, [subjects]);
 
   useEffect(() => {
     const totalObtained = subjects.reduce(
@@ -112,12 +88,24 @@ const Marksheet = () => {
       if (data.success && data.data == null) toast("invalid enrollment id");
 
       setfd(data.data);
+      const subjectName = data.data.course.subjects;
+
+      setSubjects(
+        subjectName.map((name: string) => ({
+          subject: name,
+          theoryFullMarks: "",
+          practicalFullMarks: "",
+          theoryMarks: "",
+          practicalMarks: "",
+        }))
+      );
     } catch (error) {
       toast("error happened");
     }
   };
   const check = () =>
     !allFieldsFilled || !fd?.name || year === "" || selected === "Select";
+
   const handleChange3 = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -128,12 +116,10 @@ const Marksheet = () => {
     }
   };
 
-  useEffect(() => {
-    if (enrollmentNo.length === 14) {
-      toast("plz wait while data is fetching...");
-      fetchData();
-    }
-  }, [enrollmentNo]);
+  const fetchHandler = async () => {
+    toast("plz wait while data is fetching...");
+    await fetchData();
+  };
 
   const getGrade = (percentage: number): string => {
     if (percentage >= 90) return "AA";
@@ -206,23 +192,9 @@ const Marksheet = () => {
     }
   };
 
-  // const handlePreview = () => {
-  //   if (!allFieldsFilled) {
-  //     alert("Please fill all fields before previewing!");
-  //     return;
-  //   }
-  //   alert(
-  //     `Preview:\n${JSON.stringify(
-  //       subjects,
-  //       null,
-  //       2
-  //     )}\nTotal Marks: ${totalMarks}\nPercentage: ${percentage}%\nGrade: ${grade}`
-  //   );
-  // };
-
   const handlePreview = () => {
     if (!allFieldsFilled) {
-      alert("Please fill all fields before previewing!");
+      toast("Please fill all fields before previewing!");
       return;
     }
     setPreviewOpen(true);
@@ -263,6 +235,7 @@ const Marksheet = () => {
             className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
           />
         </div>
+        <Button onClick={fetchHandler}>fetch</Button>
         {details.map((item, index) => (
           <div key={index} className="flex flex-col">
             <label className="text-sm font-medium mb-1">{item.label}</label>

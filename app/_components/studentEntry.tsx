@@ -12,111 +12,13 @@ import { X } from "lucide-react";
 import anime from "animejs";
 import {
   CategoryValue,
+  frameworksCourse,
   frameworksEdu,
   IdCardType,
   Nationality,
   sexValue,
 } from "@/data";
-
-const frameworksCourse = [
-  {
-    label: "DOAP",
-    value: "15",
-  },
-  {
-    label: "DITA",
-    value: "16",
-  },
-  {
-    label: "ADCA",
-    value: "17",
-  },
-  {
-    label: "ADOAP",
-    value: "18",
-  },
-  {
-    label: "WEBSITE DESIGNING & DEVELOPMENT",
-    value: "19",
-  },
-  {
-    label: "COMPUTER HARDWARE & NETWORKING",
-    value: "14",
-  },
-  {
-    label: "DCA",
-    value: "13",
-  },
-  {
-    label: "TYPING",
-    value: "12",
-  },
-  {
-    label: "DTP",
-    value: "11",
-  },
-  {
-    label: "KNOWLEDGE ON C/C++ PROGRAMMING",
-    value: "7",
-  },
-  {
-    label: "CCTV INSTALLATION & MAINTENANCE",
-    value: "10",
-  },
-  {
-    label: "ADVANCE EXCEL",
-    value: "9",
-  },
-  {
-    label: "PYTHON",
-    value: "8",
-  },
-  {
-    label: "Knowledge on LINUX",
-    value: "6",
-  },
-  {
-    label: "CITA",
-    value: "5",
-  },
-  {
-    label: "CCA",
-    value: "4",
-  },
-  {
-    label: "BASIC HARDWARE MAINTENANCE",
-    value: "3",
-  },
-  {
-    label: "TALLY",
-    value: "2",
-  },
-  {
-    label: "OFFICE MANAGEMENT",
-    value: "",
-  },
-  {
-    label: "BASIC COMPUTER CONCEPT",
-    value: "1",
-  },
-];
-
-export interface tfd {
-  name: string;
-  fatherName: string;
-  motherName: string;
-  Address: string;
-  dob: Date;
-  mobile: string;
-  wapp: string;
-  eduqualification: string;
-  courseid: string;
-  category: string;
-  nationality: string;
-  sex: string;
-  idtype: string;
-  idProofNo: string;
-}
+import { tfd } from "@/lib/typs";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
+import { Button } from "@/components/ui/button";
 
 export type EnrollmentData = {
   id: number;
@@ -31,6 +32,7 @@ export type EnrollmentData = {
   };
   course: {
     CName: string;
+    subjects: string[];
   };
 };
 
@@ -94,12 +96,11 @@ const ExamForm = () => {
     }
   };
 
-  useEffect(() => {
-    if (enrollmentNo.length === 14) {
-      toast("plz wait while data is fetching...");
-      fetchData();
-    }
-  }, [enrollmentNo]);
+  const fetchHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    toast("plz wait while data is fetching...");
+    fetchData();
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -164,7 +165,7 @@ const ExamForm = () => {
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
           </div>
-
+          <Button onClick={fetchHandler}>fetch</Button>
           {examFields.map(({ value, key, label }) => (
             <div key={key} className="flex flex-col">
               <label htmlFor={key} className="text-sm font-medium mb-1">

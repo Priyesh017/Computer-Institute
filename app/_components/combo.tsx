@@ -28,6 +28,7 @@ interface proptype {
   heading: string;
   frameworks: ftype;
   value: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setValue: any; //FIXME
   data:
     | "eduqualification"
@@ -77,6 +78,7 @@ export function ComboboxDemo({
                   key={framework.value}
                   value={framework.value}
                   onSelect={(currentValue) => {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     setValue((val: any) => ({
                       ...val,
                       [data]: currentValue,

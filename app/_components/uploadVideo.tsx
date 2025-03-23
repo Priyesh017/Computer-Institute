@@ -78,6 +78,7 @@ const VideoUpload = () => {
       toast("Upload successful");
     } catch (error) {
       toast("Upload failed with error");
+      console.log(error);
     } finally {
       setloading(false);
     }

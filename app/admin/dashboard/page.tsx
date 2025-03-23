@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import dynamic from "next/dynamic";
 import Loader from "@/components/Loader";
+import ReceivedVideos from "@/components/studentdashboard/Video";
 
 const EnrollmentList = dynamic(() => import("@/app/_components/enrollments"), {
   loading: () => <Loader />,
@@ -88,6 +89,8 @@ export default function AdminDashboard() {
         return <SubjectEntry />;
       case "UPLOAD VIDEO":
         return <UploadVideo />;
+      case "VIDEOS":
+        return <ReceivedVideos />;
     }
   };
 

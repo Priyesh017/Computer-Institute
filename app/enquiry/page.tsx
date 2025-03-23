@@ -145,7 +145,9 @@ const FranchiseForm = () => {
       <form className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-gray-700 mb-1">Applicant's Name</label>
+            <label className="block text-gray-700 mb-1">
+              Applicant&apos;s Name
+            </label>
             <Input
               type="text"
               name="applicantName"
@@ -169,7 +171,9 @@ const FranchiseForm = () => {
             />
           </div>
           <div>
-            <label className="block text-gray-700 mb-1">Father's Name</label>
+            <label className="block text-gray-700 mb-1">
+              Father&apos;s Name
+            </label>
             <Input
               type="text"
               name="fatherName"
@@ -506,7 +510,7 @@ const FranchiseForm = () => {
                 htmlFor="image"
                 className="block text-sm font-medium text-gray-700"
               >
-                Applicant's Signature
+                Applicant&apos;s Signature
               </label>
               <Dropzone onDrop={(files) => onDrop(files)} />
             </div>
