@@ -28,7 +28,8 @@ const ForgetPassword = () => {
     const data = await fetcher(`/ResetPassword?token=${token}`, "POST", {
       newPassword,
     });
-    if (data.success) {
+
+    if (!data.success) {
       toast.error("some error happened");
       return;
     }
@@ -101,7 +102,9 @@ const ForgetPassword = () => {
 };
 
 export default function FP() {
-  <Suspense fallback={<Loader />}>
-    <ForgetPassword />
-  </Suspense>;
+  return (
+    <Suspense fallback={<Loader />}>
+      <ForgetPassword />
+    </Suspense>
+  );
 }
