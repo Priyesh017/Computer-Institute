@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import anime from "animejs";
 import { FaArrowUp } from "react-icons/fa";
 import { menuItems } from "@/data";
-import Navbar from "@/components/landingpage/Navbar";
+const Navbar = dynamic(() => import("@/components/landingpage/Navbar"), {
+  ssr: false,
+});
 import Loader from "../Loader";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 export default function Home() {
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -35,11 +38,7 @@ export default function Home() {
     });
 
     const handleScroll = () => {
-      if (window.scrollY > window.innerHeight * 0.5) {
-        setShowScrollButton(true);
-      } else {
-        setShowScrollButton(false);
-      }
+      setShowScrollButton(window.scrollY > window.innerHeight * 0.5);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -99,25 +98,27 @@ export default function Home() {
             )}
 
             {/* Enquiry Button */}
-            <motion.div
-              className="text-center font-bold p-2"
-              initial={{ y: 0 }}
-              animate={{ y: [0, -5, 0] }}
-              transition={{
-                repeat: Infinity,
-                duration: 1.5,
-                ease: "easeInOut",
-              }}
-            >
-              <motion.button
-                className="bg-red-600 text-white text-sm md:text-lg font-bold p-4 rounded-full shadow-lg hover:bg-red-500 transition-all"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                whileHover={{ scale: 1.1 }}
+            <Link href="/enquiry">
+              <motion.div
+                className="text-center font-bold p-2"
+                initial={{ y: 0 }}
+                animate={{ y: [0, -5, 0] }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 1.5,
+                  ease: "easeInOut",
+                }}
               >
-                <Link href="/enquiry">Enquiry</Link>
-              </motion.button>
-            </motion.div>
+                <motion.button
+                  className="bg-red-600 text-white text-sm md:text-lg font-bold p-4 rounded-full shadow-lg hover:bg-red-500 transition-all"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  whileHover={{ scale: 1.1 }}
+                >
+                  Enquiry
+                </motion.button>
+              </motion.div>
+            </Link>
           </div>
         </div>
       </div>
