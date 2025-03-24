@@ -103,13 +103,16 @@ const EnrollmentList = () => {
     }
   };
 
-  const filteredEnrollment = enrollments.filter(
-    (enrollment) =>
-      enrollment.Enrollmentno.toString()
-        .toLowerCase()
-        .includes(search.toLowerCase()) &&
-      (filterStatus === "All" || enrollment.status === filterStatus)
-  );
+  const filteredEnrollment = enrollments.filter((enrollment) => {
+    const matchesSearch = enrollment.Enrollmentno.toString()
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchesStatus =
+      filterStatus === "All" ||
+      enrollment.status.toLowerCase() === filterStatus.toLowerCase();
+
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">

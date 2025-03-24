@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
-import { Check, X, Edit } from "lucide-react";
+import { Plus, Check, Trash2, Edit } from "lucide-react";
 import { ComboboxDemo } from "./combo";
 
 const frameworksCourse = [
@@ -95,57 +95,19 @@ const SubjectEntry = () => {
   const [fd, setfd] = useState<tfd>({
     courseid: "",
   });
-  const [courses, setCourses] = useState<{ [key: string]: string[] }>({});
-  const [courseName, setCourseName] = useState("");
-  const [subjectName, setSubjectName] = useState("");
-  const [editingSubject, setEditingSubject] = useState<{
-    course: string;
-    subject: string;
-  } | null>(null);
-  const [newSubjectName, setNewSubjectName] = useState("");
-  const [editingCourse, setEditingCourse] = useState<string | null>(null);
-  const [newCourseName, setNewCourseName] = useState("");
+  const [courseName, setCourseName] = useState(""); // Single course name
+  const [subjectName, setSubjectName] = useState(""); // Input for subject name
+  const [subjects, setSubjects] = useState<string[]>([]); // List of subjects
+  const [editingSubject, setEditingSubject] = useState<string | null>(null); // Subject being edited
+  const [newSubjectName, setNewSubjectName] = useState(""); // New subject name during editing
 
-  const editCourse = (course: string) => {
-    setEditingCourse(course);
-    setNewCourseName(course);
-  };
-
-  const saveEditedCourse = () => {
-    if (!editingCourse || !newCourseName.trim()) {
-      alert("Course name cannot be empty.");
-      return;
-    }
-
-    // Check if the new course name already exists and is not the same as the current course being edited
-    if (courses[newCourseName] && newCourseName !== editingCourse) {
-      alert("A course with this name already exists.");
-      return;
-    }
-
-    setCourses((prev) => {
-      const newCourses = { ...prev };
-      // If the course name is unchanged, do nothing
-      if (newCourseName === editingCourse) {
-        return newCourses;
-      }
-      // Update the course name
-      newCourses[newCourseName] = newCourses[editingCourse];
-      delete newCourses[editingCourse];
-      return newCourses;
-    });
-    // Reset editing state
-    setEditingCourse(null);
-    setNewCourseName("");
-  };
-
-  const removeCourse = (course: string) => {
-    setCourses((prev) => {
-      const newCourses = { ...prev };
-      delete newCourses[course];
-      return newCourses;
-    });
-  };
+  // Update courseName whenever fd.courseid changes
+  useEffect(() => {
+    const selectedCourse = frameworksCourse.find(
+      (course) => course.value === fd.courseid
+    );
+    setCourseName(selectedCourse ? selectedCourse.label : "");
+  }, [fd.courseid]);
 
   const addSubject = () => {
     if (!fd.courseid.trim()) {
@@ -157,23 +119,26 @@ const SubjectEntry = () => {
       return;
     }
 
-    setCourses((prev) => ({
-      ...prev,
-      [fd.courseid]: [...(prev[fd.courseid] || []), subjectName.trim()],
-    }));
+    setSubjects((prev) => [...prev, subjectName.trim()]);
     setSubjectName(""); // Reset the subject name input
-    setfd({ courseid: "" }); // Reset the course input
   };
 
-  const removeSubject = (course: string, subject: string) => {
-    setCourses((prev) => ({
-      ...prev,
-      [course]: prev[course].filter((subj) => subj !== subject),
-    }));
+  const removeSubject = (subject: string) => {
+    setSubjects((prev) => {
+      const updatedSubjects = prev.filter((subj) => subj !== subject);
+
+      // If the subjects array becomes empty, reset the combo box and course state
+      if (updatedSubjects.length === 0) {
+        setfd({ courseid: "" }); // Reset the combo box value
+        setCourseName(""); // Reset the course name
+      }
+
+      return updatedSubjects;
+    });
   };
 
-  const editSubject = (course: string, oldSubject: string) => {
-    setEditingSubject({ course, subject: oldSubject });
+  const editSubject = (oldSubject: string) => {
+    setEditingSubject(oldSubject);
     setNewSubjectName(oldSubject);
   };
 
@@ -181,19 +146,18 @@ const SubjectEntry = () => {
     if (!editingSubject || !newSubjectName.trim()) return;
 
     if (
-      courses[editingSubject.course].includes(newSubjectName.trim()) &&
-      newSubjectName.trim() !== editingSubject.subject
+      subjects.includes(newSubjectName.trim()) &&
+      newSubjectName.trim() !== editingSubject
     ) {
-      alert("A subject with this name already exists in the course.");
+      alert("A subject with this name already exists.");
       return;
     }
 
-    setCourses((prev) => ({
-      ...prev,
-      [editingSubject.course]: prev[editingSubject.course].map((subj) =>
-        subj === editingSubject.subject ? newSubjectName.trim() : subj
-      ),
-    }));
+    setSubjects((prev) =>
+      prev.map((subj) =>
+        subj === editingSubject ? newSubjectName.trim() : subj
+      )
+    );
     setEditingSubject(null);
     setNewSubjectName("");
   };
@@ -204,6 +168,13 @@ const SubjectEntry = () => {
       scale: [1, 1.1, 1],
       duration: 500,
       easing: "easeInOutQuad",
+    });
+    if (fd.courseid && subjects) {
+      alert("Submitted Successfully");
+    } else return false;
+    console.log("Submitted Data:", {
+      courseName,
+      subjects,
     });
   };
 
@@ -233,121 +204,75 @@ const SubjectEntry = () => {
           placeholder="Subject Name"
           value={subjectName}
           onChange={(e) => setSubjectName(e.target.value)}
-          className="w-full p-4 bg-white border border-gray-400 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full p-4 bg-white border border-gray-400 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
         <motion.button
           whileTap={{ scale: 0.9 }}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-md"
+          className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-3 rounded-md shadow-md"
           onClick={addSubject}
         >
-          Add
+          <Plus size={30} />
         </motion.button>
       </div>
 
-      {Object.entries(courses).map(([course, subjects]) => (
-        <div
-          key={course}
-          className="w-full mt-6 p-6 bg-white rounded-xl border border-gray-300 shadow-md"
-        >
-          <div className="flex justify-between items-center mb-3">
-            {editingCourse === course ? (
-              <ComboboxDemo
-                frameworks={frameworksCourse}
-                heading={"Select Course"}
-                value={newCourseName} // Fixed: Use newCourseName instead of fd.courseid
-                setValue={(value: string) => setNewCourseName(value)} // Update newCourseName directly
-                data="courseid"
-              />
-            ) : (
-              <h3 className="text-lg font-semibold text-indigo-700">
-                {frameworksCourse.find((item) => item.value === course)
-                  ?.label || course}
-              </h3>
-            )}
-            <div className="flex gap-2">
-              {editingCourse === course ? (
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl"
-                  onClick={saveEditedCourse}
-                >
-                  <Check size={20} />
-                </motion.button>
+      <div className="w-full mt-6 p-6 bg-white rounded-md border border-gray-300 shadow-md">
+        <h3 className="text-lg font-semibold text-indigo-700 mb-4">
+          {subjects.length > 0 ? courseName : "Course Name"}
+        </h3>
+        <ul>
+          {subjects.map((subject) => (
+            <motion.li
+              key={subject}
+              className="flex justify-between items-center p-4 bg-gray-200 border border-gray-300 rounded-md mb-3 shadow-sm"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+            >
+              {editingSubject === subject ? (
+                <input
+                  type="text"
+                  value={newSubjectName}
+                  onChange={(e) => setNewSubjectName(e.target.value)}
+                  className="w-full p-3 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
               ) : (
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl"
-                  onClick={() => editCourse(course)}
-                >
-                  <Edit size={20} />
-                </motion.button>
+                <span>{subject}</span>
               )}
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl shadow-md"
-                onClick={() => removeCourse(course)}
-              >
-                <X size={20} />
-              </motion.button>
-            </div>
-          </div>
-          <ul>
-            {subjects.map((subject) => (
-              <motion.li
-                key={subject}
-                className="flex justify-between items-center p-4 bg-gray-200 border border-gray-300 rounded-xl mb-3 shadow-sm"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-              >
-                {editingSubject?.course === course &&
-                editingSubject?.subject === subject ? (
-                  <input
-                    type="text"
-                    value={newSubjectName}
-                    onChange={(e) => setNewSubjectName(e.target.value)}
-                    className="w-full p-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  />
-                ) : (
-                  <span>{subject}</span>
-                )}
-                <div className="flex gap-3">
-                  {editingSubject?.course === course &&
-                  editingSubject?.subject === subject ? (
-                    <motion.button
-                      whileTap={{ scale: 0.9 }}
-                      className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 ml-4 rounded-xl"
-                      onClick={saveEditedSubject}
-                    >
-                      <Check size={20} />
-                    </motion.button>
-                  ) : (
-                    <motion.button
-                      whileTap={{ scale: 0.9 }}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-xl"
-                      onClick={() => editSubject(course, subject)}
-                    >
-                      <Edit size={20} />
-                    </motion.button>
-                  )}
+              <div className="flex gap-3">
+                {editingSubject === subject ? (
                   <motion.button
                     whileTap={{ scale: 0.9 }}
-                    className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-xl"
-                    onClick={() => removeSubject(course, subject)}
+                    className="bg-green-500 hover:bg-green-600 text-white p-2 ml-4 rounded-md"
+                    onClick={saveEditedSubject}
                   >
-                    <X size={20} />
+                    <Check size={20} />
                   </motion.button>
-                </div>
-              </motion.li>
-            ))}
-          </ul>
-        </div>
-      ))}
+                ) : (
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white p-2 rounded-md"
+                    onClick={() => editSubject(subject)}
+                  >
+                    <Edit size={20} />
+                  </motion.button>
+                )}
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-md"
+                  onClick={() => removeSubject(subject)}
+                >
+                  <Trash2 size={20} />
+                </motion.button>
+              </div>
+            </motion.li>
+          ))}
+        </ul>
+      </div>
 
       <motion.button
         id="submit-button"
         whileTap={{ scale: 1 }}
-        className="mt-6 w-fit bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg"
+        className="mt-6 w-fit bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-md shadow-lg"
         onClick={handleSubmit}
       >
         Submit

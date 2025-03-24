@@ -4,18 +4,108 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { useDropzone } from "react-dropzone";
+import { ComboboxDemo } from "./combo";
+import { Trash2 } from "lucide-react";
+
+const frameworksCourse = [
+  {
+    label: "DOAP",
+    value: "15",
+  },
+  {
+    label: "DITA",
+    value: "16",
+  },
+  {
+    label: "ADCA",
+    value: "17",
+  },
+  {
+    label: "ADOAP",
+    value: "18",
+  },
+  {
+    label: "WEBSITE DESIGNING & DEVELOPMENT",
+    value: "19",
+  },
+  {
+    label: "COMPUTER HARDWARE & NETWORKING",
+    value: "14",
+  },
+  {
+    label: "DCA",
+    value: "13",
+  },
+  {
+    label: "TYPING",
+    value: "12",
+  },
+  {
+    label: "DTP",
+    value: "11",
+  },
+  {
+    label: "KNOWLEDGE ON C/C++ PROGRAMMING",
+    value: "7",
+  },
+  {
+    label: "CCTV INSTALLATION & MAINTENANCE",
+    value: "10",
+  },
+  {
+    label: "ADVANCE EXCEL",
+    value: "9",
+  },
+  {
+    label: "PYTHON",
+    value: "8",
+  },
+  {
+    label: "Knowledge on LINUX",
+    value: "6",
+  },
+  {
+    label: "CITA",
+    value: "5",
+  },
+  {
+    label: "CCA",
+    value: "4",
+  },
+  {
+    label: "BASIC HARDWARE MAINTENANCE",
+    value: "3",
+  },
+  {
+    label: "TALLY",
+    value: "2",
+  },
+  {
+    label: "OFFICE MANAGEMENT",
+    value: "",
+  },
+  {
+    label: "BASIC COMPUTER CONCEPT",
+    value: "1",
+  },
+];
+
+export interface tfd {
+  courseid: string;
+}
 
 export default function UploadNotes() {
+  const [fd, setfd] = useState<tfd>({
+    courseid: "",
+  });
   const [subject, setSubject] = useState("");
-  const [description, setDescription] = useState("");
-  const [images, setImages] = useState<{ src: string; file: File } | null>(
-    null
-  );
+  // const [description, setDescription] = useState("");
+  const [pdf, setPdf] = useState<{ src: string; file: File } | null>(null);
 
   const onDrop = (acceptedFile: File) => {
     const reader = new FileReader();
     reader.onload = () => {
-      setImages({ src: reader.result as string, file: acceptedFile });
+      setPdf({ src: reader.result as string, file: acceptedFile });
 
       anime({
         targets: ".gallery-item",
@@ -29,21 +119,20 @@ export default function UploadNotes() {
   };
 
   const handleDeleteImage = () => {
-    setImages(null);
+    setPdf(null);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!subject || !description || !images?.file) {
+    if (!subject || !fd.courseid || !pdf?.file) {
       alert("Please fill all fields and upload an image.");
       return;
     }
 
     const formData = new FormData();
     formData.append("subject", subject);
-    formData.append("description", description);
-    formData.append("image", images.file);
+    formData.append("image", pdf.file);
   };
 
   return (
@@ -58,21 +147,34 @@ export default function UploadNotes() {
           Upload Written Notes
         </h2>
         <form onSubmit={handleSubmit} className="w-full space-y-6">
-          <div>
-            <input
-              type="text"
-              placeholder="Subject Name"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              className="w-full p-3 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-yellow-500 shadow-sm"
+          <div className="w-full flex items-center gap-4 mb-4">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Course Name
+            </label>
+            <ComboboxDemo
+              frameworks={frameworksCourse}
+              heading={"Select Course"}
+              value={fd.courseid}
+              setValue={setfd}
+              data="courseid"
             />
           </div>
-          <div>
-            <textarea
-              placeholder="Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-3 rounded-lg bg-white border border-gray-300 focus:ring-2 focus:ring-yellow-500 shadow-sm"
+          <div className="w-full flex items-center gap-4 mb-4">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Course Name
+            </label>
+            <ComboboxDemo
+              frameworks={frameworksCourse}
+              heading={"Select Course"}
+              value={fd.courseid}
+              setValue={setfd}
+              data="courseid"
             />
           </div>
           <div>
@@ -80,23 +182,23 @@ export default function UploadNotes() {
               htmlFor="image"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Upload Image
+              Upload Notes PDF
             </label>
             <Dropzone onDrop={onDrop} />
           </div>
-          {images && (
+          {pdf && (
             <div className="gallery-item relative mt-4">
-              <img
-                src={images.src}
-                alt="Uploaded Preview"
-                className="w-full rounded-lg shadow-md"
+              <embed
+                src={pdf.src}
+                type="application/pdf"
+                className="w-full h-96 rounded-lg shadow-md"
               />
               <button
                 type="button"
                 onClick={handleDeleteImage}
-                className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 text-sm"
+                className="absolute top-[-15] right-[-15] bg-red-500 text-white rounded-md p-2 text-sm"
               >
-                ✕
+                <Trash2 size={20} />
               </button>
             </div>
           )}
@@ -119,7 +221,7 @@ function Dropzone({ onDrop }: { onDrop: (file: File) => void }) {
         onDrop(acceptedFiles[0]); // Only take the first file
       }
     },
-    accept: { "image/*": [] }, // Only allow images
+    accept: { "application/pdf": [] }, // Only allow PDF files
     multiple: false, // Prevent multiple file selection
   });
 
@@ -129,9 +231,7 @@ function Dropzone({ onDrop }: { onDrop: (file: File) => void }) {
       className="p-6 max-w-full border-dashed border-2 border-gray-400 rounded-md text-center cursor-pointer hover:border-gray-600 transition bg-gray-50"
     >
       <input {...getInputProps()} />
-      <p className="text-gray-700">
-        Drag & drop an image here or click to select
-      </p>
+      <p className="text-gray-700">Drag & drop a PDF here or click to select</p>
     </div>
   );
 }
