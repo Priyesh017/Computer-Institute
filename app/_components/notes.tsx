@@ -4,102 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { useDropzone } from "react-dropzone";
-import { ComboboxDemo } from "./combo";
 import { Trash2 } from "lucide-react";
-
-const frameworksCourse = [
-  {
-    label: "DOAP",
-    value: "15",
-  },
-  {
-    label: "DITA",
-    value: "16",
-  },
-  {
-    label: "ADCA",
-    value: "17",
-  },
-  {
-    label: "ADOAP",
-    value: "18",
-  },
-  {
-    label: "WEBSITE DESIGNING & DEVELOPMENT",
-    value: "19",
-  },
-  {
-    label: "COMPUTER HARDWARE & NETWORKING",
-    value: "14",
-  },
-  {
-    label: "DCA",
-    value: "13",
-  },
-  {
-    label: "TYPING",
-    value: "12",
-  },
-  {
-    label: "DTP",
-    value: "11",
-  },
-  {
-    label: "KNOWLEDGE ON C/C++ PROGRAMMING",
-    value: "7",
-  },
-  {
-    label: "CCTV INSTALLATION & MAINTENANCE",
-    value: "10",
-  },
-  {
-    label: "ADVANCE EXCEL",
-    value: "9",
-  },
-  {
-    label: "PYTHON",
-    value: "8",
-  },
-  {
-    label: "Knowledge on LINUX",
-    value: "6",
-  },
-  {
-    label: "CITA",
-    value: "5",
-  },
-  {
-    label: "CCA",
-    value: "4",
-  },
-  {
-    label: "BASIC HARDWARE MAINTENANCE",
-    value: "3",
-  },
-  {
-    label: "TALLY",
-    value: "2",
-  },
-  {
-    label: "OFFICE MANAGEMENT",
-    value: "",
-  },
-  {
-    label: "BASIC COMPUTER CONCEPT",
-    value: "1",
-  },
-];
-
-export interface tfd {
-  courseid: string;
-}
+import { toast } from "react-toastify";
 
 export default function UploadNotes() {
-  const [fd, setfd] = useState<tfd>({
-    courseid: "",
-  });
-  // const [subject, setSubject] = useState("");
-  // const [description, setDescription] = useState("");
   const [pdf, setPdf] = useState<{ src: string; file: File } | null>(null);
 
   const onDrop = (acceptedFile: File) => {
@@ -125,13 +33,12 @@ export default function UploadNotes() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!fd.courseid || !pdf?.file) {
-      alert("Please fill all fields and upload an image.");
+    if (!pdf?.file) {
+      toast("Please fill all fields and upload an image.");
       return;
     }
 
     const formData = new FormData();
-    // formData.append("subject", subject);
     formData.append("image", pdf.file);
   };
 
@@ -147,36 +54,6 @@ export default function UploadNotes() {
           Upload Written Notes
         </h2>
         <form onSubmit={handleSubmit} className="w-full space-y-6">
-          <div className="w-full flex items-center gap-4 mb-4">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Course Name
-            </label>
-            <ComboboxDemo
-              frameworks={frameworksCourse}
-              heading={"Select Course"}
-              value={fd.courseid}
-              setValue={setfd}
-              data="courseid"
-            />
-          </div>
-          <div className="w-full flex items-center gap-4 mb-4">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Subject Name
-            </label>
-            <ComboboxDemo
-              frameworks={frameworksCourse}
-              heading={"Select Course"}
-              value={fd.courseid}
-              setValue={setfd}
-              data="courseid"
-            />
-          </div>
           <div>
             <label
               htmlFor="image"
