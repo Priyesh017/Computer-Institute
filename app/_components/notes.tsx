@@ -98,7 +98,7 @@ export default function UploadNotes() {
   const [fd, setfd] = useState<tfd>({
     courseid: "",
   });
-  const [subject, setSubject] = useState("");
+  // const [subject, setSubject] = useState("");
   // const [description, setDescription] = useState("");
   const [pdf, setPdf] = useState<{ src: string; file: File } | null>(null);
 
@@ -125,13 +125,13 @@ export default function UploadNotes() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!subject || !fd.courseid || !pdf?.file) {
+    if (!fd.courseid || !pdf?.file) {
       alert("Please fill all fields and upload an image.");
       return;
     }
 
     const formData = new FormData();
-    formData.append("subject", subject);
+    // formData.append("subject", subject);
     formData.append("image", pdf.file);
   };
 
@@ -167,7 +167,7 @@ export default function UploadNotes() {
               htmlFor="name"
               className="block text-sm font-medium text-gray-700"
             >
-              Course Name
+              Subject Name
             </label>
             <ComboboxDemo
               frameworks={frameworksCourse}
