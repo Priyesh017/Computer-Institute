@@ -158,14 +158,16 @@ const ExamForm = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="flex flex-col">
             <label className="text-sm font-medium mb-1">Enrollment No</label>
-            <input
-              type="text"
-              value={enrollmentNo}
-              onChange={handleChange}
-              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
-            />
+            <div className="w-full flex justify-center items-center gap-5">
+              <input
+                type="text"
+                value={enrollmentNo}
+                onChange={handleChange}
+                className="w-full p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+              />
+              <Button className="h-10" onClick={fetchHandler}>Fetch</Button>
+            </div>
           </div>
-          <Button onClick={fetchHandler}>fetch</Button>
           {examFields.map(({ value, key, label }) => (
             <div key={key} className="flex flex-col">
               <label htmlFor={key} className="text-sm font-medium mb-1">
@@ -173,7 +175,7 @@ const ExamForm = () => {
               </label>
               <div
                 id={key}
-                className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+                className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
               >
                 {value}
               </div>

@@ -12,12 +12,12 @@ const SubjectEntry = () => {
   const [fd, setfd] = useState<typefd>({
     courseid: "",
   });
-  const [loading, setloading] = useState(false);
   const [courseName, setCourseName] = useState(""); // Single course name
   const [subjectName, setSubjectName] = useState(""); // Input for subject name
   const [subjects, setSubjects] = useState<string[]>([]); // List of subjects
   const [editingSubject, setEditingSubject] = useState<string | null>(null); // Subject being edited
   const [newSubjectName, setNewSubjectName] = useState(""); // New subject name during editing
+  const [loading, setloading] = useState(false);
 
   // Update courseName whenever fd.courseid changes
   useEffect(() => {
@@ -87,7 +87,7 @@ const SubjectEntry = () => {
       duration: 500,
       easing: "easeInOutQuad",
     });
-    const c = JSON.stringify(courses);
+    const c = JSON.stringify(subjects);
 
     try {
       setloading(true);

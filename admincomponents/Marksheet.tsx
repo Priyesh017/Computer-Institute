@@ -228,14 +228,18 @@ const Marksheet = () => {
       <div className="grid grid-cols-2 sm:grid-cols-2 gap-4 my-6">
         <div className="flex flex-col">
           <label className="text-sm font-medium mb-1">Enrollment no</label>
-          <input
-            type="text"
-            onChange={handleChange3}
-            placeholder="enter enrollment number"
-            className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
-          />
+          <div className="w-full flex justify-center items-center gap-5">
+            <input
+              type="text"
+              value={enrollmentNo}
+              onChange={handleChange3}
+              className="w-full p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+            <Button className="h-10" onClick={fetchHandler}>
+              Fetch
+            </Button>
+          </div>
         </div>
-        <Button onClick={fetchHandler}>fetch</Button>
         {details.map((item, index) => (
           <div key={index} className="flex flex-col">
             <label className="text-sm font-medium mb-1">{item.label}</label>
