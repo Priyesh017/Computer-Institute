@@ -209,30 +209,46 @@ const FranchiseForm = () => {
             />
           </div>
           <div>
-            <label className="block font-bold text-lg text-gray-700 mb-1">
-              Address
-            </label>
-
-            <label className="block text-gray-700 ml-5 mb-1">
-              Address Line 1
-            </label>
+            <label className="block text-gray-700 mb-1">Mobile No</label>
             <Input
-              type="text"
-              name="address"
-              placeholder="address line "
-              value={formData.address.AddressLine}
+              type="tel"
+              name="mobileNo"
+              value={formData.mobileNo}
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  address: {
-                    ...formData.address,
-                    AddressLine: e.target.value,
-                  },
+                  mobileNo: e.target.value.slice(0, 10),
                 })
               }
-              className="w-[95%] border rounded-md ml-5 p-2"
+              className="w-full border rounded-md p-2"
             />
-            <label className="block text-gray-700 ml-5 mb-1">Village</label>
+          </div>
+          <div>
+            <label className="block font-bold text-lg text-gray-700 mb-1">
+              Address
+            </label>
+            <div className="ml-5">
+              <label className="block text-gray-700 mb-1">Address Line</label>
+              <Input
+                type="text"
+                name="address"
+                placeholder="address line "
+                value={formData.address.AddressLine}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    address: {
+                      ...formData.address,
+                      AddressLine: e.target.value,
+                    },
+                  })
+                }
+                className="w-full border rounded-md p-2"
+              />
+            </div>
+          </div>
+          <div className="mt-8 mr-5">
+            <label className="block text-gray-700 mb-1">Village</label>
             <Input
               type="text"
               name="address"
@@ -246,13 +262,11 @@ const FranchiseForm = () => {
                   },
                 })
               }
-              className="w-[95%] border rounded-md ml-5 p-2"
+              className="w-full border rounded-md p-2"
             />
           </div>
-          <div>
-            <label className="block text-gray-700 mt-7 mr-5 mb-1">
-              Post Office
-            </label>
+          <div className="ml-5">
+            <label className="block text-gray-700 mb-1">Post Office</label>
             <Input
               type="text"
               name="address"
@@ -266,13 +280,11 @@ const FranchiseForm = () => {
                   },
                 })
               }
-              className="w-[95%] border rounded-md mr-5 p-2"
+              className="w-full border rounded-md p-2"
             />
           </div>
-          <div>
-            <label className="block text-gray-700 ml-5 mb-1">
-              Police Station
-            </label>
+          <div className="mr-5">
+            <label className="block text-gray-700 mb-1">Police Station</label>
             <Input
               type="text"
               name="address"
@@ -286,11 +298,11 @@ const FranchiseForm = () => {
                   },
                 })
               }
-              className="w-[95%] border rounded-md ml-5 p-2"
+              className="w-full border rounded-md p-2"
             />
           </div>
-          <div>
-            <label className="block text-gray-700 mr-5 mb-1">District</label>
+          <div className="ml-5">
+            <label className="block text-gray-700 mb-1">District</label>
             <ComboboxDemo
               frameworks={filterfn() ?? []}
               heading={"Select District"}
@@ -299,8 +311,8 @@ const FranchiseForm = () => {
               data="dist"
             />
           </div>
-          <div>
-            <label className="block text-gray-700 ml-5 mb-1">Pincode</label>
+          <div className="mr-5">
+            <label className="block text-gray-700 mb-1">Pincode</label>
             <Input
               type="text"
               name="address"
@@ -314,18 +326,27 @@ const FranchiseForm = () => {
                   },
                 })
               }
-              className="w-[95%] border rounded-md ml-5 p-2"
+              className="w-full border rounded-md p-2"
             />
           </div>
-          <div>
-            <label className="block text-gray-700 mr-5 mb-1">State</label>
-
+          <div className="ml-5">
+            <label className="block text-gray-700 mb-1">State</label>
             <ComboboxDemo
               frameworks={indianStatesWithDistricts}
               heading={"Select State"}
               value={formData.state}
               setValue={setFormData}
               data="state"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-1">Nationality</label>
+            <ComboboxDemo
+              frameworks={Nationality}
+              heading={"Select Nationality"}
+              value={formData.nationality}
+              setValue={setFormData}
+              data="nationality"
             />
           </div>
           <div>
@@ -346,31 +367,6 @@ const FranchiseForm = () => {
               value={formData.category}
               setValue={setFormData}
               data="category"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">Nationality</label>
-            <ComboboxDemo
-              frameworks={Nationality}
-              heading={"Select Nationality"}
-              value={formData.nationality}
-              setValue={setFormData}
-              data="nationality"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">Mobile No</label>
-            <Input
-              type="tel"
-              name="mobileNo"
-              value={formData.mobileNo}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  mobileNo: e.target.value.slice(0, 10),
-                })
-              }
-              className="w-full border rounded-md p-2"
             />
           </div>
           <div>
@@ -408,7 +404,7 @@ const FranchiseForm = () => {
             />
           </div>
           <div>
-            <label className="block text-gray-700 mb-1">trade License</label>
+            <label className="block text-gray-700 mb-1">Trade License</label>
             <Input
               type="text"
               name="tradeLicense"
@@ -458,7 +454,7 @@ const FranchiseForm = () => {
           </div>
           <div>
             <label className="block text-gray-700 mb-1">
-              subdistrict Coordinator
+              Subdistrict Coordinator
             </label>
             <Input
               type="text"
@@ -475,7 +471,7 @@ const FranchiseForm = () => {
           </div>
           <div>
             <label className="block text-gray-700 mb-1">
-              district Coordinator
+              District Coordinator
             </label>
             <Input
               type="text"
@@ -492,7 +488,7 @@ const FranchiseForm = () => {
           </div>
           <div>
             <label className="block text-gray-700 mb-1">
-              state Coordinator
+              State Coordinator
             </label>
             <Input
               type="text"
