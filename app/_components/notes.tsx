@@ -4,11 +4,14 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { useDropzone } from "react-dropzone";
-import { Trash2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
+import { fetcherWc } from "@/helper";
+import { Button } from "@/components/ui/button";
 
 export default function UploadNotes() {
   const [pdf, setPdf] = useState<{ src: string; file: File } | null>(null);
+  const [loading, setloading] = useState(false);
 
   const onDrop = (acceptedFile: File) => {
     const reader = new FileReader();
@@ -30,16 +33,37 @@ export default function UploadNotes() {
     setPdf(null);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!pdf?.file) {
       toast("Please fill all fields and upload an image.");
       return;
     }
+    setloading(true);
+    const { url } = await fetcherWc(
+      `/generate-presigned-url?fileName=${pdf.file.name}&fileType=${pdf.file.type}&category=notes`,
+      "GET"
+    );
+    if (!url) {
+      toast("didnot generate url");
+      return;
+    }
 
-    const formData = new FormData();
-    formData.append("image", pdf.file);
+    const uploadResponse = await fetch(url, {
+      method: "PUT",
+      body: pdf.file,
+      headers: {
+        "Content-Type": pdf.file.type,
+      },
+    });
+    setloading(false);
+    if (!uploadResponse.ok) {
+      toast.error("error happend");
+      return;
+    }
+
+    toast.success("uploaded");
   };
 
   return (
@@ -79,12 +103,14 @@ export default function UploadNotes() {
               </button>
             </div>
           )}
-          <button
+          <Button
             type="submit"
+            disabled={loading}
             className="w-full bg-yellow-500 hover:bg-yellow-400 text-white py-3 rounded-lg shadow-md"
           >
             Upload
-          </button>
+            {loading && <Loader2 className="animate-spin" />}
+          </Button>
         </form>
       </div>
     </motion.div>
