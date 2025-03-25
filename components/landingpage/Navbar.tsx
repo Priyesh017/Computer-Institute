@@ -99,25 +99,25 @@ export default function Navbar() {
             </motion.li>
           ))}
       </ul>
-      <motion.button
-        className="hidden md:block px-6 py-2 mr-4 ml-24 bg-white text-indigo-800 font-bold rounded-lg shadow-lg transition-all transform hover:scale-105"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        whileHover={{ scale: 1.1 }}
-        transition={{ duration: 0.3 }}
+      <Link
+        href={
+          user && user.role
+            ? "/admin/dashboard"
+            : user
+            ? "/student/dashboard"
+            : "/chooseuser"
+        }
       >
-        <Link
-          href={
-            user
-              ? user.role
-                ? "admin/dashboard"
-                : "student/dashboard"
-              : "/chooseuser"
-          }
+        <motion.button
+          className="hidden md:block px-6 py-2 mr-4 ml-24 bg-white text-indigo-800 font-bold rounded-lg shadow-lg transition-all transform hover:scale-105"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
         >
           {user ? "Dashboard" : "Login"}
-        </Link>
-      </motion.button>
+        </motion.button>
+      </Link>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
@@ -132,19 +132,18 @@ export default function Navbar() {
             </li>
           ))}
           <li>
-            <button className="px-6 py-2 bg-white text-indigo-800 font-bold rounded-xl shadow-lg transition-all transform hover:scale-105">
-              <Link
-                href={
-                  user
-                    ? user.role
-                      ? "admin/dashboard"
-                      : "student/dashboard"
-                    : "/chooseuser"
-                }
-              >
-                {user ? "Dashboard" : "Login"}
-              </Link>
-            </button>
+            <Link
+              href={
+                user
+                  ? user.role
+                    ? "admin/dashboard"
+                    : "student/dashboard"
+                  : "/chooseuser"
+              }
+              className="px-6 py-2 bg-white text-indigo-800 font-bold rounded-xl shadow-lg transition-all transform hover:scale-105"
+            >
+              {user ? "Dashboard" : "Login"}
+            </Link>
           </li>
         </ul>
       )}

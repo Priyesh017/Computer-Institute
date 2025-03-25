@@ -5,21 +5,9 @@ import { useEffect, useRef, useState } from "react";
 import anime from "animejs";
 import Image from "next/image";
 import { images } from "@/data/index";
-import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
+import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { useAuthStore } from "@/store";
-const bucketRegion = process.env.NEXT_PUBLIC_YOUR_BUCKET_REGION!;
-
-const s3Client = new S3Client({
-  region: bucketRegion,
-  credentials: {
-    accessKeyId: process.env.NEXT_PUBLIC_YOUR_ACCESS_KEY!,
-    secretAccessKey: process.env.NEXT_PUBLIC_YOUR_SECRET_KEY!,
-  },
-});
-
-if (!bucketRegion) {
-  console.error("Error: AWS region is missing");
-}
+import { bucketRegion, s3Client } from "@/lib/utils";
 
 const GalleryWall = () => {
   const gridRef = useRef<HTMLDivElement>(null);
@@ -31,7 +19,7 @@ const GalleryWall = () => {
   const bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME;
 
   useEffect(() => {
-    if (!folder || !bucketName || !bucketRegion) return;
+    if (!folder || !bucketName) return;
     const fetchGalleryImages = async () => {
       setloadingTime(true);
       try {

@@ -21,6 +21,7 @@ import {
 import { fetcherWc } from "@/helper";
 import { useAuthStore } from "@/store";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export function NavUser({
   user,
@@ -33,6 +34,8 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar();
   const { logout } = useAuthStore();
+  const router = useRouter();
+
   const logouthandler = async () => {
     try {
       await fetcherWc("/logout", "GET");
@@ -84,9 +87,11 @@ export function NavUser({
 
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => router.replace("/changepassword")}
+              >
                 <BadgeCheck />
-                Account
+                Change Password
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

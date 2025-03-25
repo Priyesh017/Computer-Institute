@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import anime from "animejs";
 import { useEffect } from "react";
 import { Download } from "lucide-react";
-import { EnrollmentType } from "@/admincomponents/AllDownloads";
+import { EnrollmentType } from "@/lib/typs";
 
 const Downloads = ({ enrollment }: { enrollment: EnrollmentType }) => {
   useEffect(() => {

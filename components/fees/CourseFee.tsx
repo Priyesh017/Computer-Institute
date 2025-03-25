@@ -11,21 +11,7 @@ import {
 import { fetcherWc } from "@/helper";
 import { Button } from "../ui/button";
 import { toast } from "react-toastify";
-
-export interface Enrollment {
-  name: string;
-  Enrollmentno: string;
-  activated: boolean;
-  id: number;
-  createdAt: string;
-  course: {
-    price: number;
-  };
-  amount?: {
-    TotalPaid: number;
-    amountRemain: number;
-  };
-}
+import { Enrollment } from "@/lib/typs";
 
 const PAGE_SIZE = 5;
 

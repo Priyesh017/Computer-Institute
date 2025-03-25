@@ -5,14 +5,17 @@ import { motion } from "framer-motion";
 import anime from "animejs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { fetcherWc } from "@/helper";
+import { toast } from "react-toastify";
+import { Loader2 } from "lucide-react";
 
 const NoticeWriting = () => {
   const [form, setForm] = useState({
-    dateOfIssue: "",
     subject: "",
     details: "",
     expiryDate: "",
   });
+  const [loading, setloading] = useState(false);
 
   useEffect(() => {
     anime({
@@ -30,8 +33,23 @@ const NoticeWriting = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setloading(true);
+    try {
+      const data = await fetcherWc("/noticecreate", "POST", form);
+      if (!data.success) {
+        toast.error("failed to post");
+        return;
+      }
+
+      toast.success("success");
+    } catch (error) {
+      console.log(error);
+      toast.error("fatal error");
+    } finally {
+      setloading(false);
+    }
   };
 
   return (
@@ -86,6 +104,7 @@ const NoticeWriting = () => {
             className="w-full bg-violet-500 text-white py-2 rounded-md hover:bg-violet-600 transition"
           >
             Submit Notice
+            {loading && <Loader2 className="animate-spin" />}
           </Button>
         </div>
       </form>

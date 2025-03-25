@@ -5,27 +5,7 @@ import anime from "animejs";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { useAuthStore } from "@/store";
-
-export interface StudentProfileProps {
-  name: string;
-  Enrollmentno: string;
-  imageLink: string;
-  IdCardNo: string;
-  mobileNo: string;
-  wpNo: string;
-  dob: string;
-  father: string;
-  mother: string;
-  center: string;
-  course: string;
-  eduqualification: string;
-  EnrollmentType: string;
-  idCardLink: string;
-  admitLink: string;
-  certificateLink: string;
-  marksheetLink: string;
-  createdAt: string;
-}
+import { StudentProfileProps } from "@/lib/typs";
 
 const StudentProfile: React.FC = () => {
   const cardRef = useRef<HTMLDivElement>(null);

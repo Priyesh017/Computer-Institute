@@ -16,41 +16,41 @@ const StackableNotes: React.FC = () => {
 
   const courseName = "Bachelor of Science - Semester 1";
 
-  const demoNotes: Note[] = [
-    {
-      id: "1",
-      subject: "Mathematics",
-      content: "Integration techniques and formulas.",
-      pdfUrl: "/pdfs/mathematics1.pdf",
-    },
-    {
-      id: "2",
-      subject: "Mathematics",
-      content: "Linear algebra basics.",
-      pdfUrl: "/pdfs/mathematics2.pdf",
-    },
-    {
-      id: "3",
-      subject: "Physics",
-      content: "Newton's laws of motion.",
-      pdfUrl: "/pdfs/physics1.pdf",
-    },
-    {
-      id: "4",
-      subject: "Physics",
-      content: "Thermodynamics introduction.",
-      pdfUrl: "/pdfs/physics2.pdf",
-    },
-    {
-      id: "5",
-      subject: "Chemistry",
-      content: "Periodic table trends.",
-      pdfUrl: "/pdfs/chemistry1.pdf",
-    },
-  ];
-
   useEffect(() => {
     // Group notes by subject
+    const demoNotes: Note[] = [
+      {
+        id: "1",
+        subject: "Mathematics",
+        content: "Integration techniques and formulas.",
+        pdfUrl: "/pdfs/mathematics1.pdf",
+      },
+      {
+        id: "2",
+        subject: "Mathematics",
+        content: "Linear algebra basics.",
+        pdfUrl: "/pdfs/mathematics2.pdf",
+      },
+      {
+        id: "3",
+        subject: "Physics",
+        content: "Newton's laws of motion.",
+        pdfUrl: "/pdfs/physics1.pdf",
+      },
+      {
+        id: "4",
+        subject: "Physics",
+        content: "Thermodynamics introduction.",
+        pdfUrl: "/pdfs/physics2.pdf",
+      },
+      {
+        id: "5",
+        subject: "Chemistry",
+        content: "Periodic table trends.",
+        pdfUrl: "/pdfs/chemistry1.pdf",
+      },
+    ];
+
     const grouped = demoNotes.reduce((acc, note) => {
       if (!acc[note.subject]) {
         acc[note.subject] = [];

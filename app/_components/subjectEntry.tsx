@@ -3,98 +3,16 @@ import { motion } from "framer-motion";
 import anime from "animejs";
 import { Plus, Check, Trash2, Edit } from "lucide-react";
 import { ComboboxDemo } from "./combo";
-
-const frameworksCourse = [
-  {
-    label: "DOAP",
-    value: "15",
-  },
-  {
-    label: "DITA",
-    value: "16",
-  },
-  {
-    label: "ADCA",
-    value: "17",
-  },
-  {
-    label: "ADOAP",
-    value: "18",
-  },
-  {
-    label: "WEBSITE DESIGNING & DEVELOPMENT",
-    value: "19",
-  },
-  {
-    label: "COMPUTER HARDWARE & NETWORKING",
-    value: "14",
-  },
-  {
-    label: "DCA",
-    value: "13",
-  },
-  {
-    label: "TYPING",
-    value: "12",
-  },
-  {
-    label: "DTP",
-    value: "11",
-  },
-  {
-    label: "KNOWLEDGE ON C/C++ PROGRAMMING",
-    value: "7",
-  },
-  {
-    label: "CCTV INSTALLATION & MAINTENANCE",
-    value: "10",
-  },
-  {
-    label: "ADVANCE EXCEL",
-    value: "9",
-  },
-  {
-    label: "PYTHON",
-    value: "8",
-  },
-  {
-    label: "Knowledge on LINUX",
-    value: "6",
-  },
-  {
-    label: "CITA",
-    value: "5",
-  },
-  {
-    label: "CCA",
-    value: "4",
-  },
-  {
-    label: "BASIC HARDWARE MAINTENANCE",
-    value: "3",
-  },
-  {
-    label: "TALLY",
-    value: "2",
-  },
-  {
-    label: "OFFICE MANAGEMENT",
-    value: "",
-  },
-  {
-    label: "BASIC COMPUTER CONCEPT",
-    value: "1",
-  },
-];
-
-export interface tfd {
-  courseid: string;
-}
+import { fetcherWc } from "@/helper";
+import { toast } from "react-toastify";
+import { typefd } from "@/lib/typs";
+import { frameworksCourse } from "@/data";
 
 const SubjectEntry = () => {
-  const [fd, setfd] = useState<tfd>({
+  const [fd, setfd] = useState<typefd>({
     courseid: "",
   });
+  const [loading, setloading] = useState(false);
   const [courseName, setCourseName] = useState(""); // Single course name
   const [subjectName, setSubjectName] = useState(""); // Input for subject name
   const [subjects, setSubjects] = useState<string[]>([]); // List of subjects
@@ -162,20 +80,24 @@ const SubjectEntry = () => {
     setNewSubjectName("");
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     anime({
       targets: "#submit-button",
       scale: [1, 1.1, 1],
       duration: 500,
       easing: "easeInOutQuad",
     });
-    if (fd.courseid && subjects) {
-      alert("Submitted Successfully");
-    } else return false;
-    console.log("Submitted Data:", {
-      courseName,
-      subjects,
-    });
+    const c = JSON.stringify(courses);
+
+    try {
+      setloading(true);
+      const data = await fetcherWc("/subjectAdd", "POST", { c });
+      if (data.success) toast("success");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setloading(false);
+    }
   };
 
   return (
@@ -274,6 +196,7 @@ const SubjectEntry = () => {
         whileTap={{ scale: 1 }}
         className="mt-6 w-fit bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-md shadow-lg"
         onClick={handleSubmit}
+        disabled={loading}
       >
         Submit
       </motion.button>

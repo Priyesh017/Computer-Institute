@@ -2,9 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store";
 import { AccountCircle, School } from "@mui/icons-material";
-
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {} from "next/router";
 import { FaArrowLeft } from "react-icons/fa";
 
 const ChooseUser = () => {
@@ -20,7 +19,7 @@ const ChooseUser = () => {
     <div className="bg-gradient-to-b from-purple-900 to-blue-900 h-screen p-8 flex items-center justify-center">
       <Button
         className="absolute top-8 left-8 text-md font-bold bg-purple-600 hover:bg-purple-700"
-        onClick={() => router.push("/")}
+        onClick={() => router.replace("/")}
       >
         <FaArrowLeft />
       </Button>
@@ -30,41 +29,35 @@ const ChooseUser = () => {
           onClick={() => onclickHandler("admin")}
           className="p-5 text-center bg-gray-800 text-gray-400 cursor-pointer rounded-lg shadow-lg hover:bg-gray-700 hover:text-white transition w-80"
         >
-          <div>
-            <div className="mb-4 flex justify-center">
-              <AccountCircle className="text-5xl" />
-            </div>
-            <h2 className="text-lg mb-2 font-bold">Central Admin Login</h2>
-            <p className="text-sm">Login as a Central Admin to manage data.</p>
+          <div className="mb-4 flex justify-center">
+            <AccountCircle className="text-5xl" />
           </div>
+          <h2 className="text-lg mb-2 font-bold">Central Admin Login</h2>
+          <p className="text-sm">Login as a Central Admin to manage data.</p>
         </button>
 
         {/* Branch Login */}
         <div className="p-5 text-center bg-gray-800 text-gray-400 cursor-pointer rounded-lg shadow-lg hover:bg-gray-700 hover:text-white transition w-80">
           <button onClick={() => onclickHandler("center")}>
-            <div>
-              <div className="mb-4 flex justify-center">
-                <School className="text-5xl" />
-              </div>
-              <h2 className="text-lg mb-2 font-bold">Branch Login</h2>
-              <p className="text-sm">Login as a Branch to manage admissions.</p>
+            <div className="mb-4 flex justify-center">
+              <School className="text-5xl" />
             </div>
+            <h2 className="text-lg mb-2 font-bold">Branch Login</h2>
+            <p className="text-sm">Login as a Branch to manage admissions.</p>
           </button>
         </div>
 
         {/* Student Login */}
         <div className="p-5 text-center bg-gray-800 text-gray-400 cursor-pointer rounded-lg shadow-lg hover:bg-gray-700 hover:text-white transition w-80">
-          <button onClick={() => router.push("/studentlogin")}>
-            <div>
-              <div className="mb-4 flex justify-center">
-                <School className="text-5xl" />
-              </div>
-              <h2 className="text-lg mb-2 font-bold">Student Login</h2>
-              <p className="text-sm">
-                Login as a Student to view student details.
-              </p>
+          <Link href={"/studentlogin"}>
+            <div className="mb-4 flex justify-center">
+              <School className="text-5xl" />
             </div>
-          </button>
+            <h2 className="text-lg mb-2 font-bold">Student Login</h2>
+            <p className="text-sm">
+              Login as a Student to view student details.
+            </p>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,16 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "next/navigation";
+import { fetcher } from "@/helper";
+import { toast } from "react-toastify";
+import Loader from "@/components/Loader";
 
 const ForgetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
@@ -18,6 +24,16 @@ const ForgetPassword = () => {
       animateError();
       return;
     }
+
+    const data = await fetcher(`/ResetPassword?token=${token}`, "POST", {
+      newPassword,
+    });
+
+    if (!data.success) {
+      toast.error("some error happened");
+      return;
+    }
+    toast.success("successfully reset password");
     setError("");
   };
 
@@ -85,4 +101,10 @@ const ForgetPassword = () => {
   );
 };
 
-export default ForgetPassword;
+export default function FP() {
+  return (
+    <Suspense fallback={<Loader />}>
+      <ForgetPassword />
+    </Suspense>
+  );
+}
