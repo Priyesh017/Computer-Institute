@@ -97,13 +97,12 @@ export default function RootLayout({
         <ToastContainer
           position="top-right"
           autoClose={3000}
-          hideProgressBar
           newestOnTop
           closeOnClick
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          theme="light"
+          theme="dark"
         />
       </body>
     </html>
