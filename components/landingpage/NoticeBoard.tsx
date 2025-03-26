@@ -7,6 +7,7 @@ import Image from "next/image";
 import Loader from "../Loader";
 import { fetcher } from "@/helper";
 import { useQuery } from "@tanstack/react-query";
+import { AlertTriangle } from "lucide-react";
 
 interface inotice {
   body: string;
@@ -75,42 +76,59 @@ export default function NoticeBoard() {
           </span>
           <span className="md:text-3xl text-2xl">Announcement</span>
         </div>
-        {!expanded ? (
-          <div className="relative flex flex-col gap-2">
-            <motion.h3
-              key={index}
-              className="notice-text md:text-xl text-lg font-semibold text-gray-900"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.5 }}
-            >
-              {notices[index].heading}
-            </motion.h3>
-            <p className="text-gray-700 md:text-lg text-md">
-              {notices[index].body}
+        {notices.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-40 text-gray-700 rounded-lg p-6">
+            <AlertTriangle size={40} className="text-red-500 mb-2" />
+            <p className="text-lg font-semibold">No Notices Available</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Stay tuned! New notices will appear here.
             </p>
           </div>
         ) : (
-          <div className="mt-4 space-y-3 max-h-72 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent">
-            {notices.map((notice, i) => (
-              <motion.div
-                key={i}
-                className="p-4 bg-gray-50 rounded-lg shadow-md text-gray-900 flex flex-col gap-1"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: i * 0.1 }}
-              >
-                <h3 className="text-lg font-semibold">{notice.heading}</h3>
-                <p className="text-gray-700">{notice.body}</p>
-              </motion.div>
-            ))}
+          <div>
+            {!expanded ? (
+              <div className="relative flex flex-col gap-2">
+                <motion.h3
+                  key={index}
+                  className="notice-text md:text-xl text-lg font-semibold text-gray-900"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  {notices[index].heading}
+                </motion.h3>
+                <p className="text-gray-700 md:text-lg text-md">
+                  {notices[index].body}
+                </p>
+              </div>
+            ) : (
+              <div className="mt-4 space-y-3 max-h-72 overflow-y-auto p-2 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent">
+                {notices.map((notice, i) => (
+                  <motion.div
+                    key={i}
+                    className="p-4 bg-gray-50 rounded-lg shadow-md text-gray-900 flex flex-col gap-1"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.1 }}
+                  >
+                    <h3 className="text-lg font-semibold">{notice.heading}</h3>
+                    <p className="text-gray-700">{notice.body}</p>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </motion.div>
       <button
-        className="mt-5 px-5 py-3 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-500 transition duration-300 shadow-lg w-full"
+        className={`mt-5 px-5 py-3 font-bold rounded-md transition duration-300 shadow-lg w-full ${
+          notices.length === 0
+            ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+            : "bg-blue-600 text-white hover:bg-blue-500"
+        }`}
         onClick={() => setExpanded(!expanded)}
+        disabled={notices.length === 0}
       >
         {expanded ? "Collapse Notices" : "View All Notices"}
       </button>
