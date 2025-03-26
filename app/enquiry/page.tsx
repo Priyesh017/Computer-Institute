@@ -302,15 +302,16 @@ const FranchiseForm = () => {
             />
           </div>
           <div className="ml-5">
-            <label className="block text-gray-700 mb-1">District</label>
+            <label className="block text-gray-700 mb-1">State</label>
             <ComboboxDemo
-              frameworks={filterfn() ?? []}
-              heading={"Select District"}
-              value={formData.dist}
+              frameworks={indianStatesWithDistricts}
+              heading={"Select State"}
+              value={formData.state}
               setValue={setFormData}
-              data="dist"
+              data="state"
             />
           </div>
+
           <div className="mr-5">
             <label className="block text-gray-700 mb-1">Pincode</label>
             <Input
@@ -330,13 +331,13 @@ const FranchiseForm = () => {
             />
           </div>
           <div className="ml-5">
-            <label className="block text-gray-700 mb-1">State</label>
+            <label className="block text-gray-700 mb-1">District</label>
             <ComboboxDemo
-              frameworks={indianStatesWithDistricts}
-              heading={"Select State"}
-              value={formData.state}
+              frameworks={filterfn() ?? []}
+              heading={"Select District"}
+              value={formData.dist}
               setValue={setFormData}
-              data="state"
+              data="dist"
             />
           </div>
           <div>

@@ -25,10 +25,7 @@ const ChooseUser = () => {
       </Button>
       <div className="flex flex-col gap-8 items-center">
         {/* Central Admin Login */}
-        <button
-          onClick={() => onclickHandler("admin")}
-          className="p-5 text-center bg-gray-800 text-gray-400 cursor-pointer rounded-lg shadow-lg hover:bg-gray-700 hover:text-white transition w-80"
-        >
+        <button onClick={() => onclickHandler("admin")} className="btn-custom">
           <div className="mb-4 flex justify-center">
             <AccountCircle className="text-5xl" />
           </div>
@@ -37,7 +34,7 @@ const ChooseUser = () => {
         </button>
 
         {/* Branch Login */}
-        <div className="p-5 text-center bg-gray-800 text-gray-400 cursor-pointer rounded-lg shadow-lg hover:bg-gray-700 hover:text-white transition w-80">
+        <div className="btn-custom">
           <button onClick={() => onclickHandler("center")}>
             <div className="mb-4 flex justify-center">
               <School className="text-5xl" />
@@ -48,7 +45,7 @@ const ChooseUser = () => {
         </div>
 
         {/* Student Login */}
-        <div className="p-5 text-center bg-gray-800 text-gray-400 cursor-pointer rounded-lg shadow-lg hover:bg-gray-700 hover:text-white transition w-80">
+        <div className="btn-custom">
           <Link href={"/studentlogin"}>
             <div className="mb-4 flex justify-center">
               <School className="text-5xl" />

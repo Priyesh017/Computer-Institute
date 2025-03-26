@@ -108,3 +108,6 @@ input[type="number"] {
 ::-webkit-scrollbar {
   display: none;
 }
+.btn-custom {
+  @apply p-5 text-center bg-gray-800 text-gray-400 cursor-pointer rounded-lg shadow-lg hover:bg-gray-700 hover:text-white transition w-80;
+}

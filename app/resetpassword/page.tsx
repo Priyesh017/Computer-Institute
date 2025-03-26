@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { fetcher } from "@/helper";
 import { toast } from "react-toastify";
 import Loader from "@/components/Loader";
+import { Loader2 } from "lucide-react";
 
 const ForgetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -15,6 +16,7 @@ const ForgetPassword = () => {
   const [error, setError] = useState("");
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const [loading, setloading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,10 +26,11 @@ const ForgetPassword = () => {
       animateError();
       return;
     }
-
+    setloading(true);
     const data = await fetcher(`/ResetPassword?token=${token}`, "POST", {
       newPassword,
     });
+    setloading(false);
 
     if (!data.success) {
       toast.error("some error happened");
@@ -90,9 +93,11 @@ const ForgetPassword = () => {
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
               type="submit"
+              disabled={loading}
               className="w-full p-3 bg-violet-700 hover:bg-violet-800 text-white rounded-lg"
             >
               Change Password
+              {loading && <Loader2 className="animate-spin" />}
             </Button>
           </motion.div>
         </form>
