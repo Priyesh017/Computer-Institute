@@ -102,7 +102,7 @@ export default function Navbar() {
       <Link
         href={
           user && user.role
-            ? "/admin/dashboard"
+            ? "/admin"
             : user
             ? "/student/dashboard"
             : "/chooseuser"
@@ -136,8 +136,8 @@ export default function Navbar() {
               href={
                 user
                   ? user.role
-                    ? "admin/dashboard"
-                    : "student/dashboard"
+                    ? "/admin"
+                    : "/student/dashboard"
                   : "/chooseuser"
               }
               className="px-6 py-2 bg-white text-indigo-800 font-bold rounded-xl shadow-lg transition-all transform hover:scale-105"

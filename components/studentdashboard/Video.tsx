@@ -3,11 +3,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 import anime from "animejs";
 import { useEffect, useState } from "react";
-import { ListObjectsV2Command } from "@aws-sdk/client-s3";
-import { bucketRegion, s3Client } from "@/lib/utils";
-import Loader from "../Loader";
 
-const bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME;
+import Loader from "../Loader";
+import { fetcher } from "@/helper";
 
 const ReceivedVideos: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -27,20 +25,11 @@ const ReceivedVideos: React.FC = () => {
     const fetchGalleryImages = async () => {
       setloadingTime(true);
       try {
-        const command = new ListObjectsV2Command({
-          Bucket: bucketName,
+        const { data } = await fetcher("/fetch_aws_res", "POST", {
           Prefix: `videos/temp`,
         });
 
-        const data = await s3Client.send(command);
-
-        const imageUrls =
-          data.Contents?.map((item) => {
-            if (!item.Key) return null;
-            return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${item.Key}`;
-          }).filter(Boolean) || [];
-
-        setvideos(imageUrls as string[]);
+        setvideos(data as string[]);
 
         setloadingTime(false);
       } catch (error) {

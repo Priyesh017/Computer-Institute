@@ -3,11 +3,9 @@
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { useEffect, useState } from "react";
-import { ListObjectsV2Command } from "@aws-sdk/client-s3";
-import { bucketRegion, s3Client } from "@/lib/utils";
-import Loader from "../Loader";
 
-const bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME;
+import Loader from "../Loader";
+import { fetcher } from "@/helper";
 
 const StackableNotes: React.FC = () => {
   const [notes, setnotes] = useState<string[]>([]);
@@ -25,20 +23,11 @@ const StackableNotes: React.FC = () => {
     const fetchGalleryImages = async () => {
       setloading(true);
       try {
-        const command = new ListObjectsV2Command({
-          Bucket: bucketName,
+        const { data } = await fetcher("/fetch_aws_res", "POST", {
           Prefix: `applications/notes`,
         });
 
-        const data = await s3Client.send(command);
-
-        const imageUrls =
-          data.Contents?.map((item) => {
-            if (!item.Key) return null;
-            return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${item.Key}`;
-          }).filter(Boolean) || [];
-
-        setnotes(imageUrls as string[]);
+        setnotes(data as string[]);
 
         setloading(false);
       } catch (error) {

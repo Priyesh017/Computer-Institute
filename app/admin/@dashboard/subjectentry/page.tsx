@@ -1,12 +1,13 @@
+"use client";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { Plus, Check, Trash2, Edit } from "lucide-react";
-import { ComboboxDemo } from "./combo";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import { typefd } from "@/lib/typs";
 import { frameworksCourse } from "@/data";
+import { ComboboxDemo } from "@/components/combo";
 
 const SubjectEntry = () => {
   const [fd, setfd] = useState<typefd>({

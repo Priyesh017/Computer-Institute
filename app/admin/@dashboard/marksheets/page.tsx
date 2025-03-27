@@ -13,47 +13,11 @@ import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
-import StudentReportCard from "./StudentReportCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/store";
-
-type Mark = {
-  subject: string;
-  theoryMarks: string;
-  practicalMarks: string;
-  theoryFullMarks: string;
-  practicalFullMarks: string;
-};
-
-export type MarksWithEnrollment = {
-  id: number;
-  marks: Mark[];
-  remarks: "PASS" | "FAIL";
-  EnrollmentNo: string;
-  grade: string;
-  totalMarks: number;
-  percentage: number;
-  verified: boolean;
-  createdAt: Date;
-  year: string;
-  serialNo: number;
-  enrollment: {
-    name: string;
-    father: string;
-    dob: Date;
-    imageLink: string;
-    course: {
-      CName: string;
-      Duration: number;
-    };
-    center: {
-      Centername: string;
-      address: string;
-      code: string;
-    };
-  };
-};
+import StudentReportCard from "@/components/StudentReportCard";
+import { MarksWithEnrollment } from "@/lib/typs";
 
 const PAGE_SIZE = 5;
 

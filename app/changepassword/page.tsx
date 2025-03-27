@@ -38,7 +38,7 @@ const ChangePassword = () => {
     }
 
     toast.success("successful");
-    router.replace("/admin/dashboard");
+    router.replace("/admin");
     setError("");
   };
 

@@ -9,9 +9,9 @@ import {
   PaginationNext,
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
-import { Button } from "../ui/button";
 import { toast } from "react-toastify";
 import { Enrollment } from "@/lib/typs";
+import { Button } from "@/components/ui/button";
 
 const PAGE_SIZE = 5;
 

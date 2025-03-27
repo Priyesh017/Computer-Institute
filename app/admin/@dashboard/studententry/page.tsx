@@ -2,7 +2,6 @@
 
 import { CircularProgress } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { ComboboxDemo } from "./combo";
 import { z } from "zod";
 import { toast } from "react-toastify";
 import { fetcherWc } from "@/helper";
@@ -19,6 +18,7 @@ import {
   sexValue,
 } from "@/data";
 import { tfd } from "@/lib/typs";
+import { ComboboxDemo } from "@/components/combo";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),

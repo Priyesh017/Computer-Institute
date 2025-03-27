@@ -5,42 +5,7 @@ import { motion } from "framer-motion";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
-
-export type EnrollmentData = {
-  id: number;
-  Enrollmentno: string;
-  IdCardNo: string;
-  idCardLink: string;
-  admitLink: string;
-  certificateLink: string;
-  marksheetLink: string;
-  name: string;
-  dob: string;
-  father: string;
-  mother: string;
-  address: string;
-  mobileNo: string;
-  wpNo: string;
-  eduqualification: string;
-  activated: boolean;
-  courseId: number;
-  centerid: number;
-  createdAt: string;
-
-  center: {
-    Centername: string;
-    address: string;
-  };
-  course: {
-    CName: string;
-    subjects: string[];
-  };
-};
-
-export type ApiResponse = {
-  success: boolean;
-  data: EnrollmentData;
-};
+import { ApiResponse, EnrollmentData } from "@/lib/typs";
 
 const ExamForm = () => {
   const [fd, setfd] = useState<EnrollmentData>();
@@ -93,6 +58,7 @@ const ExamForm = () => {
       if (data.success && data.data == null) toast("invalid enrollment id");
       setfd(data.data);
     } catch (error) {
+      console.log(error);
       toast("error happened");
     }
   };

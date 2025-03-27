@@ -14,39 +14,7 @@ import { X } from "lucide-react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-export type DataItem = {
-  id: number;
-  EnrollmentNo: string;
-  verified: boolean;
-  createdAt: string;
-  ExamCenterCode: string;
-  ATI_CODE: string;
-  practExmdate: string;
-  theoryExamdate: string;
-  practExmtime: string;
-  theoryExmtime: string;
-  sem: string;
-  enrollment: {
-    name: string;
-    mobileNo: string;
-    wpNo: string;
-    Enrollmentno: string;
-    imageLink: string;
-    address: string;
-    center: {
-      Centername: string;
-    };
-    father: string;
-    IdCardNo: string;
-    amount: {
-      lastPaymentRecieptno: string;
-    };
-    course: {
-      CName: string;
-    };
-  };
-};
+import { DataItem } from "@/lib/typs";
 
 const PAGE_SIZE = 5;
 

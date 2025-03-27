@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DataItem } from "./app/_components/examforms";
+import { DataItem } from "./lib/typs";
 
 interface iDatatype {
   email?: string;
@@ -32,6 +32,7 @@ interface iDatatype {
   oldPassword?: string;
   newPassword?: string;
   cid?: string;
+  Prefix?: string;
 }
 
 const ApiEnd = axios.create({

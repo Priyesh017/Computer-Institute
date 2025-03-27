@@ -1,5 +1,5 @@
+import { MarksWithEnrollment } from "@/lib/typs";
 import React from "react";
-import { MarksWithEnrollment } from "./marksheets";
 
 const StudentReportCard = ({
   selectedEnrollment: se,

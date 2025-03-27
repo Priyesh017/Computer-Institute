@@ -2,14 +2,12 @@
 
 import { useState, useEffect, ChangeEvent } from "react";
 import { motion } from "framer-motion";
-import anime from "animejs";
-import { Trash2 } from "lucide-react";
 import { marks } from "@/data/index";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
-import { ApiResponse, EnrollmentData } from "./ExamRegForm";
 import Dropdown from "@/components/DropDown";
 import { Button } from "@/components/ui/button";
+import { ApiResponse, EnrollmentData } from "@/lib/typs";
 
 interface Subject {
   subject: string;

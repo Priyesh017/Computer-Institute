@@ -30,6 +30,7 @@ const ExamForm = () => {
       const { enrollments } = await fetcherWc("/AllEnrollments", "GET");
       if (enrollments) setexmforms(enrollments);
     } catch (error) {
+      console.log(error);
       toast("some error happened");
     }
   };
