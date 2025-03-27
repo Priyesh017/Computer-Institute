@@ -163,18 +163,6 @@ export default function LoginPage() {
           >
             {loader ? "Loading..." : "Login"}
           </button>
-
-          {utype === "center" && (
-            <div className="flex justify-center text-sm mt-4">
-              <span>Don&apos;t have an account?</span>
-              <a
-                href="/signup"
-                className="ml-2 text-purple-600 hover:underline"
-              >
-                Sign up
-              </a>
-            </div>
-          )}
         </form>
       </div>
 
