@@ -72,7 +72,11 @@ const Marksheet = () => {
       label: "Center Name",
       value: fd?.center.Centername || "",
     },
-    { key: "cAddress", label: "Center Address", value: fd?.address || "" },
+    {
+      key: "cAddress",
+      label: "Center Address",
+      value: fd?.center.address || "",
+    },
     {
       key: "dob",
       label: "Date of Birth",
@@ -140,33 +144,11 @@ const Marksheet = () => {
       item.practicalFullMarks.trim() !== ""
   );
 
-  // const handleAddRow = () => {
-  //   if (!allFieldsFilled) {
-  //     alert("Please fill all fields before adding a new row!");
-  //     return;
-  //   }
-  //   setSubjects([
-  //     ...subjects,
-  //     {
-  //       // subject: "",
-  //       theoryFullMarks: "",
-  //       practicalFullMarks: "",
-  //       theoryMarks: "",
-  //       practicalMarks: "",
-  //     },
-  //   ]);
-  // };
-
   const handleChange = (index: number, field: string, value: string) => {
     const newSubjects = [...subjects];
     newSubjects[index][field as keyof (typeof newSubjects)[number]] = value;
     setSubjects(newSubjects);
   };
-
-  // const handleDeleteRow = (index: number) => {
-  //   const newSubjects = subjects.filter((_, i) => i !== index);
-  //   setSubjects(newSubjects);
-  // };
 
   const handleSubmit = async () => {
     if (check()) {
@@ -187,7 +169,12 @@ const Marksheet = () => {
       toast(
         data.success ? "Marksheet submitted successfully!" : "error happened"
       );
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.code === "P2002") {
+        toast("duplicate entry not accepted");
+        return;
+      }
       toast("error happend");
     }
   };

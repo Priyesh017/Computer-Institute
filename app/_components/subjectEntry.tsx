@@ -67,7 +67,7 @@ const SubjectEntry = () => {
       subjects.includes(newSubjectName.trim()) &&
       newSubjectName.trim() !== editingSubject
     ) {
-      alert("A subject with this name already exists.");
+      toast("A subject with this name already exists.");
       return;
     }
 
@@ -91,7 +91,10 @@ const SubjectEntry = () => {
 
     try {
       setloading(true);
-      const data = await fetcherWc("/subjectAdd", "POST", { c });
+      const data = await fetcherWc("/subjectAdd", "POST", {
+        c,
+        cid: fd.courseid,
+      });
       if (data.success) toast("success");
     } catch (error) {
       console.log(error);

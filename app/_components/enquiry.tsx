@@ -44,7 +44,7 @@ export default function Notifications() {
     const name = selectedNotification!.name;
 
     const eventSource = new EventSource(
-      `http://localhost:3001/VerifyEnquiry?email=${email}&name=${name}`,
+      `${process.env.NEXT_PUBLIC_SERVER_ENDPOINT}/VerifyEnquiry?email=${email}&name=${name}`,
       { withCredentials: true }
     );
 

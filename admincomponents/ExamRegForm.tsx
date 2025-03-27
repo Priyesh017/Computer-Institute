@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
@@ -29,6 +29,7 @@ export type EnrollmentData = {
 
   center: {
     Centername: string;
+    address: string;
   };
   course: {
     CName: string;
@@ -165,7 +166,9 @@ const ExamForm = () => {
                 onChange={handleChange}
                 className="w-full p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
               />
-              <Button className="h-10" onClick={fetchHandler}>Fetch</Button>
+              <Button className="h-10" onClick={fetchHandler}>
+                Fetch
+              </Button>
             </div>
           </div>
           {examFields.map(({ value, key, label }) => (

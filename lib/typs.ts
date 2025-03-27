@@ -36,7 +36,7 @@ export interface Enrollment {
   Enrollmentno: string;
   activated: boolean;
   id: number;
-  createdAt: string;
+
   course: {
     price: number;
   };
