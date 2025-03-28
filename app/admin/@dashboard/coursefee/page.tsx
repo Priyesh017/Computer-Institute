@@ -49,7 +49,6 @@ const ExamFee = () => {
     id: number,
     remainingAmount: number
   ) => {
-    toast.info("Processing payment...");
     const amountPaid = feesPaid[id] || 0;
 
     if (amountPaid < 0 || amountPaid > remainingAmount) {

@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EnrollmentDetails } from "@/components/enrollmentdatashow";
 import { Enrollmenttype } from "@/lib/typs";
+import Loader from "@/components/Loader";
 
 const PAGE_SIZE = 5;
 
@@ -76,7 +77,7 @@ const EnrollmentList = () => {
     onError: () => toast("Some error happened"),
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader />;
   if (isError) return <p>Error loading data</p>;
 
   const filteredEnrollment = data!.enrollments.filter((enrollment) => {

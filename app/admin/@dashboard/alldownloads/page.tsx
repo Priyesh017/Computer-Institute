@@ -12,32 +12,40 @@ import { fetcherWc } from "@/helper";
 import { X } from "lucide-react";
 import AllDownloads from "@/components/studentdashboard/Downloads";
 import { toast } from "react-toastify";
-import { EnrollmentType } from "@/lib/typs";
+import { Enrollmenttype } from "@/lib/typs";
+import { useQuery } from "@tanstack/react-query";
+import Loader from "@/components/Loader";
 
 const PAGE_SIZE = 5;
 
 const ExamForm = () => {
-  const [exmforms, setexmforms] = useState<EnrollmentType[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedexmform, setselectedexmform] = useState<EnrollmentType | null>(
+  const [selectedexmform, setselectedexmform] = useState<Enrollmenttype | null>(
     null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isNew, setIsNew] = useState(true);
 
   const fetchfn = async () => {
-    try {
-      const { enrollments } = await fetcherWc("/AllEnrollments", "GET");
-      if (enrollments) setexmforms(enrollments);
-    } catch (error) {
-      console.log(error);
-      toast("some error happened");
-    }
+    const { enrollments } = await fetcherWc("/AllEnrollments", "GET");
+    return enrollments as Enrollmenttype[];
   };
 
-  useEffect(() => {
-    fetchfn();
-  }, []);
+  const {
+    data: exmforms,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["alldownloads"],
+    queryFn: fetchfn,
+    staleTime: 1000 * 60 * 10,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  if (isLoading) return <Loader />;
+  if (exmforms == undefined || isError) return <h1>error happened</h1>;
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const currentEnrollments = exmforms.slice(startIndex, startIndex + PAGE_SIZE);

@@ -27,7 +27,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {user.role === "ADMIN" ? "Central Admin" : "Branch Admin"} Dashboard
           </h1>
           <h1 className="text-md text-ellipsis font-bold text-gray-600 px-4 text-center border-b border-gray-300 py-2 overflow-x-hidden">
-            Welcome {user ? user.name : "Guest"}
+            Welcome {user.name}
           </h1>
         </>
       )}

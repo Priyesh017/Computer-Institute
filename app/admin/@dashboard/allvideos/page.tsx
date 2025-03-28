@@ -1,4 +1,4 @@
-import ReceivedVideos from "@/components/studentdashboard/Video";
+import ReceivedVideos from "@/app/student/@dashboard/videos/page";
 import React from "react";
 
 const Page = () => {

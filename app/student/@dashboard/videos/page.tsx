@@ -4,13 +4,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import anime from "animejs";
 import { useEffect, useState } from "react";
 
-import Loader from "../Loader";
 import { fetcher } from "@/helper";
+import Loader from "@/components/Loader";
+import { useQuery } from "@tanstack/react-query";
 
 const ReceivedVideos: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
-  const [loadingtime, setloadingTime] = useState(false);
-  const [videos, setvideos] = useState<string[]>([]);
 
   useEffect(() => {
     anime({
@@ -21,25 +20,31 @@ const ReceivedVideos: React.FC = () => {
       duration: 800,
       delay: anime.stagger(100),
     });
-
-    const fetchGalleryImages = async () => {
-      setloadingTime(true);
-      try {
-        const { data } = await fetcher("/fetch_aws_res", "POST", {
-          Prefix: `videos/temp`,
-        });
-
-        setvideos(data as string[]);
-
-        setloadingTime(false);
-      } catch (error) {
-        console.error("Error fetching gallery videos:", error);
-      }
-    };
-
-    fetchGalleryImages();
   }, []);
-  if (loadingtime) return <Loader />;
+
+  const fetchGalleryImages = async () => {
+    const { data } = await fetcher("/fetch_aws_res", "POST", {
+      Prefix: `videos/temp`,
+    });
+    return data as string[];
+  };
+
+  const {
+    data: videos,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["galleryVideos"],
+    queryFn: fetchGalleryImages,
+    staleTime: 1000 * 60 * 10,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  if (isLoading) return <Loader />;
+  if (videos == undefined || isError) return <h1>error happened</h1>;
+
   return (
     <div className="relative flex flex-col items-center w-full max-w-2xl mx-auto space-y-6 mt-6 p-4">
       <h1 className="text-3xl font-bold text-center text-purple-600">

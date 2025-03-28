@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import StudentReportCard from "@/components/StudentReportCard";
 import { MarksWithEnrollment } from "@/lib/typs";
+import Loader from "@/components/Loader";
 
 const PAGE_SIZE = 5;
 
@@ -127,7 +128,7 @@ const ExamForm = () => {
 
       {/* Table Data */}
       {isLoading ? (
-        <div className="text-center py-4">Loading...</div>
+        <Loader />
       ) : (
         currentEnrollments.map((d) => (
           <div

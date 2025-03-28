@@ -4,13 +4,31 @@ import { motion } from "framer-motion";
 import anime from "animejs";
 import { useEffect, useState } from "react";
 
-import Loader from "../Loader";
 import { fetcher } from "@/helper";
+import Loader from "@/components/Loader";
+import { useQuery } from "@tanstack/react-query";
 
 const StackableNotes: React.FC = () => {
-  const [notes, setnotes] = useState<string[]>([]);
-  const [loading, setloading] = useState(false);
+  const fetchGalleryNotes = async () => {
+    const { data } = await fetcher("/fetch_aws_res", "POST", {
+      Prefix: `applications/notes`,
+    });
 
+    return data as string[];
+  };
+
+  const {
+    data: notes,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["galleryNotes"],
+    queryFn: fetchGalleryNotes,
+    staleTime: 1000 * 60 * 10,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
   useEffect(() => {
     anime({
       targets: ".note-card",
@@ -19,25 +37,11 @@ const StackableNotes: React.FC = () => {
       delay: anime.stagger(100, { start: 200 }),
       easing: "easeOutElastic(1, .8)",
     });
-
-    const fetchGalleryImages = async () => {
-      setloading(true);
-      try {
-        const { data } = await fetcher("/fetch_aws_res", "POST", {
-          Prefix: `applications/notes`,
-        });
-
-        setnotes(data as string[]);
-
-        setloading(false);
-      } catch (error) {
-        console.error("Error fetching gallery videos:", error);
-      }
-    };
-
-    fetchGalleryImages();
   }, []);
-  if (loading) return <Loader />;
+
+  if (isLoading) return <Loader />;
+  if (notes == undefined || isError) return <h1>error happened</h1>;
+
   return (
     <div className="w-full max-w-4xl mx-auto p-6">
       <div className="flex flex-col space-y-4">

@@ -19,17 +19,6 @@ export interface StudentProfileProps {
   createdAt: string;
 }
 
-export interface EnrollmentType {
-  Enrollmentno: string;
-  IdCardNo: string;
-  idCardLink: string;
-  admitLink: string;
-  certificateLink: string;
-  marksheetLink: string;
-  name: string;
-  dob: string;
-  createdAt: string;
-}
 export interface Enrollmenttype {
   admitLink: string;
   certificateLink: string;

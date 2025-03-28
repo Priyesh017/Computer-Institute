@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataItem } from "@/lib/typs";
 import { EnrollmentDetails } from "@/components/exmformdetails";
+import Loader from "@/components/Loader";
 
 const PAGE_SIZE = 5;
 
@@ -65,7 +66,7 @@ const ExamForm = () => {
     onError: () => toast("Some error happened"),
   });
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader />;
   if (isError) return <p>Error loading data</p>;
 
   // Filter and paginate data

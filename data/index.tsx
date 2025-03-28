@@ -22,6 +22,31 @@ export const navMain = [
     ],
   },
   {
+    title: "Student Profile",
+    url: "#",
+    role: "student",
+    icon: SquareTerminal,
+    isActive: true,
+    items: [
+      {
+        title: "Profile",
+        url: "/student/profile",
+      },
+      {
+        title: "Downloads",
+        url: "/student/downloads",
+      },
+      {
+        title: "Notes",
+        url: "/student/notes",
+      },
+      {
+        title: "Videos",
+        url: "/student/videos",
+      },
+    ],
+  },
+  {
     title: "Video Section",
     url: "#",
     role: "center",
