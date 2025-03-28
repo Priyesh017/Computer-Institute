@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import anime from "animejs";
 import { useEffect } from "react";
 import { Download } from "lucide-react";
-import { EnrollmentType } from "@/lib/typs";
+import { Enrollmenttype } from "@/lib/typs";
 
-const Downloads = ({ enrollment }: { enrollment: EnrollmentType }) => {
+const Downloads = ({ enrollment }: { enrollment: Enrollmenttype }) => {
   useEffect(() => {
     anime({
       targets: ".download-item",

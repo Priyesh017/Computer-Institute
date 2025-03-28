@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import anime from "animejs";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { fetcher } from "@/helper";
 import Loader from "@/components/Loader";

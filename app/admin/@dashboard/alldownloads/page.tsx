@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -11,7 +11,6 @@ import {
 import { fetcherWc } from "@/helper";
 import { X } from "lucide-react";
 import AllDownloads from "@/components/studentdashboard/Downloads";
-import { toast } from "react-toastify";
 import { Enrollmenttype } from "@/lib/typs";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/Loader";
