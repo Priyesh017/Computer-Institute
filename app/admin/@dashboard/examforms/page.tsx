@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Pagination,
   PaginationContent,
@@ -15,79 +16,67 @@ import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataItem } from "@/lib/typs";
+import { EnrollmentDetails } from "@/components/exmformdetails";
 
 const PAGE_SIZE = 5;
 
 const ExamForm = () => {
-  const [exmforms, setexmforms] = useState<DataItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedexmform, setselectedexmform] = useState<DataItem | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isNew, setIsNew] = useState(true);
   const [search, setSearch] = useState("");
+  const [selectedexmform, setselectedexmform] = useState<DataItem | null>(null);
+  const queryClient = useQueryClient();
 
-  const fetchfn = async () => {
-    try {
-      const data = await fetcherWc("/exmformsfetch", "GET");
+  // Fetching exam forms using React Query
+  const {
+    data: exmforms = [],
+    isLoading,
+    isError,
+  } = useQuery<DataItem[]>({
+    queryKey: ["exmforms"],
+    queryFn: () => fetcherWc("/exmformsfetch", "GET").then((res) => res.data),
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
-      setexmforms(data.data);
-    } catch (error) {
-      console.log(error);
-      toast("some error happened");
-    }
-  };
+  // Mutation for approving/disapproving
+  const toggleActivation = useMutation({
+    mutationFn: async ({ verified, id }: DataItem) => {
+      const endpoint = verified ? "/exmformDisApprove" : "/exmformApprove";
+      return fetcherWc(endpoint, "POST", { id });
+    },
+    onSuccess: (_, { id, verified }) => {
+      queryClient.setQueryData(["exmforms"], (prev: DataItem[]) =>
+        prev.map((p) => (p.id === id ? { ...p, verified: !verified } : p))
+      );
+      toast("Success");
+    },
+    onError: () => toast("Some error happened"),
+  });
 
-  useEffect(() => {
-    fetchfn();
-  }, []);
+  // Mutation for generating admit
+  const generateAdmit = useMutation({
+    mutationFn: async (enrollment: DataItem) => {
+      toast("Please wait...");
+      return fetcherWc("/generateadmit", "POST", { enrollment });
+    },
+    onSuccess: (data) => toast(data.success ? "Generated" : "Error"),
+    onError: () => toast("Some error happened"),
+  });
 
-  const toggleActivation = async ({ verified, id }: DataItem) => {
-    try {
-      toast("plz wait");
-      if (verified) {
-        const data = await fetcherWc("/exmformDisApprove", "POST", { id });
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading data</p>;
 
-        if (data.success) {
-          setexmforms((prev) =>
-            prev.map((p) => (p.id === id ? { ...p, verified: false } : p))
-          );
-        }
-        toast(data.success ? "success" : "failed");
-        return;
-      }
-
-      const data = await fetcherWc("/exmformApprove", "POST", { id });
-      if (data.success) {
-        setexmforms((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
-        );
-      }
-      toast(data.success ? "success" : "failed");
-    } catch (error) {
-      console.log(error);
-      toast("some error happened");
-    }
-  };
-
-  const filteredEnrollment = exmforms.filter((enrollment) =>
-    enrollment.EnrollmentNo.toString()
-      .toLowerCase()
-      .includes(search.toLowerCase())
+  // Filter and paginate data
+  const filteredEnrollment = exmforms.filter((e) =>
+    e.EnrollmentNo.toString().toLowerCase().includes(search.toLowerCase())
   );
-
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const currentEnrollments = filteredEnrollment.slice(
     startIndex,
     startIndex + PAGE_SIZE
   );
-  const generateAdmit = async (enrollment: DataItem) => {
-    toast("plz wait");
-    const data = await fetcherWc("/generateadmit", "POST", {
-      enrollment,
-    });
-
-    toast(data.success ? "generated" : "error");
-  };
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
@@ -95,12 +84,13 @@ const ExamForm = () => {
         <h2 className="text-xl font-bold">Exam Form Verify</h2>
         <Input
           type="text"
-          placeholder="Search courses..."
+          placeholder="Search Enrollment..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-1/3 p-2 border border-gray-400 rounded-lg"
         />
       </div>
+
       <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
@@ -108,51 +98,41 @@ const ExamForm = () => {
         <span>Approval</span>
         <span>Generate</span>
       </div>
-      <div>
-        {currentEnrollments.map((enrollment, index: number) => (
+
+      {currentEnrollments.map((enrollment, index) => (
+        <div
+          key={enrollment.id}
+          className="grid md:grid-cols-5 items-center text-center text-gray-600 gap-2 font-bold py-3 border-b border-gray-500 hover:bg-blue-100"
+        >
           <div
-            key={index}
-            className={`click grid md:grid-cols-5 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer ${
-              isNew ? "bg-rose-100" : "bg-gray-200"
-            } hover:bg-blue-100`}
+            className="hover:text-orange-600 cursor-pointer"
+            onClick={() => setselectedexmform(enrollment)}
           >
-            <div
-              className="hover:text-violet-800"
-              onClick={() => {
-                setselectedexmform(enrollment);
-                setIsModalOpen(true);
-                setIsNew(false);
-              }}
-            >
-              {isNew && (
-                <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-              )}
-              {enrollment.enrollment.name}
-            </div>
-            <div>{enrollment.EnrollmentNo}</div>
-            <span>{new Date(enrollment.createdAt).toDateString()}</span>
-            <div className="flex items-center justify-center gap-2">
-              <Switch
-                id={`activation-${startIndex + index}`}
-                checked={enrollment.verified}
-                onCheckedChange={() => toggleActivation(enrollment)}
-                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
-              />
-            </div>
-            <Button
-              className={`mx-4 ${
-                enrollment.verified
-                  ? "bg-purple-600 hover:bg-purple-700"
-                  : "bg-gray-400 cursor-not-allowed"
-              }`}
-              onClick={() => generateAdmit(enrollment)}
-              disabled={!enrollment.verified} // Disable if not verified
-            >
-              Generate Admit
-            </Button>
+            {enrollment.enrollment.name}
           </div>
-        ))}
-      </div>
+          <div>{enrollment.EnrollmentNo}</div>
+          <span>{new Date(enrollment.createdAt).toDateString()}</span>
+          <div className="flex items-center justify-center gap-2">
+            <Switch
+              id={`activation-${startIndex + index}`}
+              checked={enrollment.verified}
+              onCheckedChange={() => toggleActivation.mutate(enrollment)}
+              className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+            />
+          </div>
+          <Button
+            className={`mx-4 ${
+              enrollment.verified
+                ? "bg-purple-600 hover:bg-purple-700"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
+            onClick={() => generateAdmit.mutate(enrollment)}
+            disabled={!enrollment.verified}
+          >
+            Generate Admit
+          </Button>
+        </div>
+      ))}
 
       {/* Pagination */}
       <Pagination className="mt-4">
@@ -177,12 +157,12 @@ const ExamForm = () => {
       </Pagination>
 
       {/* Fullscreen Modal */}
-      {isModalOpen && selectedexmform && (
+      {selectedexmform && (
         <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="relative bg-white rounded-lg shadow-xl w-full max-w-4xl h-full overflow-auto">
             <button
               className="absolute top-4 right-4 p-2 bg-gray-200 rounded-full hover:bg-gray-300"
-              onClick={() => setIsModalOpen(false)}
+              onClick={() => setselectedexmform(null)}
             >
               <X size={24} className="hover:text-red-600" />
             </button>
@@ -190,50 +170,6 @@ const ExamForm = () => {
           </div>
         </div>
       )}
-    </div>
-  );
-};
-
-const EnrollmentDetails = ({ enrollment }: { enrollment: DataItem }) => {
-  const data = {
-    id: enrollment.id,
-    EnrollmentNo: enrollment.EnrollmentNo,
-    verified: enrollment.verified,
-    createdAt: enrollment.createdAt,
-    name: enrollment.enrollment.name,
-    mobileNo: enrollment.enrollment.name,
-    wpNo: enrollment.enrollment.name,
-    Enrollmentno: enrollment.enrollment.name,
-    address: enrollment.enrollment.name,
-
-    Centername: enrollment.enrollment.center.Centername,
-
-    IdCardNo: enrollment.enrollment.IdCardNo,
-    "Last Payment Reciept No":
-      enrollment.enrollment.amount.lastPaymentRecieptno,
-
-    CName: enrollment.enrollment.course.CName,
-  };
-
-  return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-xl border border-gray-200">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-        Enrollment Details
-      </h2>
-      <div className="grid grid-cols-2 gap-4 text-gray-700">
-        {Object.entries(data).map(([key, value]) => (
-          <div key={key} className="p-3 border-b border-gray-300">
-            <span className="font-semibold capitalize text-gray-600">
-              {key.replace(/([A-Z])/g, " $1").trim()}:
-            </span>
-            <span className="block text-gray-900">
-              {key === "createdAt"
-                ? new Date(value as string).toDateString()
-                : value || "-"}
-            </span>
-          </div>
-        ))}
-      </div>
     </div>
   );
 };

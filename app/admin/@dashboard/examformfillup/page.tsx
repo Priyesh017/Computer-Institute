@@ -98,6 +98,7 @@ const ExamForm = () => {
           toast("❌ Submission failed!");
         }
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error:", error);
       toast("⚠️ Some error happened");

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { marks } from "@/data/index";
 import { fetcherWc } from "@/helper";
@@ -102,6 +102,7 @@ const Marksheet = () => {
         }))
       );
     } catch (error) {
+      console.log(error);
       toast("error happened");
     }
   };

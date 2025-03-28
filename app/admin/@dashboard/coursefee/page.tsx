@@ -121,12 +121,8 @@ const ExamFee = () => {
                 <span>{enrollment.course.price}</span>
 
                 <input
-                  type="number"
-                  value={
-                    feesPaid[enrollment.id] ||
-                    enrollment.amount?.TotalPaid ||
-                    ""
-                  }
+                  type=""
+                  value={feesPaid[enrollment.id] || ""}
                   onChange={(e) => {
                     const value = parseInt(e.target.value) || 0;
                     setFeesPaid((prev) => ({

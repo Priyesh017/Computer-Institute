@@ -30,7 +30,7 @@ export const navMain = [
     items: [
       {
         title: "Videos",
-        url: "#",
+        url: "/admin/allvideos",
       },
     ],
   },
@@ -159,7 +159,7 @@ export const navMain = [
     items: [
       {
         title: "All Downloads",
-        url: "/admin/downloads",
+        url: "/admin/alldownloads",
       },
     ],
   },

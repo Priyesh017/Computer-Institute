@@ -22,9 +22,14 @@ interface Notification {
 export default function Notifications() {
   const [selectedNotification, setSelectedNotification] =
     useState<Notification | null>(null);
+
   const { isPending, error, data } = useQuery<idata>({
     queryKey: ["repoData"],
     queryFn: () => fetcherWc("/FetchAllEnquiry", "GET"),
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   if (isPending) {

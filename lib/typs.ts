@@ -30,6 +30,20 @@ export interface EnrollmentType {
   dob: string;
   createdAt: string;
 }
+export interface Enrollmenttype {
+  admitLink: string;
+  certificateLink: string;
+  dob: string; // or Date if you want to parse it
+  idCardLink: string;
+  marksheetLink: string;
+  imageLink: string;
+  name: string;
+  createdAt: string; // or Date
+  Enrollmentno: string;
+  id: number;
+  activated: boolean;
+  status: string;
+}
 
 export interface Enrollment {
   name: string;

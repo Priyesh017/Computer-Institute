@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Pagination,
   PaginationContent,
@@ -19,99 +20,73 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-interface Enrollment {
-  admitLink: string;
-  certificateLink: string;
-  dob: string; // or Date if you want to parse it
-  idCardLink: string;
-  marksheetLink: string;
-  imageLink: string;
-  name: string;
-  createdAt: string; // or Date
-  Enrollmentno: string;
-  id: number;
-  activated: boolean;
-  status: string;
-}
+import { EnrollmentDetails } from "@/components/enrollmentdatashow";
+import { Enrollmenttype } from "@/lib/typs";
 
 const PAGE_SIZE = 5;
 
 const EnrollmentList = () => {
-  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedEnrollment, setSelectedEnrollment] =
-    useState<Enrollment | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [totalEnrollments, setTotalEnrollments] = useState(0); // Track total count
-  const [temploading, settemploading] = useState(false);
   const [filterStatus, setFilterStatus] = useState("All");
-  const fetchEnrollments = useCallback(async () => {
-    try {
-      const { enrollments, total } = await fetcherWc(
+  const [selectedEnrollment, setSelectedEnrollment] =
+    useState<Enrollmenttype | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  interface etype {
+    enrollments: Enrollmenttype[];
+    total: number;
+  }
+
+  const { data, isLoading, isError } = useQuery<etype>({
+    queryKey: ["enrollments", currentPage],
+    queryFn: () =>
+      fetcherWc(
         `/AllEnrollments?page=${currentPage}&limit=${PAGE_SIZE}`,
         "GET"
-      );
-      setEnrollments(enrollments);
-      setTotalEnrollments(total);
-    } catch (error) {
-      console.error("Failed to fetch enrollments:", error);
-    }
-  }, [currentPage]);
+      ),
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
-  useEffect(() => {
-    fetchEnrollments();
-  }, [currentPage, fetchEnrollments]);
+  const toggleActivation = useMutation({
+    mutationFn: async (enrollment: Enrollmenttype) => {
+      const endpoint = enrollment.activated
+        ? "/deActivateEnrollment"
+        : "/ActivateEnrollment";
+      return fetcherWc(endpoint, "POST", { id: enrollment.id });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
+      toast("Success");
+    },
+    onError: () => toast("Some error happened"),
+  });
 
-  const toggleActivation = async (enrollment: Enrollment) => {
-    toast("Please wait...");
-    const endpoint = enrollment.activated
-      ? "/deActivateEnrollment"
-      : "/ActivateEnrollment";
-    try {
-      const data = await fetcherWc(endpoint, "POST", { id: enrollment.id });
-
-      if (data.success) {
-        setEnrollments((prev) =>
-          prev.map((p) =>
-            p.id === enrollment.id ? { ...p, activated: !p.activated } : p
-          )
-        );
-        toast("Success");
-      } else {
-        toast("Failed");
-      }
-    } catch (error) {
-      console.log(error);
-      toast("some error happened");
-    }
-  };
-
-  const generateHandler = async (Enrollmentno: string) => {
-    try {
-      toast("Generating ID...");
-      settemploading(true);
-      const data = await fetcherWc("/generateId", "POST", { Enrollmentno });
-      settemploading(false);
+  const generateHandler = useMutation({
+    mutationFn: (Enrollmentno: string) =>
+      fetcherWc("/generateId", "POST", { Enrollmentno }),
+    onSuccess: (data) =>
       toast(
         data.success ? "ID generated successfully" : "ID generation failed"
-      );
-    } catch (error) {
-      console.log(error);
-      toast("some error happened");
-    }
-  };
+      ),
+    onError: () => toast("Some error happened"),
+  });
 
-  const filteredEnrollment = enrollments.filter((enrollment) => {
-    const matchesSearch = enrollment.Enrollmentno.toString()
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchesStatus =
-      filterStatus === "All" ||
-      enrollment.status.toLowerCase() === filterStatus.toLowerCase();
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error loading data</p>;
 
-    return matchesSearch && matchesStatus;
+  const filteredEnrollment = data!.enrollments.filter((enrollment) => {
+    return (
+      enrollment.Enrollmentno.toString()
+        .toLowerCase()
+        .includes(search.toLowerCase()) &&
+      (filterStatus === "All" ||
+        enrollment.status.toLowerCase() === filterStatus.toLowerCase())
+    );
   });
 
   return (
@@ -149,14 +124,12 @@ const EnrollmentList = () => {
         <span>Approval</span>
         <span>Generate</span>
       </div>
-
       {filteredEnrollment.map((enrollment) => (
         <div
           key={enrollment.id}
-          className="click grid md:grid-cols-6 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer bg-gray-200 hover:bg-blue-100"
+          className="grid md:grid-cols-6 items-center text-center py-3 border-b"
         >
           <div
-            className="hover:text-violet-800"
             onClick={() => {
               setSelectedEnrollment(enrollment);
               setIsModalOpen(true);
@@ -166,15 +139,12 @@ const EnrollmentList = () => {
           </div>
           <div>{enrollment.Enrollmentno}</div>
           <span>{new Date(enrollment.createdAt).toDateString()}</span>
-          <div className="w-full h-full p-2 mx-auto text-red-600 bg-white border border-gray-900 rounded-md">
-            {enrollment.status}
-          </div>
+          <div className="p-2 border rounded-md">{enrollment.status}</div>
           <div className="flex items-center justify-center gap-2">
             <Switch
-              id={`activation-${enrollment.id}`}
-              checked={enrollment.activated}
-              onCheckedChange={() => toggleActivation(enrollment)}
               className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+              checked={enrollment.activated}
+              onCheckedChange={() => toggleActivation.mutate(enrollment)}
             />
           </div>
           <Button
@@ -183,42 +153,36 @@ const EnrollmentList = () => {
                 ? "bg-purple-600 hover:bg-purple-700"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
-            onClick={() => generateHandler(enrollment.Enrollmentno)}
-            disabled={!enrollment.activated || temploading}
+            onClick={() => generateHandler.mutate(enrollment.Enrollmentno)}
+            disabled={!enrollment.activated}
           >
             Generate ID
           </Button>
         </div>
       ))}
-
-      {/* Pagination */}
       <Pagination className="mt-4">
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              isActive={currentPage !== 1}
             />
           </PaginationItem>
           <PaginationItem>
             <PaginationNext
               onClick={() =>
                 setCurrentPage((prev) =>
-                  currentPage * PAGE_SIZE < totalEnrollments ? prev + 1 : prev
+                  prev * PAGE_SIZE < data!.total ? prev + 1 : prev
                 )
               }
-              isActive={currentPage * PAGE_SIZE < totalEnrollments}
             />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-
-      {/* Fullscreen Modal */}
       {isModalOpen && selectedEnrollment && (
-        <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-lg shadow-xl w-full max-w-4xl h-full overflow-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="relative bg-white rounded-lg w-full max-w-4xl">
             <button
-              className="absolute top-4 right-4 p-2 bg-gray-200 rounded-full hover:bg-gray-300"
+              className="absolute top-4 right-4 p-2"
               onClick={() => setIsModalOpen(false)}
             >
               ✖
@@ -232,27 +196,3 @@ const EnrollmentList = () => {
 };
 
 export default EnrollmentList;
-
-const EnrollmentDetails = ({ enrollment }: { enrollment: Enrollment }) => {
-  return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-xl border border-gray-200">
-      <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-        Enrollment Details
-      </h2>
-      <div className="grid grid-cols-2 gap-4 text-gray-700">
-        {Object.entries(enrollment).map(([key, value]) => (
-          <div key={key} className="p-3 border-b border-gray-300">
-            <span className="font-semibold capitalize text-gray-600">
-              {key.replace(/([A-Z])/g, " $1").trim()}:
-            </span>
-            <span className="block text-gray-900">
-              {key === "createdAt" || key === "dob"
-                ? new Date(value).toDateString()
-                : value || "-"}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};

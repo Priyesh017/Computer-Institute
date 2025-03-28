@@ -1,7 +1,7 @@
 "use client";
-import { Loader2 } from "lucide-react";
-
-import { useCallback, useEffect, useState } from "react";
+import { X } from "lucide-react";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Pagination,
   PaginationContent,
@@ -11,109 +11,84 @@ import {
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
-import { X } from "lucide-react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuthStore } from "@/store";
 import StudentReportCard from "@/components/StudentReportCard";
 import { MarksWithEnrollment } from "@/lib/typs";
 
 const PAGE_SIZE = 5;
 
 const ExamForm = () => {
-  const [enrollments, setEnrollments] = useState<MarksWithEnrollment[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
   const [selectedEnrollment, setSelectedEnrollment] =
     useState<MarksWithEnrollment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isNew, setIsNew] = useState(true);
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const { setloadingTime } = useAuthStore();
+  const queryClient = useQueryClient();
 
-  const [temploading, settemploading] = useState(false);
-  const [temploading2, settemploading2] = useState(false);
-
-  const fetchfn = useCallback(async () => {
-    try {
-      setloadingTime(true);
-      const data = await fetcherWc("/marksheetfetch", "GET");
-      setEnrollments(data.data);
-      setloadingTime(false);
-    } catch (error) {
-      console.log(error);
-      toast("some error happened");
+  // Fetch enrollments using React Query
+  const { data: enrollments = [], isLoading } = useQuery<MarksWithEnrollment[]>(
+    {
+      queryKey: ["marksheets"],
+      queryFn: async () => {
+        const res = await fetcherWc("/marksheetfetch", "GET");
+        return res.data || [];
+      },
+      staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
     }
-  }, [setloadingTime]);
+  );
 
-  useEffect(() => {
-    fetchfn();
-  }, [fetchfn]);
+  // Approve/Disapprove mutation
+  const toggleMutation = useMutation({
+    mutationFn: async (enrollment: MarksWithEnrollment) => {
+      const endpoint = enrollment.verified
+        ? "/exmmarksDisApprove"
+        : "/exmmarksApprove";
+      const res = await fetcherWc(endpoint, "POST", { id: enrollment.id });
+      if (!res.success) throw new Error("Action failed");
+      return enrollment.id;
+    },
+    onSuccess: (id) => {
+      queryClient.setQueryData(
+        ["marksheets"],
+        (oldData: MarksWithEnrollment[]) =>
+          oldData.map((e) =>
+            e.id === id ? { ...e, verified: !e.verified } : e
+          )
+      );
+      toast.success("Updated successfully");
+    },
+    onError: () => {
+      toast.error("Action failed");
+    },
+  });
 
-  const toggleActivation = async ({ verified, id }: MarksWithEnrollment) => {
-    toast("plz wait");
-
-    try {
-      if (verified) {
-        const data = await fetcherWc("/exmmarksDisApprove", "POST", { id });
-
-        if (data.success) {
-          setEnrollments((prev) =>
-            prev.map((p) => (p.id === id ? { ...p, verified: false } : p))
-          );
-        }
-        toast(data.success ? "success" : "failed");
-        return;
-      }
-
-      const data = await fetcherWc("/exmmarksApprove", "POST", { id });
-
-      if (data.success) {
-        setEnrollments((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, verified: true } : p))
-        );
-      }
-      toast(data.success ? "success" : "failed");
-    } catch (error) {
-      console.log(error);
-      toast("some error happened");
-    }
-  };
-
-  const handleGenerateClick = (enrollment: MarksWithEnrollment) => {
-    setSelectedEnrollment(enrollment);
-    setIsGenerateModalOpen(true);
-  };
-
-  const handleGenerate = async (
-    type: "marksheet" | "certificate",
-    selectedEnrollment: MarksWithEnrollment
-  ) => {
-    if (!selectedEnrollment) return;
-
-    const endpoint =
-      type === "marksheet" ? "/generateMarksheet" : "/generateCertificate";
-    if (type === "marksheet") settemploading(true);
-    else settemploading2(true);
-
-    try {
-      const response = await fetcherWc(endpoint, "POST", {
-        data: selectedEnrollment,
-      });
-      if (type === "marksheet") settemploading(false);
-      else settemploading2(false);
-
-      if (!response.success) toast.error("failed");
-      else toast.success("success");
-    } catch (error) {
-      console.log(error);
-      toast.error("some error, try again!");
-    } finally {
-      if (type === "marksheet") settemploading(false);
-      else settemploading2(false);
-    }
-  };
+  // Generate Marksheet/Certificate Mutation
+  const generateMutation = useMutation({
+    mutationFn: async ({
+      type,
+      enrollment,
+    }: {
+      type: "marksheet" | "certificate";
+      enrollment: MarksWithEnrollment;
+    }) => {
+      const endpoint =
+        type === "marksheet" ? "/generateMarksheet" : "/generateCertificate";
+      const res = await fetcherWc(endpoint, "POST", { data: enrollment });
+      if (!res.success) throw new Error("Generation failed");
+    },
+    onSuccess: () => {
+      toast.success("Generated successfully");
+    },
+    onError: () => {
+      toast.error("Generation failed");
+    },
+  });
 
   const filteredEnrollment = enrollments.filter((enrollment) =>
     enrollment.EnrollmentNo.toString()
@@ -129,16 +104,19 @@ const ExamForm = () => {
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
+      {/* Header & Search */}
       <div className="flex justify-between items-center px-4 py-2">
         <h2 className="text-xl font-bold">Marksheet Verify</h2>
         <Input
           type="text"
-          placeholder="Search courses..."
+          placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-1/3 p-2 border border-gray-400 rounded-lg"
         />
       </div>
+
+      {/* Table Headers */}
       <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
@@ -146,51 +124,49 @@ const ExamForm = () => {
         <span>Approval</span>
         <span>Generate</span>
       </div>
-      <div>
-        {currentEnrollments.map((d, index: number) => (
+
+      {/* Table Data */}
+      {isLoading ? (
+        <div className="text-center py-4">Loading...</div>
+      ) : (
+        currentEnrollments.map((d) => (
           <div
-            key={index}
-            className={`click grid md:grid-cols-5 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer ${
-              isNew ? "bg-rose-100" : "bg-gray-200"
-            } hover:bg-blue-100`}
+            key={d.id}
+            className="grid md:grid-cols-5 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-gray-500"
           >
             <div
-              className="hover:text-violet-800"
+              className="hover:text-violet-800 cursor-pointer"
               onClick={() => {
                 setSelectedEnrollment(d);
                 setIsModalOpen(true);
-                setIsNew(false);
               }}
             >
-              {isNew && (
-                <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-              )}
               {d.enrollment.name}
             </div>
             <div>{d.EnrollmentNo}</div>
             <span>{new Date(d.createdAt).toDateString()}</span>
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center">
               <Switch
-                id={`activation-${startIndex + index}`}
                 checked={d.verified}
-                onCheckedChange={() => toggleActivation(d)}
+                onCheckedChange={() => toggleMutation.mutate(d)}
                 className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
               />
             </div>
             <Button
               className={`mx-4 ${
-                d.verified
-                  ? "bg-purple-600 hover:bg-purple-700"
-                  : "bg-gray-400 cursor-not-allowed"
+                d.verified ? "bg-purple-600" : "bg-gray-400 cursor-not-allowed"
               }`}
-              disabled={!d.verified} // Disable if not verified
-              onClick={() => handleGenerateClick(d)} // Open modal
+              disabled={!d.verified}
+              onClick={() => {
+                setSelectedEnrollment(d);
+                setIsGenerateModalOpen(true);
+              }}
             >
               Generate
             </Button>
           </div>
-        ))}
-      </div>
+        ))
+      )}
 
       {/* Pagination */}
       <Pagination className="mt-4">
@@ -233,34 +209,29 @@ const ExamForm = () => {
       {isGenerateModalOpen && selectedEnrollment && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-md w-full">
-            <button
-              className="absolute top-4 right-4 p-2 bg-gray-200 rounded-full hover:bg-gray-300"
-              onClick={() => setIsGenerateModalOpen(false)}
-            >
-              <X size={24} className="hover:text-red-600" />
-            </button>
             <h2 className="text-xl font-bold mb-4">Generate Options</h2>
-            <p className="text-gray-600 mb-4">Select an option below:</p>
-            <div className="flex gap-4">
-              <Button
-                className="bg-blue-600 hover:bg-blue-700 flex-1"
-                onClick={() => handleGenerate("marksheet", selectedEnrollment)}
-                disabled={temploading}
-              >
-                Generate Marksheet
-                {temploading && <Loader2 className="animate-spin" />}
-              </Button>
-              <Button
-                className="bg-green-600 hover:bg-green-700 flex-1"
-                disabled={temploading2}
-                onClick={() =>
-                  handleGenerate("certificate", selectedEnrollment)
-                }
-              >
-                Generate Certificate
-                {temploading2 && <Loader2 className="animate-spin" />}
-              </Button>
-            </div>
+            <Button
+              className="bg-blue-600"
+              onClick={() =>
+                generateMutation.mutate({
+                  type: "marksheet",
+                  enrollment: selectedEnrollment,
+                })
+              }
+            >
+              Generate Marksheet
+            </Button>
+            <Button
+              className="bg-green-600 ml-4"
+              onClick={() =>
+                generateMutation.mutate({
+                  type: "certificate",
+                  enrollment: selectedEnrollment,
+                })
+              }
+            >
+              Generate Certificate
+            </Button>
           </div>
         </div>
       )}
