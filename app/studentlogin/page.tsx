@@ -32,7 +32,7 @@ export default function StudentLogin() {
 
   useEffect(() => {
     if (user) {
-      router.push("/student/dashboard"); // FIXME
+      router.push("/student"); // FIXME
       return;
     }
   }, [user, router]);
@@ -54,7 +54,7 @@ export default function StudentLogin() {
         toast("login successful");
         login(data.data);
 
-        router.push("/student/dashboard");
+        router.push("/student");
       } else {
         setError("Invalid Enrollment No. or Password.");
       }

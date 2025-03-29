@@ -18,7 +18,7 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useAuthStore } from "@/store";
+import Link from "next/link";
 
 export function NavMain({
   items,
@@ -35,19 +35,12 @@ export function NavMain({
     }[];
   }[];
 }) {
-  const setSelectedComponent = useAuthStore(
-    (state) => state.setSelectedComponent
-  );
   const {
     openMobile,
 
     toggleSidebar,
   } = useSidebar();
 
-  const handler = (subItem: { title: string; url: string }) => {
-    setSelectedComponent(subItem.title.toUpperCase());
-    if (openMobile) toggleSidebar();
-  };
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Actions</SidebarGroupLabel>
@@ -72,12 +65,15 @@ export function NavMain({
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton asChild>
-                        <div
-                          onClick={() => handler(subItem)}
+                        <Link
+                          href={subItem.url}
+                          onClick={() => {
+                            if (openMobile) toggleSidebar();
+                          }}
                           className=" cursor-pointer"
                         >
                           <span>{subItem.title}</span>
-                        </div>
+                        </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

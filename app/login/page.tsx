@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
 
 export default function LoginPage() {
-  const { utype, user, login, setloadingTime } = useAuthStore();
+  const { utype, user, login } = useAuthStore();
   const router = useRouter();
   const [toggle, setToggle] = useState(false);
   const [fd, setfd] = useState({
@@ -25,7 +25,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user) {
-      router.push("/admin/dashboard");
+      router.push("/admin");
       return;
     }
   }, [user, router]); // Runs only when `user` changes
@@ -35,7 +35,6 @@ export default function LoginPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoader(true);
-    setloadingTime(true);
     try {
       const data = await fetcherWc("/loginRoute", "POST", {
         email: fd.email,
@@ -43,7 +42,6 @@ export default function LoginPage() {
       });
 
       setLoader(false);
-      setloadingTime(false);
       if (data.message === "Login successful") {
         if (data.user.role.toLowerCase() !== utype) {
           toast(`u r not authorised`);
@@ -51,7 +49,7 @@ export default function LoginPage() {
         }
         login(data.user);
         toast("Login Successfully");
-        router.push("/admin/dashboard");
+        router.push("/admin");
       } else {
         toast(data.error);
       }
@@ -152,29 +150,16 @@ export default function LoginPage() {
               Forgot password?
             </a>
           </div>
-          <button
+          <Button
             type="submit"
-            className={`w-full py-3 text-white font-bold rounded-lg ${
-              loader
-                ? "bg-purple-400 cursor-not-allowed"
-                : "bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-300"
-            } transition`}
+            className={`w-full py-3 text-white font-bold rounded-lg 
+               "bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:ring-purple-300"
+             transition`}
             disabled={loader}
           >
-            {loader ? "Loading..." : "Login"}
-          </button>
-
-          {utype === "center" && (
-            <div className="flex justify-center text-sm mt-4">
-              <span>Don&apos;t have an account?</span>
-              <a
-                href="/signup"
-                className="ml-2 text-purple-600 hover:underline"
-              >
-                Sign up
-              </a>
-            </div>
-          )}
+            Login
+            {loading && <Loader2 className="animate-spin" />}
+          </Button>
         </form>
       </div>
 
