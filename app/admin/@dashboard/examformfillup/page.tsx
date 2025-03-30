@@ -65,7 +65,6 @@ const ExamForm = () => {
 
   const fetchHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    toast("plz wait while data is fetching...");
     fetchData();
   };
 

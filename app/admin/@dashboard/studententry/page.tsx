@@ -15,16 +15,15 @@ import {
   Nationality,
   sexValue,
 } from "@/data";
-import { tfd } from "@/lib/typs";
 import { ComboboxDemo } from "@/components/combo";
 import { Dropzone } from "@/components/dropzone";
 import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  fatherName: z.string().min(1, "Father's name is required"),
-  motherName: z.string().min(1, "Mother's name is required"),
-  Address: z.string().min(5, "Address must be at least 5 characters long"),
+  father: z.string().min(1, "Father's name is required"),
+  mother: z.string().min(1, "Mother's name is required"),
+  address: z.string().min(5, "Address must be at least 5 characters long"),
   dob: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid date"),
   eduqualification: z.string().min(1, "Required"),
   category: z.string().min(1, "Required"),
@@ -34,7 +33,8 @@ const formSchema = z.object({
   nationality: z.string().min(1, "Required"),
   sex: z.string().min(1, "Required"),
   mobile: z.string().regex(/^\d{10}$/, "Invalid mobile number"),
-  wapp: z.string().regex(/^\d{10}$/, "Invalid WhatsApp number"),
+  whatsapp: z.string().regex(/^\d{10}$/, "Invalid WhatsApp number"),
+  pincode: z.string().min(6, "Required"),
 });
 
 const AddStudent: React.FC = () => {
@@ -42,14 +42,14 @@ const AddStudent: React.FC = () => {
   const [images, setImages] = useState<{ src: string; file: File } | null>(
     null
   );
-  const [fd, setfd] = useState<tfd>({
+  const [fd, setfd] = useState({
     name: "",
-    fatherName: "",
-    motherName: "",
-    Address: "",
+    father: "",
+    mother: "",
+    address: "",
     dob: "",
     mobile: "",
-    wapp: "",
+    whatsapp: "",
     eduqualification: "",
     courseid: "",
     category: "",
@@ -57,8 +57,9 @@ const AddStudent: React.FC = () => {
     sex: "",
     idProofNo: "",
     idtype: "",
+    pincode: "",
   });
-
+  console.log(fd);
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setfd((prevFd) => ({ ...prevFd, [id]: value }));
@@ -85,6 +86,7 @@ const AddStudent: React.FC = () => {
     event.preventDefault();
     const result = formSchema.safeParse(fd);
     if (!result.success) {
+      console.log(result.error);
       toast("Please correct the input fields");
       return;
     }
@@ -113,7 +115,7 @@ const AddStudent: React.FC = () => {
         ...fd,
         imageUrl,
       });
-      toast(data.success);
+      toast(data.success && "successfully saved");
     } catch (error) {
       console.log(error);
       toast("An error occurred");
@@ -133,20 +135,19 @@ const AddStudent: React.FC = () => {
         <div className="grid grid-cols-2 gap-6">
           {[
             "name",
-            "fatherName",
-            "motherName",
-            "Address",
+            "father",
+            "mother",
+            "address",
             "mobile",
-            "wapp",
-            "dob",
-            "idProofNo",
+            "whatsapp",
+            "pincode",
           ].map((field) => (
             <input
               key={field}
               id={field}
               type="text"
               placeholder={field}
-              value={fd[field as keyof tfd]}
+              value={fd[field as keyof typeof fd]}
               onChange={handleInputChange}
               className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
@@ -167,11 +168,26 @@ const AddStudent: React.FC = () => {
               key={key}
               frameworks={values}
               heading={label}
-              value={fd[key as keyof tfd]}
+              value={fd[key as keyof typeof fd]}
               setValue={setfd}
               data={key}
             />
           ))}
+          <input
+            id="idProofNo"
+            type="text"
+            placeholder={"idProofNo"}
+            value={fd.idProofNo}
+            onChange={handleInputChange}
+            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+          <input
+            id="dob"
+            type="date"
+            value={fd.dob}
+            onChange={handleInputChange}
+            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
           <div className="flex flex-col md:flex-row w-full gap-4">
             {/* Dropzone Section */}
             <div className="w-full md:w-auto">
