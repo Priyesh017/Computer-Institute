@@ -21,7 +21,7 @@ export function useAuth() {
         } = await axios.get(`${apiUrl}/loginCheckRoute`, {
           withCredentials: true,
         });
-        console.log("called");
+
         if (user) {
           login(user);
         }

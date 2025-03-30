@@ -4,22 +4,24 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ComboboxDemo } from "@/components/combo"; // Ensure this path is correct
-import { useDropzone } from "react-dropzone";
+import { ComboboxDemo } from "@/components/combo";
 import { Loader2, X } from "lucide-react";
 import anime from "animejs";
+import { Dropzone } from "@/components/dropzone";
+import { fetcher } from "@/helper";
+import { toast } from "react-toastify";
 import {
   CategoryValue,
+  enqinp1,
+  enqinp2,
   frameworksEdu,
   IdCardType,
   indianStatesWithDistricts,
   Nationality,
   sexValue,
 } from "@/data";
-import { fetcher } from "@/helper";
-import { toast } from "react-toastify";
 
-const bathroom = ["Yes", "No"];
+const bathroomOptions = ["Yes", "No"];
 
 const initialFormData = {
   name: "",
@@ -31,16 +33,11 @@ const initialFormData = {
   category: "",
   nationality: "",
   mobileNo: "",
-  stateCoordinator: "",
-  districtCoordinator: "",
-  subdistrictCoordinator: "",
-  address: {
-    AddressLine: "",
-    vill: "",
-    po: "",
-    ps: "",
-    pin: "",
-  },
+  AddressLine: "",
+  vill: "",
+  po: "",
+  ps: "",
+  pin: "",
   state: "",
   dist: "",
   eduqualification: "",
@@ -53,25 +50,17 @@ const initialFormData = {
 };
 
 const FranchiseForm = () => {
+  const [formData, setFormData] = useState(initialFormData);
   const [images, setImages] = useState<{ src: string; file: File } | null>(
     null
   );
-  const handleDeleteImage = () => {
-    setImages(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const filterfn = () => {
-    const data = indianStatesWithDistricts.find(
-      (val) => val.label == formData.state
-    );
-    if (data == undefined) return;
-
-    const arr = data.districts.map((district) => ({
-      value: district,
-      label: district,
-    }));
-    return arr;
-  };
+  const handleDeleteImage = () => setImages(null);
 
   const onDrop = (acceptedFile: File) => {
     const reader = new FileReader();
@@ -88,488 +77,159 @@ const FranchiseForm = () => {
     reader.readAsDataURL(acceptedFile);
   };
 
-  const [formData, setFormData] = useState(initialFormData);
-  const [loading, setloading] = useState(false);
+  const filterDistricts = () => {
+    const stateData = indianStatesWithDistricts.find(
+      (val) => val.label === formData.state
+    );
+    return stateData
+      ? stateData.districts.map((district) => ({
+          value: district,
+          label: district,
+        }))
+      : [];
+  };
 
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    setloading(true);
+    if (!images) return;
+    setLoading(true);
 
     try {
-      if (!images) return;
-
       const { url } = await fetcher(
         `/generate-presigned-url?fileName=${images.file.name}&fileType=${images.file.type}&category=enquiry`,
         "GET"
       );
-      if (!url) {
-        toast("didnot generate url");
-        return;
-      }
-
+      if (!url) return toast("Failed to generate URL");
       const uploadResponse = await fetch(url, {
         method: "PUT",
         body: images.file,
-        headers: {
-          "Content-Type": images.file.type,
-        },
+        headers: { "Content-Type": images.file.type },
       });
-
       if (!uploadResponse.ok) return toast("Upload failed");
-
       const signatureLink = url.split("?")[0];
-
       const { success } = await fetcher("/TakeEnquiry", "POST", {
         ...formData,
         signatureLink,
       });
-
-      if (success) toast("success");
+      if (success) toast("Success");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="max-w-4xl mx-auto my-10 p-6 bg-white border border-1 shadow-2xl rounded-2xl"
+      transition={{ duration: 0.5 }}
+      className="max-w-4xl mx-auto my-10 p-6 bg-white shadow-2xl rounded-2xl"
     >
-      <h1 className="text-3xl font-bold text-center mb-4 text-gray-800">
+      <h1 className="text-3xl font-bold text-center mb-4">
         Franchise Application Form
       </h1>
-      <form className="space-y-4">
+      <form onSubmit={submitHandler} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 mb-1">
-              Applicant&apos;s Name
-            </label>
-            <Input
-              type="text"
-              name="applicantName"
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">Email</label>
-            <Input
-              type="text"
-              name="applicantName"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">
-              Father&apos;s Name
-            </label>
-            <Input
-              type="text"
-              name="fatherName"
-              value={formData.father}
-              onChange={(e) =>
-                setFormData({ ...formData, father: e.target.value })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">C/O Name</label>
-            <Input
-              type="text"
-              name="coName"
-              value={formData.coName}
-              onChange={(e) =>
-                setFormData({ ...formData, coName: e.target.value })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">Date of Birth</label>
-            <Input
-              type="date"
-              name="dob"
-              value={formData.dob}
-              onChange={(e) =>
-                setFormData({ ...formData, dob: e.target.value })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">Mobile No</label>
-            <Input
-              type="tel"
-              name="mobileNo"
-              value={formData.mobileNo}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  mobileNo: e.target.value.slice(0, 10),
-                })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block font-bold text-lg text-gray-700 mb-1">
-              Address
-            </label>
-            <div className="ml-5">
-              <label className="block text-gray-700 mb-1">Address Line</label>
+          {enqinp1.map(({ label, field, type }) => (
+            <div key={field}>
+              <label className="block text-gray-700 mb-1">{label}</label>
               <Input
-                type="text"
-                name="address"
-                placeholder="address line "
-                value={formData.address.AddressLine}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    address: {
-                      ...formData.address,
-                      AddressLine: e.target.value,
-                    },
-                  })
-                }
+                type={type || "text"}
+                value={formData[field as keyof typeof initialFormData]}
+                onChange={(e) => handleChange(field, e.target.value)}
                 className="w-full border rounded-md p-2"
               />
             </div>
-          </div>
-          <div className="mt-8 mr-5">
-            <label className="block text-gray-700 mb-1">Village</label>
-            <Input
-              type="text"
-              name="address"
-              value={formData.address.vill}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  address: {
-                    ...formData.address,
-                    vill: e.target.value,
-                  },
-                })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div className="ml-5">
-            <label className="block text-gray-700 mb-1">Post Office</label>
-            <Input
-              type="text"
-              name="address"
-              value={formData.address.po}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  address: {
-                    ...formData.address,
-                    po: e.target.value,
-                  },
-                })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div className="mr-5">
-            <label className="block text-gray-700 mb-1">Police Station</label>
-            <Input
-              type="text"
-              name="address"
-              value={formData.address.ps}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  address: {
-                    ...formData.address,
-                    ps: e.target.value,
-                  },
-                })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div className="ml-5">
-            <label className="block text-gray-700 mb-1">State</label>
-            <ComboboxDemo
-              frameworks={indianStatesWithDistricts}
-              heading={"Select State"}
-              value={formData.state}
-              setValue={setFormData}
-              data="state"
-            />
-          </div>
+          ))}
 
-          <div className="mr-5">
-            <label className="block text-gray-700 mb-1">Pincode</label>
-            <Input
-              type="text"
-              name="address"
-              value={formData.address.pin}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  address: {
-                    ...formData.address,
-                    pin: e.target.value,
-                  },
-                })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div className="ml-5">
-            <label className="block text-gray-700 mb-1">District</label>
-            <ComboboxDemo
-              frameworks={filterfn() ?? []}
-              heading={"Select District"}
-              value={formData.dist}
-              setValue={setFormData}
-              data="dist"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">Nationality</label>
-            <ComboboxDemo
-              frameworks={Nationality}
-              heading={"Select Nationality"}
-              value={formData.nationality}
-              setValue={setFormData}
-              data="nationality"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">Gender</label>
-            <ComboboxDemo
-              frameworks={sexValue}
-              heading={"Select Gender"}
-              value={formData.sex}
-              setValue={setFormData}
-              data="sex"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">Category</label>
-            <ComboboxDemo
-              frameworks={CategoryValue}
-              heading={"Select Category"}
-              value={formData.category}
-              setValue={setFormData}
-              data="category"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">ID Proof</label>
-            <ComboboxDemo
-              frameworks={IdCardType}
-              heading={"Select ID Proof"}
-              value={formData.idProof}
-              setValue={setFormData}
-              data="idProof"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">ID Proof No</label>
-            <Input
-              type="text"
-              name="idProofNo"
-              value={formData.idProofNo}
-              onChange={(e) =>
-                setFormData({ ...formData, idProofNo: e.target.value })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">House Room No</label>
-            <Input
-              type="number"
-              name="houseRoomNo"
-              value={formData.houseRoomNo}
-              onChange={(e) =>
-                setFormData({ ...formData, houseRoomNo: e.target.value })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">Trade License</label>
-            <Input
-              type="text"
-              name="tradeLicense"
-              value={formData.tradeLicense}
-              onChange={(e) =>
-                setFormData({ ...formData, tradeLicense: e.target.value })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">Square Fit</label>
-            <Input
-              type="number"
-              name="squareFit"
-              value={formData.squareFit}
-              onChange={(e) =>
-                setFormData({ ...formData, squareFit: e.target.value })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">
-              Education Qualification
-            </label>
-            <ComboboxDemo
-              frameworks={frameworksEdu}
-              heading={"Education Qualification"}
-              value={formData.eduqualification}
-              setValue={setFormData}
-              data="eduqualification"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">Bathroom</label>
-            <ComboboxDemo
-              frameworks={bathroom.map((item) => ({
-                value: item,
-                label: item,
-              }))}
-              heading={"Select Bathroom"}
-              value={formData.bathroom}
-              setValue={setFormData}
-              data="bathroom"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">
-              Subdistrict Coordinator
-            </label>
-            <Input
-              type="text"
-              name="subdistrictCoordinator"
-              value={formData.subdistrictCoordinator}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  subdistrictCoordinator: e.target.value,
-                })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">
-              District Coordinator
-            </label>
-            <Input
-              type="text"
-              name="districtCoordinator"
-              value={formData.districtCoordinator}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  districtCoordinator: e.target.value,
-                })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-1">
-              State Coordinator
-            </label>
-            <Input
-              type="text"
-              name="stateCoordinator"
-              value={formData.stateCoordinator}
-              onChange={(e) =>
-                setFormData({ ...formData, stateCoordinator: e.target.value })
-              }
-              className="w-full border rounded-md p-2"
-            />
-          </div>
-          <div className="flex-row md:flex w-full gap-2">
-            <div>
+          {[
+            { label: "State", data: indianStatesWithDistricts, field: "state" },
+            { label: "District", data: filterDistricts(), field: "dist" },
+            { label: "Nationality", data: Nationality, field: "nationality" },
+            { label: "Gender", data: sexValue, field: "sex" },
+            { label: "Category", data: CategoryValue, field: "category" },
+            { label: "ID Proof", data: IdCardType, field: "idProof" },
+            {
+              label: "Education Qualification",
+              data: frameworksEdu,
+              field: "eduqualification",
+            },
+            {
+              label: "Bathroom",
+              data: bathroomOptions.map((b) => ({ value: b, label: b })),
+              field: "bathroom",
+            },
+          ].map(({ label, data, field }) => (
+            <div key={field}>
+              <label className="block text-gray-700 mb-1">{label}</label>
+              <ComboboxDemo
+                frameworks={data}
+                heading={`Select ${label}`}
+                value={formData[field as keyof typeof initialFormData]}
+                setValue={setFormData}
+                data={field}
+              />
+            </div>
+          ))}
+
+          {enqinp2.map(({ label, field }) => (
+            <div key={field}>
+              <label className="block text-gray-700 mb-1">{label}</label>
+              <Input
+                type="text"
+                value={formData[field as keyof typeof initialFormData]}
+                onChange={(e) => handleChange(field, e.target.value)}
+                className="w-full border rounded-md p-2"
+              />
+            </div>
+          ))}
+
+          <div className="flex flex-col md:flex-row w-full gap-4">
+            {/* Dropzone Section */}
+            <div className="w-full md:w-auto">
               <label
                 htmlFor="image"
                 className="block text-sm font-medium text-gray-700"
               >
-                Applicant&apos;s Signature
+                Applicant Image
               </label>
-              <Dropzone onDrop={(files) => onDrop(files)} />
+              <Dropzone onDrop={(files) => onDrop(files)} accept="image/*" />
             </div>
-            <div className="flex-1 mt-2 gap-4 min-w-fit">
-              <div className="relative">
-                {images && (
-                  <>
-                    <motion.img
-                      src={images.src}
-                      alt="student_image"
-                      className="gallery-item w-fit h-32 object-cover rounded-md"
-                      initial={{ opacity: 0, y: 50 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                    />
-                    <button
-                      onClick={() => handleDeleteImage()}
-                      className="absolute top-0 right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-700"
-                    >
-                      <X size={24} />
-                    </button>
-                  </>
-                )}
-              </div>
+
+            {/* Image Preview Section */}
+            <div className="flex-1 flex items-start gap-4 min-w-fit mt-2">
+              {images && (
+                <div className="relative w-auto h-[98.91px]">
+                  <motion.img
+                    src={images.src}
+                    alt="student_image"
+                    className="w-32 h-32 object-cover rounded-md shadow-md"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
+                  <button
+                    onClick={() => handleDeleteImage()}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-700 shadow-lg"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
+
         <Button
           type="submit"
-          onClick={submitHandler}
           disabled={loading}
           className="w-1/3 mx-auto block bg-violet-600 hover:bg-violet-700 text-white rounded-lg mt-4"
         >
-          Submit
-          {loading && <Loader2 className="animate-spin" />}
+          Submit {loading && <Loader2 className="animate-spin" />}
         </Button>
       </form>
     </motion.div>
   );
 };
-
-function Dropzone({ onDrop }: { onDrop: (files: File) => void }) {
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        onDrop(acceptedFiles[0]); // Only take the first file
-      }
-    },
-    accept: { "image/*": [] }, // Only allow images
-    multiple: false, // Prevent multiple file selection
-  });
-
-  return (
-    <div
-      {...getRootProps()}
-      className="p-6 max-w-56 border-dashed border-2 border-gray-400 rounded-md text-center cursor-pointer hover:border-gray-600 transition bg-gray-50"
-    >
-      <input {...getInputProps()} />
-      <p className="text-gray-700">
-        Drag & drop images here or click to select
-      </p>
-    </div>
-  );
-}
-
 export default FranchiseForm;

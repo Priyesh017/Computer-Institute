@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
-import { useDropzone } from "react-dropzone";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { fetcherWc } from "@/helper";
+import { DropzoneMul } from "@/components/dropzonemultiple";
 
 const categories = [
   "Program",
@@ -61,7 +61,7 @@ export default function GalleryInsertion() {
           `/generate-presigned-url?fileName=${image.file.name}&fileType=${image.file.type}&category=${image.category}`,
           "GET"
         );
-        console.log(image.file.type);
+
         if (!url) throw new Error("Failed to generate pre-signed URL");
 
         const uploadResponse = await fetch(url, {
@@ -92,7 +92,7 @@ export default function GalleryInsertion() {
           className="border p-4 rounded-lg shadow-md bg-gray-100 text-gray-900 relative"
         >
           <h2 className="text-xl font-semibold mb-4">{category}</h2>
-          <Dropzone onDrop={(files) => onDrop(files, category)} />
+          <DropzoneMul onDrop={(files) => onDrop(files, category)} />
           <div className="grid grid-cols-3 gap-4 mt-4">
             {images
               .filter((img) => img.category === category)
@@ -125,22 +125,6 @@ export default function GalleryInsertion() {
       >
         {loading ? "Saving..." : "Save Images"}
       </Button>
-    </div>
-  );
-}
-
-function Dropzone({ onDrop }: { onDrop: (files: File[]) => void }) {
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
-
-  return (
-    <div
-      {...getRootProps()}
-      className="p-6 border-dashed border-2 border-gray-400 rounded-md text-center cursor-pointer hover:border-gray-600 transition bg-gray-50"
-    >
-      <input {...getInputProps()} />
-      <p className="text-gray-700">
-        Drag & drop images here or click to select
-      </p>
     </div>
   );
 }

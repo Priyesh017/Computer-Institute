@@ -36,19 +36,22 @@ const Downloads = ({ enrollment }: { enrollment: Enrollmenttype }) => {
         Downloads
       </motion.h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-lg">
-        {downloadItems.map((item) => (
-          <motion.a
-            key={item.id}
-            href={item.file}
-            download
-            className="download-item flex items-center justify-between p-4 bg-violet-700 border border-violet-500 rounded-lg shadow-md hover:bg-violet-700/40 transition-colors cursor-pointer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="text-lg font-medium">{item.name}</span>
-            <Download size={24} />
-          </motion.a>
-        ))}
+        {downloadItems.map(
+          (item) =>
+            item.file !== "notavl" && (
+              <motion.a
+                key={item.id}
+                href={item.file}
+                download
+                className="download-item flex items-center justify-between p-4 bg-violet-700 border border-violet-500 rounded-lg shadow-md hover:bg-violet-700/40 transition-colors cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="text-lg font-medium">{item.name}</span>
+                <Download size={24} />
+              </motion.a>
+            )
+        )}
       </div>
     </div>
   );

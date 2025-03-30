@@ -58,7 +58,7 @@ export interface tfd {
   fatherName: string;
   motherName: string;
   Address: string;
-  dob: Date;
+  dob: string;
   mobile: string;
   wapp: string;
   eduqualification: string;
