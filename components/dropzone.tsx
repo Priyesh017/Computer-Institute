@@ -13,7 +13,7 @@ export function Dropzone({
         onDrop(acceptedFiles[0]); // Only take the first file
       }
     },
-    accept: { accept: [] }, // Only allow images
+    accept: { [accept]: [] }, // Only allow images
     multiple: false, // Prevent multiple file selection
   });
 

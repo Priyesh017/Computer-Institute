@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
-import { useDropzone } from "react-dropzone";
 import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { fetcherWc } from "@/helper";
