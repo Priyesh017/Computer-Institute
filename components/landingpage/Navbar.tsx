@@ -100,13 +100,7 @@ export default function Navbar() {
           ))}
       </ul>
       <Link
-        href={
-          user && user.role
-            ? "/admin/dashboard"
-            : user
-            ? "/student/dashboard"
-            : "/chooseuser"
-        }
+        href={user && user.role ? "/admin" : user ? "/student" : "/chooseuser"}
       >
         <motion.button
           className="hidden md:block px-6 py-2 mr-4 ml-24 bg-white text-indigo-800 font-bold rounded-lg shadow-lg transition-all transform hover:scale-105"
@@ -133,13 +127,7 @@ export default function Navbar() {
           ))}
           <li>
             <Link
-              href={
-                user
-                  ? user.role
-                    ? "admin/dashboard"
-                    : "student/dashboard"
-                  : "/chooseuser"
-              }
+              href={user ? (user.role ? "/admin" : "/student") : "/chooseuser"}
               className="px-6 py-2 bg-white text-indigo-800 font-bold rounded-xl shadow-lg transition-all transform hover:scale-105"
             >
               {user ? "Dashboard" : "Login"}

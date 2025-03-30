@@ -7,165 +7,188 @@ import { FaEnvelope, FaPhone, FaWhatsapp } from "react-icons/fa";
 
 import { Settings2, SquareTerminal } from "lucide-react";
 
-export const data = {
-  navMain: [
-    {
-      title: "Fee payment",
-      url: "#",
-      role: "center",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Course Fee",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Video Section",
-      url: "#",
-      role: "center",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Videos",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Verify",
-      url: "#",
-      role: "admin",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Enrollments",
-          url: "#",
-        },
-        {
-          title: "Exam Forms",
-          url: "#",
-        },
+export const navMain = [
+  {
+    title: "Fee payment",
+    url: "#",
+    role: "center",
+    icon: SquareTerminal,
+    isActive: true,
+    items: [
+      {
+        title: "Course Fee",
+        url: "/admin/coursefee",
+      },
+    ],
+  },
+  {
+    title: "Student Profile",
+    url: "#",
+    role: "student",
+    icon: SquareTerminal,
+    isActive: true,
+    items: [
+      {
+        title: "Profile",
+        url: "/student/profile",
+      },
+      {
+        title: "Downloads",
+        url: "/student/downloads",
+      },
+      {
+        title: "Notes",
+        url: "/student/notes",
+      },
+      {
+        title: "Videos",
+        url: "/student/videos",
+      },
+    ],
+  },
+  {
+    title: "Video Section",
+    url: "#",
+    role: "center",
+    icon: SquareTerminal,
+    isActive: true,
+    items: [
+      {
+        title: "Videos",
+        url: "/admin/allvideos",
+      },
+    ],
+  },
+  {
+    title: "Verify",
+    url: "#",
+    role: "admin",
+    icon: SquareTerminal,
+    isActive: true,
+    items: [
+      {
+        title: "Enrollments",
+        url: "/admin/enrollments",
+      },
+      {
+        title: "Exam Forms",
+        url: "/admin/examforms",
+      },
 
-        {
-          title: "Marksheets",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Enquiry",
-      url: "#",
-      role: "admin",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Enquiry",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Gallery",
-      url: "#",
-      role: "admin",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "Gallery Insertion",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Notice",
-      role: "admin",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Notice Writing",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Notes",
-      role: "admin",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Upload Notes",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Video",
-      role: "admin",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Upload Video",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Subject Entry",
-      role: "admin",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Subject Entry",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Education",
-      role: "center",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "Online admission",
-          url: "#",
-        },
+      {
+        title: "Marksheets",
+        url: "/admin/marksheets",
+      },
+    ],
+  },
+  {
+    title: "Enquiry",
+    url: "#",
+    role: "admin",
+    icon: SquareTerminal,
+    isActive: true,
+    items: [
+      {
+        title: "All Enquiries",
+        url: "/admin/enquiries",
+      },
+    ],
+  },
+  {
+    title: "Gallery",
+    url: "#",
+    role: "admin",
+    icon: SquareTerminal,
+    isActive: true,
+    items: [
+      {
+        title: "Gallery Insertion",
+        url: "/admin/galleryinsert",
+      },
+    ],
+  },
+  {
+    title: "Notice",
+    role: "admin",
+    url: "#",
+    icon: Settings2,
+    items: [
+      {
+        title: "Notice Writing",
+        url: "/admin/noticewrite",
+      },
+    ],
+  },
+  {
+    title: "Notes",
+    role: "admin",
+    url: "#",
+    icon: Settings2,
+    items: [
+      {
+        title: "Upload Notes",
+        url: "/admin/noteswrite",
+      },
+    ],
+  },
+  {
+    title: "Video",
+    role: "admin",
+    url: "#",
+    icon: Settings2,
+    items: [
+      {
+        title: "Upload Video",
+        url: "/admin/videoupload",
+      },
+    ],
+  },
+  {
+    title: "Subject Entry",
+    role: "admin",
+    url: "#",
+    icon: Settings2,
+    items: [
+      {
+        title: "Subject Entry",
+        url: "/admin/subjectentry",
+      },
+    ],
+  },
+  {
+    title: "Education",
+    role: "center",
+    url: "#",
+    icon: Settings2,
+    items: [
+      {
+        title: "Online admission",
+        url: "/admin/studententry",
+      },
 
-        {
-          title: "Exam Form",
-          url: "#",
-        },
-        {
-          title: "Marksheet",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Downloads",
-      role: "center",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "All Downloads",
-          url: "#",
-        },
-      ],
-    },
-  ],
-};
+      {
+        title: "Exam Form",
+        url: "/admin/examformfillup",
+      },
+      {
+        title: "Marksheet",
+        url: "/admin/marksheetentry",
+      },
+    ],
+  },
+  {
+    title: "Downloads",
+    role: "center",
+    url: "#",
+    icon: Settings2,
+    items: [
+      {
+        title: "All Downloads",
+        url: "/admin/alldownloads",
+      },
+    ],
+  },
+];
 
 export const menuItems = [
   { name: "Home", pos: <Banner /> },

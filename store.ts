@@ -16,17 +16,13 @@ interface userAuthState {
   logout: () => void;
   isSidebarOpen: boolean;
   setSidebarOpen: (s: true | false) => void;
-  selectedComponent: string;
-  setSelectedComponent: (component: string) => void;
   loadingTime: boolean;
   setloadingTime: (val: boolean) => void;
   loading: boolean;
   setLoading: (val: boolean) => void;
 }
 
-const useAuthStore = create<userAuthState>((set) => ({
-  selectedComponent: "Dashboard", // Default component
-  setSelectedComponent: (component) => set({ selectedComponent: component }),
+export const useAuthStore = create<userAuthState>((set) => ({
   isSidebarOpen: true,
   setSidebarOpen(s) {
     set({ isSidebarOpen: s });
@@ -35,7 +31,7 @@ const useAuthStore = create<userAuthState>((set) => ({
   setUtype: (s) => set({ utype: s }),
   user: null,
   login: (userData: usertype) => set({ user: userData }),
-  logout: () => set({ user: null, selectedComponent: "", loading: false }),
+  logout: () => set({ user: null, loading: false }),
   loadingTime: false,
   setloadingTime(val) {
     set({ loadingTime: val });
@@ -45,5 +41,3 @@ const useAuthStore = create<userAuthState>((set) => ({
     set({ loading: val });
   },
 }));
-
-export { useAuthStore };

@@ -25,6 +25,8 @@ export default function NoticeBoard() {
   } = useQuery<inotice[]>({
     queryKey: ["noticeData"],
     queryFn: () => fetcher("/noticefetch", "GET"),
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: false,
   });
 
   useEffect(() => {
@@ -62,7 +64,7 @@ export default function NoticeBoard() {
         <h2 className="md:text-2xl text-xl font-bold text-gray-800">
           Notice to All
         </h2>
-        <Image src="/logo.png" alt="Logo" width={40} height={40} />
+        <Image src="/Logo.png" alt="Logo" width={40} height={40} />
       </div>
       <motion.div
         initial={{ scale: 0.9 }}

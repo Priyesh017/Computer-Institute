@@ -5,45 +5,30 @@ import { useEffect, useRef, useState } from "react";
 import anime from "animejs";
 import Image from "next/image";
 import { images } from "@/data/index";
-import { ListObjectsV2Command } from "@aws-sdk/client-s3";
-import { useAuthStore } from "@/store";
-import { bucketRegion, s3Client } from "@/lib/utils";
+import { fetcher } from "@/helper";
 
 const GalleryWall = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [folder, setFolder] = useState<string | null>(null);
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
-  const { setloadingTime } = useAuthStore();
-
-  const bucketName = process.env.NEXT_PUBLIC_AWS_BUCKET_NAME;
 
   useEffect(() => {
-    if (!folder || !bucketName) return;
+    if (!folder) return;
     const fetchGalleryImages = async () => {
-      setloadingTime(true);
       try {
-        const command = new ListObjectsV2Command({
-          Bucket: bucketName,
+        const { data } = await fetcher("/fetch_aws_res", "POST", {
           Prefix: `images/${folder}`,
         });
-        const data = await s3Client.send(command);
 
-        const imageUrls =
-          data.Contents?.map((item) => {
-            if (!item.Key) return null;
-            return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${item.Key}`;
-          }).filter(Boolean) || [];
-
-        setGalleryImages(imageUrls as string[]);
-        setloadingTime(false);
+        setGalleryImages(data as string[]);
       } catch (error) {
         console.error("Error fetching gallery images:", error);
       }
     };
 
     fetchGalleryImages();
-  }, [folder, bucketName, setloadingTime]);
+  }, [folder]);
 
   useEffect(() => {
     if (!gridRef.current) return;

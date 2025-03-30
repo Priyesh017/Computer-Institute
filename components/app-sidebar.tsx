@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -10,7 +9,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store";
-import { data } from "@/data";
+import { navMain } from "@/data";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, isSidebarOpen } = useAuthStore();
@@ -18,9 +17,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   if (!user || !user.role) {
     return;
   }
-  const filteredNav = data.navMain.filter(
-    (d) => d.role === user.role.toLowerCase()
-  );
+  const filteredNav = navMain.filter((d) => d.role === user.role.toLowerCase());
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -30,7 +27,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {user.role === "ADMIN" ? "Central Admin" : "Branch Admin"} Dashboard
           </h1>
           <h1 className="text-md text-ellipsis font-bold text-gray-600 px-4 text-center border-b border-gray-300 py-2 overflow-x-hidden">
-            Welcome {user ? user.name : "Guest"}
+            Welcome {user.name}
           </h1>
         </>
       )}

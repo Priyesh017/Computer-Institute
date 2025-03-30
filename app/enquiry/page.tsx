@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ComboboxDemo } from "@/app/_components/combo"; // Ensure this path is correct
+import { ComboboxDemo } from "@/components/combo"; // Ensure this path is correct
 import { useDropzone } from "react-dropzone";
 import { Loader2, X } from "lucide-react";
 import anime from "animejs";
@@ -51,7 +51,6 @@ const initialFormData = {
   tradeLicense: "",
   bathroom: "",
 };
-export type FormDataKey = typeof initialFormData;
 
 const FranchiseForm = () => {
   const [images, setImages] = useState<{ src: string; file: File } | null>(
@@ -89,7 +88,7 @@ const FranchiseForm = () => {
     reader.readAsDataURL(acceptedFile);
   };
 
-  const [formData, setFormData] = useState<FormDataKey>(initialFormData);
+  const [formData, setFormData] = useState(initialFormData);
   const [loading, setloading] = useState(false);
 
   const submitHandler = async (e: React.FormEvent) => {
