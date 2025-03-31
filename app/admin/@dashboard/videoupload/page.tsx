@@ -74,7 +74,6 @@ const VideoUpload = () => {
         },
       });
 
-      console.log(data);
       toast("Upload successful");
     } catch (error) {
       toast("Upload failed with error");

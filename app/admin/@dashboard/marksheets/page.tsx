@@ -1,5 +1,5 @@
 "use client";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -22,6 +22,10 @@ const PAGE_SIZE = 5;
 
 const ExamForm = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [loadingType, setLoadingType] = useState<
+    "marksheet" | "certificate" | null
+  >(null);
+
   const [search, setSearch] = useState("");
   const [selectedEnrollment, setSelectedEnrollment] =
     useState<MarksWithEnrollment | null>(null);
@@ -80,14 +84,17 @@ const ExamForm = () => {
     }) => {
       const endpoint =
         type === "marksheet" ? "/generateMarksheet" : "/generateCertificate";
+      setLoadingType(type);
       const res = await fetcherWc(endpoint, "POST", { data: enrollment });
       if (!res.success) throw new Error("Generation failed");
     },
     onSuccess: () => {
       toast.success("Generated successfully");
+      setLoadingType(null);
     },
     onError: () => {
       toast.error("Generation failed");
+      setLoadingType(null);
     },
   });
 
@@ -210,9 +217,16 @@ const ExamForm = () => {
       {isGenerateModalOpen && selectedEnrollment && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center max-w-md w-full">
+            <button
+              className="absolute top-4 right-4 p-2 bg-gray-200 rounded-full hover:bg-gray-300"
+              onClick={() => setIsGenerateModalOpen(false)}
+            >
+              <X size={15} className="hover:text-red-600" />
+            </button>
             <h2 className="text-xl font-bold mb-4">Generate Options</h2>
             <Button
               className="bg-blue-600"
+              disabled={loadingType === "marksheet"}
               onClick={() =>
                 generateMutation.mutate({
                   type: "marksheet",
@@ -221,9 +235,13 @@ const ExamForm = () => {
               }
             >
               Generate Marksheet
+              {loadingType === "marksheet" && (
+                <Loader2 className="animate-spin" />
+              )}
             </Button>
             <Button
               className="bg-green-600 ml-4"
+              disabled={loadingType === "certificate"}
               onClick={() =>
                 generateMutation.mutate({
                   type: "certificate",
@@ -232,6 +250,9 @@ const ExamForm = () => {
               }
             >
               Generate Certificate
+              {loadingType === "certificate" && (
+                <Loader2 className="animate-spin" />
+              )}
             </Button>
           </div>
         </div>
