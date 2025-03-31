@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import Dropdown from "@/components/DropDown";
 import { Button } from "@/components/ui/button";
 import { ApiResponse, EnrollmentData } from "@/lib/typs";
+import { Loader2 } from "lucide-react";
 
 interface Subject {
   subject: string;
@@ -30,6 +31,7 @@ const Marksheet = () => {
   const [selected, setSelected] = useState<"PASS" | "FAIL" | "Select">(
     "Select"
   );
+  const [loading, setloading] = useState(false);
 
   useEffect(() => {
     const totalObtained = subjects.reduce(
@@ -155,6 +157,7 @@ const Marksheet = () => {
       return;
     }
     try {
+      setloading(true);
       const data = await fetcherWc("/exmmarksentry", "POST", {
         EnrollmentNo: enrollmentNo,
         marks: subjects,
@@ -175,6 +178,8 @@ const Marksheet = () => {
         return;
       }
       toast("error happend");
+    } finally {
+      setloading(false);
     }
   };
 
@@ -310,18 +315,6 @@ const Marksheet = () => {
           <p className="text-green-600">{totalPracticalMarks}</p>
           <p className="text-purple-600 pl-3">{grandTotal}</p>
         </motion.div>
-
-        {/* <button
-          onClick={handleAddRow}
-          className={`w-full p-3 rounded text-white font-bold ${
-            allFieldsFilled
-              ? "bg-blue-500 hover:bg-blue-600"
-              : "bg-gray-400 cursor-not-allowed"
-          }`}
-          disabled={!allFieldsFilled}
-        >
-          + Add New Row
-        </button> */}
       </div>
 
       <div className="grid md:grid-cols-4 items-center justify-center gap-2 mt-6 text-center">
@@ -348,7 +341,7 @@ const Marksheet = () => {
         >
           Preview
         </button>
-        <button
+        <Button
           onClick={handleSubmit}
           className={`w-1/2 p-2 rounded text-white font-bold ${
             !check()
@@ -362,8 +355,8 @@ const Marksheet = () => {
             selected === "Select"
           }
         >
-          Submit
-        </button>
+          Submit {loading && <Loader2 className="animate-spin" />}
+        </Button>
       </div>
       <PreviewModal
         isOpen={isPreviewOpen}

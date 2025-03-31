@@ -1028,4 +1028,53 @@ export const indianStatesWithDistricts = [
       "Yadgir",
     ],
   },
+  {
+    value: "West Bengal",
+    label: "West Bengal",
+    districts: [
+      "Alipurduar",
+      "Bankura",
+      "Paschim Bardhaman",
+      "Purba Bardhaman",
+      "Birbhum",
+      "Cooch Behar",
+      "Dakshin Dinajpur",
+      "Darjeeling",
+      "Hooghly",
+      "Howrah",
+      "Jalpaiguri",
+      "Jhargram",
+      "Kalimpong",
+      "Kolkata",
+      "Malda",
+      "Murshidabad",
+      "Nadia",
+      "North 24 Parganas",
+      "South 24 Parganas",
+      "Paschim Medinipur",
+      "Purba Medinipur",
+      "Purulia",
+    ],
+  },
+];
+
+export const enqinp1 = [
+  { label: "Applicant's Name", field: "name" },
+  { label: "Email", field: "email" },
+  { label: "Father's Name", field: "father" },
+  { label: "C/O Name", field: "coName" },
+  { label: "Date of Birth", field: "dob", type: "date" },
+  { label: "Mobile No", field: "mobileNo", type: "tel" },
+  { label: "Address Line", field: "AddressLine" },
+  { label: "Village", field: "vill" },
+  { label: "Post Office", field: "po" },
+  { label: "Police Station", field: "ps" },
+  { label: "Pincode", field: "pin" },
+];
+
+export const enqinp2 = [
+  { label: "Id Proof No", field: "idProofNo" },
+  { label: "trade License", field: "tradeLicense" },
+  { label: "square Fit", field: "squareFit" },
+  { label: "house RoomNo", field: "houseRoomNo" },
 ];

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -8,86 +8,67 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from "@/components/ui/pagination";
-import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import { Enrollment } from "@/lib/typs";
 import { Button } from "@/components/ui/button";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetcherWc } from "@/helper";
+import { Loader2 } from "lucide-react";
 
 const PAGE_SIZE = 5;
 
 const ExamFee = () => {
-  const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [feesPaid, setFeesPaid] = useState<{ [key: number]: number }>({});
-  const [isLoading, setIsLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchEnrollments = async () => {
-      setIsLoading(true);
-      try {
-        const { data } = await fetcherWc("/amountFetch", "POST");
-        if (data) setEnrollments(data);
-      } catch (error) {
-        console.error(error);
-        toast.error("Some error occurred while fetching data.");
-      } finally {
-        setIsLoading(false);
+  const { data: enrollments = [], isLoading } = useQuery<Enrollment[]>({
+    queryKey: ["enrollments"],
+    queryFn: async () => {
+      const { data } = await fetcherWc("/amountFetch", "POST");
+      return data || [];
+    },
+    staleTime: 1000 * 60 * 10,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const mutation = useMutation({
+    mutationFn: async ({
+      enrollmentNo,
+      id,
+      remainingAmount,
+    }: {
+      enrollmentNo: string;
+      id: number;
+      remainingAmount: number;
+    }) => {
+      const amountPaid = feesPaid[id] || 0;
+      if (amountPaid < 0 || amountPaid > remainingAmount) {
+        throw new Error("Invalid amount entered.");
       }
-    };
-
-    fetchEnrollments();
-  }, []);
+      return fetcherWc("/amountEdit", "POST", {
+        EnrollmentNo: enrollmentNo,
+        tp: amountPaid,
+        ar: remainingAmount - amountPaid,
+      });
+    },
+    onSuccess: (_, { id, remainingAmount }) => {
+      toast.success("Payment updated successfully.");
+      setFeesPaid((prev) => ({ ...prev, [id]: 0 }));
+      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
+    },
+    onError: () => {
+      toast.error("Failed to update payment.");
+    },
+  });
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const currentEnrollments = enrollments.slice(
     startIndex,
     startIndex + PAGE_SIZE
   );
-
-  const saveHandler = async (
-    enrollmentNo: string,
-    id: number,
-    remainingAmount: number
-  ) => {
-    const amountPaid = feesPaid[id] || 0;
-
-    if (amountPaid < 0 || amountPaid > remainingAmount) {
-      toast.error("Invalid amount entered.");
-      return;
-    }
-
-    try {
-      const { success } = await fetcherWc("/amountEdit", "POST", {
-        EnrollmentNo: enrollmentNo,
-        tp: amountPaid,
-        ar: remainingAmount - amountPaid,
-      });
-
-      if (success) {
-        toast.success("Payment updated successfully.");
-        setFeesPaid((prev) => ({ ...prev, [id]: 0 })); // Reset input after saving
-        setEnrollments((prev) =>
-          prev.map((enrollment) =>
-            enrollment.id === id
-              ? {
-                  ...enrollment,
-                  amount: {
-                    ...enrollment.amount,
-                    TotalPaid: (enrollment.amount?.TotalPaid || 0) + amountPaid,
-                    amountRemain: remainingAmount - amountPaid,
-                  },
-                }
-              : enrollment
-          )
-        );
-      } else {
-        toast.error("Failed to update payment.");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Some error occurred.");
-    }
-  };
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
@@ -118,9 +99,8 @@ const ExamFee = () => {
                 <div className="hover:text-violet-800">{enrollment.name}</div>
                 <div>{enrollment.Enrollmentno}</div>
                 <span>{enrollment.course.price}</span>
-
                 <input
-                  type=""
+                  type="number"
                   value={feesPaid[enrollment.id] || ""}
                   onChange={(e) => {
                     const value = parseInt(e.target.value) || 0;
@@ -133,20 +113,20 @@ const ExamFee = () => {
                   min={0}
                   max={remainingAmount}
                 />
-
                 <span>{remainingAmount}</span>
-
                 <Button
                   className="mx-4 bg-green-600 hover:bg-green-500"
                   onClick={() =>
-                    saveHandler(
-                      enrollment.Enrollmentno,
-                      enrollment.id,
-                      remainingAmount
-                    )
+                    mutation.mutate({
+                      enrollmentNo: enrollment.Enrollmentno,
+                      id: enrollment.id,
+                      remainingAmount,
+                    })
                   }
+                  disabled={mutation.isPending}
                 >
                   Save
+                  {mutation.isPending && <Loader2 className="animate-spin" />}
                 </Button>
               </div>
             );

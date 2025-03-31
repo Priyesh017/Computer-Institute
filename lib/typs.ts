@@ -53,22 +53,6 @@ export interface typefd {
   courseid: string;
 }
 
-export interface tfd {
-  name: string;
-  fatherName: string;
-  motherName: string;
-  Address: string;
-  dob: Date;
-  mobile: string;
-  wapp: string;
-  eduqualification: string;
-  courseid: string;
-  category: string;
-  nationality: string;
-  sex: string;
-  idtype: string;
-  idProofNo: string;
-}
 export type EnrollmentData = {
   id: number;
   Enrollmentno: string;

@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
-import { useDropzone } from "react-dropzone";
 import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { fetcherWc } from "@/helper";
 import { Button } from "@/components/ui/button";
+import { Dropzone } from "@/components/dropzone";
 
 export default function UploadNotes() {
   const [pdf, setPdf] = useState<{ src: string; file: File } | null>(null);
@@ -85,7 +85,7 @@ export default function UploadNotes() {
             >
               Upload Notes PDF
             </label>
-            <Dropzone onDrop={onDrop} />
+            <Dropzone onDrop={onDrop} accept="application/pdf" />
           </div>
           {pdf && (
             <div className="gallery-item relative mt-4">
@@ -114,27 +114,5 @@ export default function UploadNotes() {
         </form>
       </div>
     </motion.div>
-  );
-}
-
-function Dropzone({ onDrop }: { onDrop: (file: File) => void }) {
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        onDrop(acceptedFiles[0]); // Only take the first file
-      }
-    },
-    accept: { "application/pdf": [] }, // Only allow PDF files
-    multiple: false, // Prevent multiple file selection
-  });
-
-  return (
-    <div
-      {...getRootProps()}
-      className="p-6 max-w-full border-dashed border-2 border-gray-400 rounded-md text-center cursor-pointer hover:border-gray-600 transition bg-gray-50"
-    >
-      <input {...getInputProps()} />
-      <p className="text-gray-700">Drag & drop a PDF here or click to select</p>
-    </div>
   );
 }

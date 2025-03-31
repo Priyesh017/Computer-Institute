@@ -30,17 +30,7 @@ interface proptype {
   value: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setValue: any; //FIXME
-  data:
-    | "eduqualification"
-    | "courseid"
-    | "category"
-    | "nationality"
-    | "sex"
-    | "idtype"
-    | "idProof"
-    | "bathroom"
-    | "state"
-    | "dist";
+  data: string;
 }
 
 export function ComboboxDemo({

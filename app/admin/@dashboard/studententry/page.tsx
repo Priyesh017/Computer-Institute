@@ -1,13 +1,11 @@
 "use client";
 
-import { CircularProgress } from "@mui/material";
 import { ChangeEvent, useState } from "react";
 import { z } from "zod";
 import { toast } from "react-toastify";
 import { fetcherWc } from "@/helper";
-import { useDropzone } from "react-dropzone";
 import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import anime from "animejs";
 import {
   CategoryValue,
@@ -17,24 +15,26 @@ import {
   Nationality,
   sexValue,
 } from "@/data";
-import { tfd } from "@/lib/typs";
 import { ComboboxDemo } from "@/components/combo";
+import { Dropzone } from "@/components/dropzone";
+import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  fatherName: z.string().min(1, "Father's name is required"),
-  motherName: z.string().min(1, "Mother's name is required"),
-  Address: z.string().min(5, "Address must be at least 5 characters long"),
-  dob: z.date(),
-  eduqualification: z.string(),
-  category: z.string(),
-  courseid: z.string(),
-  idtype: z.string(),
-  idProofNo: z.string(),
-  nationality: z.string(),
-  sex: z.string(),
+  father: z.string().min(1, "Father's name is required"),
+  mother: z.string().min(1, "Mother's name is required"),
+  address: z.string().min(5, "Address must be at least 5 characters long"),
+  dob: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid date"),
+  eduqualification: z.string().min(1, "Required"),
+  category: z.string().min(1, "Required"),
+  courseid: z.string().min(1, "Required"),
+  idtype: z.string().min(1, "Required"),
+  idProofNo: z.string().min(1, "Required"),
+  nationality: z.string().min(1, "Required"),
+  sex: z.string().min(1, "Required"),
   mobile: z.string().regex(/^\d{10}$/, "Invalid mobile number"),
-  wapp: z.string().regex(/^\d{10}$/, "Invalid WhatsApp number"),
+  whatsapp: z.string().regex(/^\d{10}$/, "Invalid WhatsApp number"),
+  pincode: z.string().min(6, "Required"),
 });
 
 const AddStudent: React.FC = () => {
@@ -42,15 +42,14 @@ const AddStudent: React.FC = () => {
   const [images, setImages] = useState<{ src: string; file: File } | null>(
     null
   );
-
-  const [fd, setfd] = useState<tfd>({
+  const [fd, setfd] = useState({
     name: "",
-    fatherName: "",
-    motherName: "",
-    Address: "",
-    dob: new Date(),
+    father: "",
+    mother: "",
+    address: "",
+    dob: "",
     mobile: "",
-    wapp: "",
+    whatsapp: "",
     eduqualification: "",
     courseid: "",
     category: "",
@@ -58,24 +57,13 @@ const AddStudent: React.FC = () => {
     sex: "",
     idProofNo: "",
     idtype: "",
+    pincode: "",
   });
-
-  function handleInputChange(e: ChangeEvent<HTMLInputElement>): void {
+  console.log(fd);
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-
-    setfd((prevFd) => {
-      if (id === "dob") {
-        return { ...prevFd, [id]: new Date(value) };
-      }
-
-      // Allow backspace by only restricting new character additions
-      if (id === "enrollmentNo" && value.length > 14) {
-        return prevFd;
-      }
-
-      return { ...prevFd, [id]: value };
-    });
-  }
+    setfd((prevFd) => ({ ...prevFd, [id]: value }));
+  };
 
   const onDrop = (acceptedFile: File) => {
     const reader = new FileReader();
@@ -92,57 +80,47 @@ const AddStudent: React.FC = () => {
     reader.readAsDataURL(acceptedFile);
   };
 
-  const handleDeleteImage = () => {
-    setImages(null);
-  };
+  const handleDeleteImage = () => setImages(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const result = formSchema.safeParse(fd);
-
     if (!result.success) {
-      const errorMessages: { [key: string]: string } = {};
-      result.error.issues.forEach((issue) => {
-        errorMessages[issue.path[0] as string] = issue.message;
-      });
-      toast("some error happend");
-    } else {
-      try {
-        setLoader(true);
-        if (!images) return;
-
-        const { url } = await fetcherWc(
-          `/generate-presigned-url?fileName=${images.file.name}&fileType=${images.file.type}&category=face`,
-          "GET"
-        );
-        if (!url) {
-          toast("didnot generate url");
-          return;
-        }
-
-        const uploadResponse = await fetch(url, {
-          method: "PUT",
-          body: images.file,
-          headers: {
-            "Content-Type": images.file.type,
-          },
-        });
-
-        if (!uploadResponse.ok) throw new Error("Upload failed");
-
-        const imageUrl = url.split("?")[0];
-
-        const data = await fetcherWc("/createEnrollment", "POST", {
-          ...fd,
-          imageUrl,
-        });
-        toast(data.success);
-      } catch (error) {
-        console.log(error);
-        toast("some error happened");
-      }
-      setLoader(false);
+      console.log(result.error);
+      toast("Please correct the input fields");
+      return;
     }
+    try {
+      setLoader(true);
+      if (!images) return;
+
+      const { url } = await fetcherWc(
+        `/generate-presigned-url?fileName=${images.file.name}&fileType=${images.file.type}&category=face`,
+        "GET"
+      );
+      if (!url) {
+        toast("Failed to generate upload URL");
+        return;
+      }
+
+      const uploadResponse = await fetch(url, {
+        method: "PUT",
+        body: images.file,
+        headers: { "Content-Type": images.file.type },
+      });
+      if (!uploadResponse.ok) throw new Error("Upload failed");
+
+      const imageUrl = url.split("?")[0];
+      const data = await fetcherWc("/createEnrollment", "POST", {
+        ...fd,
+        imageUrl,
+      });
+      toast(data.success && "successfully saved");
+    } catch (error) {
+      console.log(error);
+      toast("An error occurred");
+    }
+    setLoader(false);
   };
 
   return (
@@ -154,316 +132,109 @@ const AddStudent: React.FC = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800 sm:text-3xl">
           Add Student
         </h2>
-
-        {/* Name Field */}
         <div className="grid grid-cols-2 gap-6">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Applicant Name
-            </label>
+          {[
+            "name",
+            "father",
+            "mother",
+            "address",
+            "mobile",
+            "whatsapp",
+            "pincode",
+          ].map((field) => (
             <input
-              id="name"
+              key={field}
+              id={field}
               type="text"
-              placeholder="Enter student's name..."
-              value={fd.name}
+              placeholder={field}
+              value={fd[field as keyof typeof fd]}
               onChange={handleInputChange}
               className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              autoComplete="name"
             />
-          </div>
-          <div className="flex-row md:flex w-full gap-2">
-            <div>
+          ))}
+          {[
+            { label: "Course", key: "courseid", values: frameworksCourse },
+            {
+              label: "Education",
+              key: "eduqualification",
+              values: frameworksEdu,
+            },
+            { label: "Nationality", key: "nationality", values: Nationality },
+            { label: "Category", key: "category", values: CategoryValue },
+            { label: "Sex", key: "sex", values: sexValue },
+            { label: "ID Type", key: "idtype", values: IdCardType },
+          ].map(({ label, key, values }) => (
+            <ComboboxDemo
+              key={key}
+              frameworks={values}
+              heading={label}
+              value={fd[key as keyof typeof fd]}
+              setValue={setfd}
+              data={key}
+            />
+          ))}
+          <input
+            id="idProofNo"
+            type="text"
+            placeholder={"idProofNo"}
+            value={fd.idProofNo}
+            onChange={handleInputChange}
+            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+          <input
+            id="dob"
+            type="date"
+            value={fd.dob}
+            onChange={handleInputChange}
+            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+          <div className="flex flex-col md:flex-row w-full gap-4">
+            {/* Dropzone Section */}
+            <div className="w-full md:w-auto">
               <label
                 htmlFor="image"
                 className="block text-sm font-medium text-gray-700"
               >
                 Applicant Image
               </label>
-              <Dropzone onDrop={(files) => onDrop(files)} />
+              <Dropzone onDrop={(files) => onDrop(files)} accept="image/*" />
             </div>
-            <div className="flex-1 mt-2 gap-4 min-w-fit">
-              <div className="relative">
-                {images && (
-                  <>
-                    <motion.img
-                      src={images.src}
-                      alt="student_image"
-                      className="gallery-item w-fit h-32 object-cover rounded-md"
-                      initial={{ opacity: 0, y: 50 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, ease: "easeOut" }}
-                    />
-                    <button
-                      onClick={() => handleDeleteImage()}
-                      className="absolute top-0 right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-700"
-                    >
-                      <X size={24} />
-                    </button>
-                  </>
-                )}
-              </div>
+
+            {/* Image Preview Section */}
+            <div className="flex-1 flex items-start gap-4 min-w-fit mt-2">
+              {images && (
+                <div className="relative w-auto h-[98.91px]">
+                  <motion.img
+                    src={images.src}
+                    alt="student_image"
+                    className="w-32 h-32 object-cover rounded-md shadow-md"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
+                  <button
+                    onClick={() => handleDeleteImage()}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-700 shadow-lg"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              )}
             </div>
-          </div>
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Father&apos;s Name
-            </label>
-            <input
-              id="fatherName"
-              type="text"
-              placeholder="Enter Father's Name..."
-              value={fd.fatherName}
-              onChange={handleInputChange}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              autoComplete="name"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Mother&apos;s Name
-            </label>
-            <input
-              id="motherName"
-              type="text"
-              placeholder="Enter Mother's Name..."
-              value={fd.motherName}
-              onChange={handleInputChange}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              autoComplete="name"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Address
-            </label>
-            <input
-              id="Address"
-              type="text"
-              placeholder="Enter Address..."
-              value={fd.Address}
-              onChange={handleInputChange}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              autoComplete="name"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Mobile No
-            </label>
-            <input
-              id="mobile"
-              type="number"
-              placeholder="Enter Mobile No..."
-              value={fd.mobile}
-              onChange={
-                (e) => setfd({ ...fd, mobile: e.target.value.slice(0, 10) }) // Ensures only 10 digits
-              }
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              autoComplete="name"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              WhatsApp No
-            </label>
-            <input
-              id="wapp"
-              type="number"
-              placeholder="Enter WhatsApp No..."
-              value={fd.wapp}
-              onChange={
-                (e) => setfd({ ...fd, wapp: e.target.value.slice(0, 10) }) // Ensures only 10 digits
-              }
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              autoComplete="name"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Date Of Birth
-            </label>
-            <input
-              type="date"
-              id="dob"
-              onChange={(e) => handleInputChange(e)}
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Course Name
-            </label>
-            <ComboboxDemo
-              frameworks={frameworksCourse}
-              heading={"Select Course"}
-              value={fd.courseid}
-              setValue={setfd}
-              data="courseid"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="className"
-              className="text-sm font-semibold text-gray-700 dark:text-gray-200"
-            >
-              Educational Qualification
-            </label>
-            <ComboboxDemo
-              frameworks={frameworksEdu}
-              heading={"Select Educational Qualification"}
-              value={fd.eduqualification}
-              setValue={setfd}
-              data="eduqualification"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="className"
-              className="text-sm font-semibold text-gray-700 dark:text-gray-200"
-            >
-              Nationality
-            </label>
-            <ComboboxDemo
-              frameworks={Nationality}
-              heading={"Select Nationality"}
-              value={fd.nationality}
-              setValue={setfd}
-              data="nationality"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="className"
-              className="text-sm font-semibold text-gray-700 dark:text-gray-200"
-            >
-              Select Category
-            </label>
-            <ComboboxDemo
-              frameworks={CategoryValue}
-              heading={"Select Category"}
-              value={fd.category}
-              setValue={setfd}
-              data="category"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="className"
-              className="text-sm font-semibold text-gray-700 dark:text-gray-200"
-            >
-              Sex
-            </label>
-            <ComboboxDemo
-              frameworks={sexValue}
-              heading={"Sex"}
-              value={fd.sex}
-              setValue={setfd}
-              data="sex"
-            />
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="className"
-              className="text-sm font-semibold text-gray-700 dark:text-gray-200"
-            >
-              Id Card Type
-            </label>
-            <ComboboxDemo
-              frameworks={IdCardType}
-              heading={"Id Card Type"}
-              value={fd.idtype}
-              setValue={setfd}
-              data="idtype"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              ID Proof No.
-            </label>
-            <input
-              id="idProofNo"
-              type="text"
-              placeholder="Enter ID Proof No."
-              value={fd.idProofNo}
-              onChange={handleInputChange}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              autoComplete="name"
-              required
-            />
           </div>
         </div>
-        {/* Submit Button */}
-        <div className="flex justify-center items-center w-full">
-          <button
-            type="submit"
-            disabled={loader}
-            className="w-1/2 py-2 text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition disabled:bg-gray-400"
-          >
-            {loader ? <CircularProgress size={24} color="inherit" /> : "Add"}
-          </button>
-        </div>
+
+        <Button
+          type="submit"
+          disabled={loader}
+          className=" text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition disabled:bg-gray-400"
+        >
+          Submit
+          {loader && <Loader2 className="animate-spin" />}
+        </Button>
       </form>
     </div>
   );
 };
 
 export default AddStudent;
-
-function Dropzone({ onDrop }: { onDrop: (files: File) => void }) {
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      if (acceptedFiles.length > 0) {
-        onDrop(acceptedFiles[0]); // Only take the first file
-      }
-    },
-    accept: { "image/*": [] }, // Only allow images
-    multiple: false, // Prevent multiple file selection
-  });
-
-  return (
-    <div
-      {...getRootProps()}
-      className="p-6 max-w-56 border-dashed border-2 border-gray-400 rounded-md text-center cursor-pointer hover:border-gray-600 transition bg-gray-50"
-    >
-      <input {...getInputProps()} />
-      <p className="text-gray-700">
-        Drag & drop images here or click to select
-      </p>
-    </div>
-  );
-}
