@@ -1,7 +1,7 @@
 "use client";
+import SvgComp from "@/components/svgComp";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store";
-import { AccountCircle, School } from "@mui/icons-material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
@@ -27,7 +27,7 @@ const ChooseUser = () => {
         {/* Central Admin Login */}
         <button onClick={() => onclickHandler("admin")} className="btn-custom">
           <div className="mb-4 flex justify-center">
-            <AccountCircle className="text-5xl" />
+            <SvgComp />{" "}
           </div>
           <h2 className="text-lg mb-2 font-bold">Central Admin Login</h2>
           <p className="text-sm">Login as a Central Admin to manage data.</p>
@@ -37,7 +37,7 @@ const ChooseUser = () => {
         <div className="btn-custom">
           <button onClick={() => onclickHandler("center")}>
             <div className="mb-4 flex justify-center">
-              <School className="text-5xl" />
+              <SvgComp />{" "}
             </div>
             <h2 className="text-lg mb-2 font-bold">Branch Login</h2>
             <p className="text-sm">Login as a Branch to manage admissions.</p>
@@ -48,7 +48,7 @@ const ChooseUser = () => {
         <div className="btn-custom">
           <Link href={"/studentlogin"}>
             <div className="mb-4 flex justify-center">
-              <School className="text-5xl" />
+              <SvgComp />
             </div>
             <h2 className="text-lg mb-2 font-bold">Student Login</h2>
             <p className="text-sm">
