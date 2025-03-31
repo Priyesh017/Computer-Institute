@@ -37,8 +37,6 @@ export default function Menu({ dashboard }: { dashboard: React.ReactNode }) {
 
   return (
     <SidebarProvider open={isSidebarOpen} onOpenChange={setSidebarOpen}>
-      <SidebarTrigger className="absolute rounded-none z-50" />
-
       <Sidebar className=" w-64 min-h-screen">
         <h1 className="text-2xl text-ellipsis font-bold text-gray-900 text-center border-b border-gray-300 px-4 py-6 overflow-hidden">
           Student Dashboard
@@ -61,7 +59,8 @@ export default function Menu({ dashboard }: { dashboard: React.ReactNode }) {
       </Sidebar>
       {/* Content Section */}
 
-      <main className="flex-col gap-4 lg:p-6 overflow-y-auto w-screen">
+      <main className="flex-col gap-4 overflow-y-auto w-screen">
+        <SidebarTrigger className="fixed rounded-none z-50" />
         {dashboard}
       </main>
     </SidebarProvider>
