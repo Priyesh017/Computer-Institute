@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import anime from "animejs";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { images } from "@/data/index";
 import { fetcher } from "@/helper";
@@ -12,6 +13,9 @@ const GalleryWall = () => {
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [folder, setFolder] = useState<string | null>(null);
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     if (!folder) return;
@@ -43,6 +47,23 @@ const GalleryWall = () => {
     });
   }, []);
 
+  const handleNextImage = () => {
+    if (currentImageIndex !== null && galleryImages.length > 0) {
+      const nextIndex = (currentImageIndex + 1) % galleryImages.length;
+      setFullscreenImage(galleryImages[nextIndex]);
+      setCurrentImageIndex(nextIndex);
+    }
+  };
+
+  const handlePrevImage = () => {
+    if (currentImageIndex !== null && galleryImages.length > 0) {
+      const prevIndex =
+        (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+      setFullscreenImage(galleryImages[prevIndex]);
+      setCurrentImageIndex(prevIndex);
+    }
+  };
+
   return (
     <div className="text-center px-6 pt-16 xl:pt-24">
       <motion.h2
@@ -59,14 +80,34 @@ const GalleryWall = () => {
           className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50"
           onClick={() => setFullscreenImage(null)}
         >
-          <Image
-            src={fullscreenImage}
-            alt="Fullscreen View"
-            width={800}
-            height={600}
-            className="max-w-fit max-h-fit rounded-lg"
-            priority
-          />
+          <div className="relative">
+            <Image
+              src={fullscreenImage}
+              alt="Fullscreen View"
+              width={800}
+              height={600}
+              className="max-w-fit max-h-fit rounded-lg"
+              priority
+            />
+          </div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePrevImage();
+            }}
+            className="absolute left-5 top-1/2 transform -translate-y-1/2 bg-white hover:bg-yellow-300 text-black p-2 rounded-full shadow-lg"
+          >
+            <ChevronLeft className="h-6 w-6" /> {/* Left Arrow Icon */}
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNextImage();
+            }}
+            className="absolute right-5 top-1/2 transform -translate-y-1/2 bg-white hover:bg-yellow-300 text-black p-2 rounded-full shadow-lg"
+          >
+            <ChevronRight className="h-6 w-6" /> {/* Right Arrow Icon */}
+          </button>
         </div>
       )}
 
@@ -79,7 +120,10 @@ const GalleryWall = () => {
                 key={index}
                 className="gallery-item relative overflow-hidden rounded-2xl shadow-lg cursor-pointer"
                 whileHover={{ scale: 1.05 }}
-                onClick={() => setFullscreenImage(src)}
+                onClick={() => {
+                  setFullscreenImage(src);
+                  setCurrentImageIndex(index);
+                }}
               >
                 <Image
                   src={src}
