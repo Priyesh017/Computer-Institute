@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,7 +59,6 @@ const ExamForm = () => {
   // Mutation for generating admit
   const generateAdmit = useMutation({
     mutationFn: async (enrollment: DataItem) => {
-      toast("Please wait...");
       return fetcherWc("/generateadmit", "POST", { enrollment });
     },
     onSuccess: (data) => toast(data.success ? "Generated" : "Error"),
@@ -131,6 +130,7 @@ const ExamForm = () => {
             disabled={!enrollment.verified}
           >
             Generate Admit
+            {generateAdmit.isPending && <Loader2 className="animate-spin" />}
           </Button>
         </div>
       ))}
