@@ -7,21 +7,15 @@ import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import Dropdown from "@/components/DropDown";
 import { Button } from "@/components/ui/button";
-import { ApiResponse, EnrollmentData } from "@/lib/typs";
+import { ApiResponse, EnrollmentData, Subject } from "@/lib/typs";
 import { Loader2 } from "lucide-react";
-
-interface Subject {
-  subject: string;
-  theoryFullMarks: string;
-  practicalFullMarks: string;
-  theoryMarks: string;
-  practicalMarks: string;
-}
+import { PreviewModal } from "@/components/PreviewMarks";
 
 const Marksheet = () => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
 
   const [isPreviewOpen, setPreviewOpen] = useState(false);
+
   const [totalMarks, setTotalMarks] = useState<number>(0);
   const [percentage, setPercentage] = useState<number>(0);
   const [grade, setGrade] = useState<string>("N/A");
@@ -31,7 +25,7 @@ const Marksheet = () => {
   const [selected, setSelected] = useState<"PASS" | "FAIL" | "Select">(
     "Select"
   );
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState<"fetch" | "send" | null>(null);
 
   useEffect(() => {
     const totalObtained = subjects.reduce(
@@ -86,6 +80,7 @@ const Marksheet = () => {
 
   const fetchData = async () => {
     try {
+      setloading("fetch");
       const data = (await fetcherWc("/exmformfillupDatafetch", "POST", {
         enrollmentNo,
       })) as ApiResponse;
@@ -106,8 +101,11 @@ const Marksheet = () => {
     } catch (error) {
       console.log(error);
       toast("error happened");
+    } finally {
+      setloading(null);
     }
   };
+
   const check = () =>
     !allFieldsFilled || !fd?.name || year === "" || selected === "Select";
 
@@ -157,7 +155,7 @@ const Marksheet = () => {
       return;
     }
     try {
-      setloading(true);
+      setloading("send");
       const data = await fetcherWc("/exmmarksentry", "POST", {
         EnrollmentNo: enrollmentNo,
         marks: subjects,
@@ -179,7 +177,7 @@ const Marksheet = () => {
       }
       toast("error happend");
     } finally {
-      setloading(false);
+      setloading(null);
     }
   };
 
@@ -226,8 +224,13 @@ const Marksheet = () => {
               onChange={handleChange3}
               className="w-full p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
-            <Button className="h-10" onClick={fetchHandler}>
-              Fetch
+            <Button
+              className="h-10"
+              onClick={fetchHandler}
+              disabled={loading === "fetch"}
+            >
+              Fetch{" "}
+              {loading === "fetch" && <Loader2 className="animate-spin" />}
             </Button>
           </div>
         </div>
@@ -292,12 +295,6 @@ const Marksheet = () => {
             <p className="text-center font-bold text-blue-500">
               {parseInt(item.theoryMarks) + parseInt(item.practicalMarks) || 0}
             </p>
-            {/* <button
-              onClick={() => handleDeleteRow(index)}
-              className="p-2 bg-red-500 hover:bg-red-600 transition rounded text-white"
-            >
-              <Trash2 className="mx-auto" size={20} />
-            </button> */}
           </motion.div>
         ))}
 
@@ -352,10 +349,11 @@ const Marksheet = () => {
             !allFieldsFilled ||
             !fd?.name ||
             year === "" ||
-            selected === "Select"
+            selected === "Select" ||
+            loading === "send"
           }
         >
-          Submit {loading && <Loader2 className="animate-spin" />}
+          Submit {loading === "send" && <Loader2 className="animate-spin" />}
         </Button>
       </div>
       <PreviewModal
@@ -372,65 +370,3 @@ const Marksheet = () => {
 };
 
 export default Marksheet;
-
-interface PreviewModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  subjects: Subject[];
-  totalMarks: number;
-  percentage: number;
-  grade: string;
-  result: string;
-}
-
-const PreviewModal = ({
-  isOpen,
-  onClose,
-  subjects,
-  totalMarks,
-  percentage,
-  grade,
-  result,
-}: PreviewModalProps) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div className="max-h-screen bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg max-w-lg w-full">
-        {/* Header */}
-        <div className="flex justify-between items-center pb-4 border-b border-gray-300 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Preview
-          </h2>
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-violet-500 text-white rounded-lg hover:bg-violet-600 transition"
-          >
-            Close
-          </button>
-        </div>
-
-        {/* Scrollable JSON Preview */}
-        <div className="bg-gray-200 dark:bg-gray-800 p-4 rounded text-sm overflow-y-auto max-h-[300px] mt-4">
-          <pre className="whitespace-pre-wrap break-words">
-            {JSON.stringify(subjects, null, 2)}
-          </pre>
-        </div>
-
-        {/* Additional Info */}
-        <p className="mt-4 text-gray-700 dark:text-gray-300">
-          <strong>Grand Total:</strong> {totalMarks}
-        </p>
-        <p className="text-gray-700 dark:text-gray-300">
-          <strong>Percentage:</strong> {percentage}%
-        </p>
-        <p className="text-gray-700 dark:text-gray-300">
-          <strong>Grade:</strong> {grade}
-        </p>
-        <p className="text-gray-700 dark:text-gray-300">
-          <strong>Result:</strong> {result}
-        </p>
-      </div>
-    </div>
-  );
-};

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { fetcherWc } from "@/helper";
 import { DropzoneMul } from "@/components/dropzonemultiple";
 
@@ -123,7 +123,8 @@ export default function GalleryInsertion() {
         disabled={loading || images.length === 0}
         className="w-full"
       >
-        {loading ? "Saving..." : "Save Images"}
+        Save
+        {loading && <Loader2 className="animate-spin" />}
       </Button>
     </div>
   );

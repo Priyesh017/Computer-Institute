@@ -2,12 +2,13 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
-import { Plus, Check, Trash2, Edit } from "lucide-react";
+import { Plus, Check, Trash2, Edit, Loader2 } from "lucide-react";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import { typefd } from "@/lib/typs";
 import { frameworksCourse } from "@/data";
 import { ComboboxDemo } from "@/components/combo";
+import { Button } from "@/components/ui/button";
 
 const SubjectEntry = () => {
   const [fd, setfd] = useState<typefd>({
@@ -195,15 +196,14 @@ const SubjectEntry = () => {
         </ul>
       </div>
 
-      <motion.button
+      <Button
         id="submit-button"
-        whileTap={{ scale: 1 }}
-        className="mt-6 w-fit bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-md shadow-lg"
+        className="mt-6 "
         onClick={handleSubmit}
         disabled={loading}
       >
-        Submit
-      </motion.button>
+        Submit {loading && <Loader2 className="animate-spin" />}
+      </Button>
     </div>
   );
 };
