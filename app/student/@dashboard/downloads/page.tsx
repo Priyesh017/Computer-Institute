@@ -1,3 +1,4 @@
+"use client";
 import { Enrollmenttype } from "@/lib/typs";
 import { useAuthStore } from "@/store";
 import AllDownloads from "@/components/studentdashboard/Downloads";

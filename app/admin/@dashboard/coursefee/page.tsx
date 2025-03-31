@@ -54,7 +54,7 @@ const ExamFee = () => {
         ar: remainingAmount - amountPaid,
       });
     },
-    onSuccess: (_, { id, remainingAmount }) => {
+    onSuccess: (_, { id }) => {
       toast.success("Payment updated successfully.");
       setFeesPaid((prev) => ({ ...prev, [id]: 0 }));
       queryClient.invalidateQueries({ queryKey: ["enrollments"] });
