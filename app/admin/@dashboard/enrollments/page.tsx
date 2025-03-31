@@ -23,6 +23,7 @@ import {
 import { EnrollmentDetails } from "@/components/enrollmentdatashow";
 import { Enrollmenttype } from "@/lib/typs";
 import Loader from "@/components/Loader";
+import { Loader2 } from "lucide-react";
 
 const PAGE_SIZE = 5;
 
@@ -135,6 +136,7 @@ const EnrollmentList = () => {
               setSelectedEnrollment(enrollment);
               setIsModalOpen(true);
             }}
+            className="hover:text-red-600 cursor-pointer"
           >
             {enrollment.name}
           </div>
@@ -158,6 +160,7 @@ const EnrollmentList = () => {
             disabled={!enrollment.activated}
           >
             Generate ID
+            {generateHandler.isPending && <Loader2 className="animate-spin" />}
           </Button>
         </div>
       ))}

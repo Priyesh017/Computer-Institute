@@ -59,7 +59,7 @@ const AddStudent: React.FC = () => {
     idtype: "",
     pincode: "",
   });
-  console.log(fd);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setfd((prevFd) => ({ ...prevFd, [id]: value }));
@@ -85,11 +85,14 @@ const AddStudent: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const result = formSchema.safeParse(fd);
-    if (!result.success) {
-      console.log(result.error);
-      toast("Please correct the input fields");
+
+    if (result.error) {
+      result.error.errors.forEach((err) => {
+        toast.error(err.message);
+      });
       return;
     }
+
     try {
       setLoader(true);
       if (!images) return;
@@ -119,8 +122,9 @@ const AddStudent: React.FC = () => {
     } catch (error) {
       console.log(error);
       toast("An error occurred");
+    } finally {
+      setLoader(false);
     }
-    setLoader(false);
   };
 
   return (

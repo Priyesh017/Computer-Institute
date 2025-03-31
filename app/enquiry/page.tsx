@@ -20,6 +20,7 @@ import {
   Nationality,
   sexValue,
 } from "@/data";
+import { z } from "zod";
 
 const bathroomOptions = ["Yes", "No"];
 
@@ -48,6 +49,38 @@ const initialFormData = {
   tradeLicense: "",
   bathroom: "",
 };
+
+const formSchema = z.object({
+  name: z.string().min(3, "Name must be at least 3 characters"),
+  father: z.string().min(3, "Father's name must be at least 3 characters"),
+  coName: z.string().min(3, "Co-Name must be at least 3 characters"),
+  email: z.string().email("Invalid email address"),
+  dob: z.string().refine(
+    (date) => {
+      const parsedDate = new Date(date);
+      return !isNaN(parsedDate.getTime());
+    },
+    { message: "Invalid date of birth" }
+  ),
+  sex: z.enum(["MALE", "FEMALE", "OTHER"], { message: "Invalid selection" }),
+  category: z.string().min(2, "Category is required"),
+  nationality: z.string().min(2, "Nationality is required"),
+  mobileNo: z.string().regex(/^\d{10}$/, "Mobile number must be 10 digits"),
+  AddressLine: z.string().min(5, "Address must be at least 5 characters"),
+  vill: z.string().min(2, "Village must be at least 2 characters"),
+  po: z.string().min(2, "Post Office must be at least 2 characters"),
+  ps: z.string().min(2, "Police Station must be at least 2 characters"),
+  pin: z.string().regex(/^\d{6}$/, "PIN code must be 6 digits"),
+  state: z.string().min(2, "State is required"),
+  dist: z.string().min(2, "District is required"),
+  eduqualification: z.string().min(2, "Education qualification is required"),
+  idProof: z.string().min(2, "ID Proof is required"),
+  idProofNo: z.string().min(5, "ID Proof No must be valid"),
+  houseRoomNo: z.string().min(1, "House/Room No is required"),
+  squareFit: z.string().min(1, "Square Fit is required"),
+  tradeLicense: z.string().min(2, "Trade License is required"),
+  bathroom: z.string().min(1, "Bathroom details are required"),
+});
 
 const FranchiseForm = () => {
   const [formData, setFormData] = useState(initialFormData);
@@ -97,6 +130,15 @@ const FranchiseForm = () => {
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!images.length) return;
+    const result = formSchema.safeParse(formData);
+
+    if (result.error) {
+      result.error.errors.forEach((err) => {
+        toast.error(err.message);
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -112,14 +154,16 @@ const FranchiseForm = () => {
           headers: { "Content-Type": image.file.type },
         });
         if (!uploadResponse.ok) throw new Error("Upload failed");
-        return url.split("?")[0];
+        return { url: url.split("?")[0] as string, catg: image.category };
       });
 
       const Links = await Promise.all(uploadPromises);
+
       const { success } = await fetcher("/TakeEnquiry", "POST", {
         ...formData,
-        Link: Links.join(","),
+        Links,
       });
+
       if (success) toast("Success");
     } catch (error) {
       console.error(error);
@@ -148,6 +192,7 @@ const FranchiseForm = () => {
                 value={formData[field as keyof typeof initialFormData]}
                 onChange={(e) => handleChange(field, e.target.value)}
                 className="w-full border rounded-md p-2"
+                required
               />
             </div>
           ))}
@@ -190,6 +235,7 @@ const FranchiseForm = () => {
                 value={formData[field as keyof typeof initialFormData]}
                 onChange={(e) => handleChange(field, e.target.value)}
                 className="w-full border rounded-md p-2"
+                required
               />
             </div>
           ))}
