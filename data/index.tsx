@@ -1073,8 +1073,8 @@ export const enqinp1 = [
 ];
 
 export const enqinp2 = [
-  { label: "Id Proof No", field: "idProofNo" },
-  { label: "trade License", field: "tradeLicense" },
-  { label: "square Fit", field: "squareFit" },
-  { label: "house RoomNo", field: "houseRoomNo" },
+  { label: "ID Proof No", field: "idProofNo" },
+  { label: "Trade License", field: "tradeLicense" },
+  { label: "Square Fit", field: "squareFit" },
+  { label: "House Room No", field: "houseRoomNo" },
 ];

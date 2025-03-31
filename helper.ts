@@ -33,6 +33,7 @@ interface iDatatype {
   newPassword?: string;
   cid?: string;
   Prefix?: string;
+  Link?: string;
 }
 
 const ApiEnd = axios.create({

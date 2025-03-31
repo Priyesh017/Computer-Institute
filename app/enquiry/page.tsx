@@ -51,21 +51,26 @@ const initialFormData = {
 
 const FranchiseForm = () => {
   const [formData, setFormData] = useState(initialFormData);
-  const [images, setImages] = useState<{ src: string; file: File } | null>(
-    null
-  );
+  const [images, setImages] = useState<
+    { category: "profile" | "signature"; src: string; file: File }[]
+  >([]);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleDeleteImage = () => setImages(null);
+  const handleDeleteImage = (category: "profile" | "signature") => {
+    setImages((prev) => prev.filter((image) => image.category !== category));
+  };
 
-  const onDrop = (acceptedFile: File) => {
+  const onDrop = (acceptedFile: File, category: "profile" | "signature") => {
     const reader = new FileReader();
     reader.onload = () => {
-      setImages({ src: reader.result as string, file: acceptedFile });
+      setImages((prev) => [
+        ...prev.filter((image) => image.category !== category),
+        { category, src: reader.result as string, file: acceptedFile },
+      ]);
       anime({
         targets: ".gallery-item",
         opacity: [0, 1],
@@ -91,25 +96,29 @@ const FranchiseForm = () => {
 
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!images) return;
+    if (!images.length) return;
     setLoading(true);
 
     try {
-      const { url } = await fetcher(
-        `/generate-presigned-url?fileName=${images.file.name}&fileType=${images.file.type}&category=enquiry`,
-        "GET"
-      );
-      if (!url) return toast("Failed to generate URL");
-      const uploadResponse = await fetch(url, {
-        method: "PUT",
-        body: images.file,
-        headers: { "Content-Type": images.file.type },
+      const uploadPromises = images.map(async (image) => {
+        const { url } = await fetcher(
+          `/generate-presigned-url?fileName=${image.file.name}&fileType=${image.file.type}&category=enquiry`,
+          "GET"
+        );
+        if (!url) throw new Error("Failed to generate URL");
+        const uploadResponse = await fetch(url, {
+          method: "PUT",
+          body: image.file,
+          headers: { "Content-Type": image.file.type },
+        });
+        if (!uploadResponse.ok) throw new Error("Upload failed");
+        return url.split("?")[0];
       });
-      if (!uploadResponse.ok) return toast("Upload failed");
-      const signatureLink = url.split("?")[0];
+
+      const Links = await Promise.all(uploadPromises);
       const { success } = await fetcher("/TakeEnquiry", "POST", {
         ...formData,
-        signatureLink,
+        Link: Links.join(","),
       });
       if (success) toast("Success");
     } catch (error) {
@@ -185,32 +194,77 @@ const FranchiseForm = () => {
             </div>
           ))}
 
-          <div className="flex flex-col md:flex-row w-full gap-4">
-            {/* Dropzone Section */}
+          <div></div>
+
+          <div className="flex flex-col justify-center items-center w-full gap-4">
+            {/* Dropzone for Profile Image */}
             <div className="w-full md:w-auto">
               <label
-                htmlFor="image"
+                htmlFor="profileImage"
                 className="block text-sm font-medium text-gray-700"
               >
                 Applicant Image
               </label>
-              <Dropzone onDrop={(files) => onDrop(files)} accept="image/*" />
+              <Dropzone
+                onDrop={(files) => onDrop(files, "profile")}
+                accept="image/*"
+              />
             </div>
 
-            {/* Image Preview Section */}
+            {/* Profile Image Preview */}
             <div className="flex-1 flex items-start gap-4 min-w-fit mt-2">
-              {images && (
+              {images.find((img) => img.category === "profile") && (
                 <div className="relative w-auto h-[98.91px]">
                   <motion.img
-                    src={images.src}
-                    alt="student_image"
+                    src={images.find((img) => img.category === "profile")?.src}
+                    alt="profile_image"
                     className="w-32 h-32 object-cover rounded-md shadow-md"
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
                   />
                   <button
-                    onClick={() => handleDeleteImage()}
+                    onClick={() => handleDeleteImage("profile")}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-700 shadow-lg"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-center items-center w-full gap-4">
+            {/* Dropzone for Signature Image */}
+            <div className="w-full md:w-auto">
+              <label
+                htmlFor="signatureImage"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Applicant Signature
+              </label>
+              <Dropzone
+                onDrop={(files) => onDrop(files, "signature")}
+                accept="image/*"
+              />
+            </div>
+
+            {/* Signature Image Preview */}
+            <div className="flex-1 flex items-start gap-4 min-w-fit mt-2">
+              {images.find((img) => img.category === "signature") && (
+                <div className="relative w-auto h-[98.91px]">
+                  <motion.img
+                    src={
+                      images.find((img) => img.category === "signature")?.src
+                    }
+                    alt="signature_image"
+                    className="w-32 h-32 object-cover rounded-md shadow-md"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
+                  <button
+                    onClick={() => handleDeleteImage("signature")}
                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-700 shadow-lg"
                   >
                     <X size={16} />
@@ -221,13 +275,15 @@ const FranchiseForm = () => {
           </div>
         </div>
 
-        <Button
-          type="submit"
-          disabled={loading}
-          className="w-1/3 mx-auto block bg-violet-600 hover:bg-violet-700 text-white rounded-lg mt-4"
-        >
-          Submit {loading && <Loader2 className="animate-spin" />}
-        </Button>
+        <div className="flex justify-center items-center">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-1/3 block bg-violet-600 hover:bg-violet-700 text-white rounded-lg mt-4"
+          >
+            Submit {loading && <Loader2 className="animate-spin" />}
+          </Button>
+        </div>
       </form>
     </motion.div>
   );
