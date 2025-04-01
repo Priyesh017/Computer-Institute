@@ -58,7 +58,7 @@ const VideoUpload = () => {
         return;
       }
 
-      const data = await axios.put(url, videoFile, {
+      await axios.put(url, videoFile, {
         headers: {
           "Content-Type": videoFile.type,
         },

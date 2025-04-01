@@ -2,6 +2,7 @@ import Banner from "@/components/landingpage/Banner";
 import About from "@/components/landingpage/About";
 import Gallery from "@/components/landingpage/Gallery";
 import Course from "@/components/landingpage/Course";
+import Testimonials from "@/components/landingpage/Testimonials";
 import Center from "@/components/landingpage/Center";
 import { FaEnvelope, FaPhone, FaWhatsapp } from "react-icons/fa";
 
@@ -195,6 +196,7 @@ export const menuItems = [
   { name: "About", pos: <About /> },
   { name: "Gallery", pos: <Gallery /> },
   { name: "Course", pos: <Course /> },
+  { name: "Reviews", pos: <Testimonials /> },
   { name: "Center", pos: <Center /> },
 ];
 

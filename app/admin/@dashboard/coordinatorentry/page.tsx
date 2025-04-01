@@ -35,7 +35,11 @@ export default function EntryForm() {
     });
   };
 
-  const updateMember = (id: number, key: keyof Member, value: any) => {
+  const updateMember = (
+    id: number,
+    key: keyof Member,
+    value: string | null
+  ) => {
     setMembers((prev) =>
       prev.map((member) =>
         member.id === id ? { ...member, [key]: value } : member
