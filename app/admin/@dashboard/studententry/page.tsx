@@ -12,6 +12,7 @@ import {
   frameworksCourse,
   frameworksEdu,
   IdCardType,
+  indianStatesWithDistricts,
   Nationality,
   sexValue,
 } from "@/data";
@@ -58,6 +59,11 @@ const AddStudent: React.FC = () => {
     idProofNo: "",
     idtype: "",
     pincode: "",
+    state: "",
+    dist: "",
+    ps: "",
+    po: "",
+    vill: "",
   });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -127,6 +133,18 @@ const AddStudent: React.FC = () => {
     }
   };
 
+  const filterDistricts = () => {
+    const stateData = indianStatesWithDistricts.find(
+      (val) => val.label === fd.state
+    );
+    return stateData
+      ? stateData.districts.map((district) => ({
+          value: district,
+          label: district,
+        }))
+      : [];
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 md:px-8">
       <form
@@ -145,6 +163,9 @@ const AddStudent: React.FC = () => {
             "mobile",
             "whatsapp",
             "pincode",
+            "po",
+            "ps",
+            "vill",
           ].map((field) => (
             <input
               key={field}
@@ -157,6 +178,8 @@ const AddStudent: React.FC = () => {
             />
           ))}
           {[
+            { label: "State", values: indianStatesWithDistricts, key: "state" },
+            { label: "District", values: filterDistricts(), key: "dist" },
             { label: "Course", key: "courseid", values: frameworksCourse },
             {
               label: "Education",

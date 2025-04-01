@@ -322,11 +322,7 @@ const FranchiseForm = () => {
         </div>
 
         <div className="flex justify-center items-center">
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-1/3 block bg-violet-600 hover:bg-violet-700 text-white rounded-lg mt-4"
-          >
+          <Button type="submit" disabled={loading} className="">
             Submit {loading && <Loader2 className="animate-spin" />}
           </Button>
         </div>

@@ -6,10 +6,11 @@ import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { ApiResponse, EnrollmentData } from "@/lib/typs";
+import { Loader2 } from "lucide-react";
 
 const ExamForm = () => {
   const [fd, setfd] = useState<EnrollmentData>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<"fetch" | "send" | null>(null);
 
   const [enrollmentNo, setEnrollmentNo] = useState<string>("");
 
@@ -50,6 +51,7 @@ const ExamForm = () => {
   ];
 
   const fetchData = async () => {
+    setLoading("fetch");
     try {
       const data = (await fetcherWc("/exmformfillupDatafetch", "POST", {
         enrollmentNo,
@@ -60,6 +62,8 @@ const ExamForm = () => {
     } catch (error) {
       console.log(error);
       toast("error happened");
+    } finally {
+      setLoading(null);
     }
   };
 
@@ -81,7 +85,7 @@ const ExamForm = () => {
     e.preventDefault();
 
     try {
-      setLoading(true);
+      setLoading("send");
 
       const response = await fetcherWc("/examFormFillup", "POST", {
         enrollmentNo,
@@ -102,7 +106,7 @@ const ExamForm = () => {
       console.error("Error:", error);
       toast("⚠️ Some error happened");
     } finally {
-      setLoading(false);
+      setLoading(null);
     }
   };
 
@@ -132,8 +136,13 @@ const ExamForm = () => {
                 onChange={handleChange}
                 className="w-full p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
               />
-              <Button className="h-10" onClick={fetchHandler}>
+              <Button
+                className="h-10"
+                onClick={fetchHandler}
+                disabled={loading === "fetch"}
+              >
                 Fetch
+                {loading === "fetch" && <Loader2 className="animate-spin" />}
               </Button>
             </div>
           </div>
@@ -254,12 +263,12 @@ const ExamForm = () => {
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             type="submit"
-            disabled={loading}
+            disabled={loading === "send"}
             className={`w-1/3 mx-auto bg-violet-600 hover:bg-violet-700 text-white font-semibold py-2 rounded-md transition ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
+              loading === "send" && "opacity-50 cursor-not-allowed"
             }`}
           >
-            {loading ? "Submitting..." : "Submit"}
+            {loading === "send" ? "Submitting..." : "Submit"}
           </motion.button>
         </div>
       </form>

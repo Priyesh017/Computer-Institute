@@ -52,7 +52,22 @@ export interface Enrollment {
 export interface typefd {
   courseid: string;
 }
-
+export interface Subject {
+  subject: string;
+  theoryFullMarks: string;
+  practicalFullMarks: string;
+  theoryMarks: string;
+  practicalMarks: string;
+}
+export interface PreviewModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  subjects: Subject[];
+  totalMarks: number;
+  percentage: number;
+  grade: string;
+  result: string;
+}
 export type EnrollmentData = {
   id: number;
   Enrollmentno: string;
