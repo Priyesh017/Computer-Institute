@@ -157,6 +157,18 @@ export const navMain = [
     ],
   },
   {
+    title: "Coordinator Entry",
+    role: "admin",
+    url: "#",
+    icon: Settings2,
+    items: [
+      {
+        title: "Coordinator Entry",
+        url: "/admin/coordinatorentry",
+      },
+    ],
+  },
+  {
     title: "Education",
     role: "center",
     url: "#",
@@ -178,13 +190,13 @@ export const navMain = [
     ],
   },
   {
-    title: "Downloads",
+    title: "Enrollments",
     role: "center",
     url: "#",
     icon: Settings2,
     items: [
       {
-        title: "All Downloads",
+        title: "All Enrollments",
         url: "/admin/alldownloads",
       },
     ],

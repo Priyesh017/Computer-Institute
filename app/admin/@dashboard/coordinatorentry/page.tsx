@@ -104,9 +104,7 @@ export default function EntryForm() {
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-gray-100 text-black rounded-xl shadow-lg space-y-6">
-      <h2 className="text-2xl font-bold text-center">
-        District Coordinator Entry
-      </h2>
+      <h2 className="text-2xl font-bold text-center">Coordinator Entry</h2>
 
       <div className="grid grid-cols-2 gap-5">
         <div>
@@ -171,11 +169,11 @@ export default function EntryForm() {
         )}
       </div>
 
-      <h3 className="text-xl font-semibold">Members</h3>
+      <h3 className="text-xl font-semibold">Sub-District Co-Ordinators</h3>
       {members.map((member) => (
         <motion.div
           key={member.id}
-          className="member-entry bg-gray-300 p-4 rounded-lg space-y-2 relative"
+          className="member-entry bg-gray-100 border border-gray-300 p-4 rounded-lg space-y-2 relative"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
         >
@@ -187,7 +185,7 @@ export default function EntryForm() {
               <input
                 type="text"
                 placeholder="Sub-District Co-Ordinator Name"
-                className="w-full p-2 bg-gray-200 text-black"
+                className="w-full p-2 bg-gray-200 text-black rounded-md"
                 value={member.name}
                 onChange={(e) =>
                   updateMember(member.id, "name", e.target.value)
@@ -201,7 +199,7 @@ export default function EntryForm() {
               <input
                 type="text"
                 placeholder="Sub-District Name"
-                className="w-full p-2 bg-gray-200 text-black"
+                className="w-full p-2 bg-gray-200 text-black rounded-md"
                 value={member.area}
                 onChange={(e) =>
                   updateMember(member.id, "area", e.target.value)
@@ -210,7 +208,7 @@ export default function EntryForm() {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row justify-center items-center w-full gap-4">
+          <div className="flex flex-col md:flex-row justify-start items-center w-full gap-4">
             <div className="w-full md:w-auto">
               <label
                 htmlFor="profileImage"

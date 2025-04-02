@@ -160,12 +160,12 @@ const ExamForm = () => {
       {/* Fullscreen Modal */}
       {selectedexmform && (
         <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-lg shadow-xl w-full max-w-4xl h-full overflow-auto">
+          <div className="relative bg-white rounded-xl shadow-xl w-full max-w-fit h-full overflow-auto">
             <button
-              className="absolute top-4 right-4 p-2 bg-gray-200 rounded-full hover:bg-gray-300"
+              className="relative mx-4 p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
               onClick={() => setselectedexmform(null)}
             >
-              <X size={24} className="hover:text-red-600" />
+              <X size={24} />
             </button>
             <EnrollmentDetails enrollment={selectedexmform} />
           </div>

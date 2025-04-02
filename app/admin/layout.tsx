@@ -6,13 +6,14 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/store";
 
 export default function Layout({ dashboard }: { dashboard: React.ReactNode }) {
-  const { isSidebarOpen, setSidebarOpen } = useAuthStore();
+  const { isSidebarOpen, setSidebarOpen, user } = useAuthStore();
+  const isAdmin = user && (user.role === "ADMIN" || user.role === "CENTER");
 
   return (
     <SidebarProvider open={isSidebarOpen} onOpenChange={setSidebarOpen}>
       <SidebarTrigger className="absolute rounded-none z-50" />
       <div className="h-screen flex flex-col bg-gray-100 w-screen">
-        <Display />
+        {!isAdmin && <Display />}
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar */}
           <AppSidebar />
