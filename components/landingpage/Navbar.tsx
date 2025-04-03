@@ -62,7 +62,7 @@ export default function Navbar() {
         />
         <h1 className="text-3xl font-bold">MNYCTC</h1>
       </div>
-      <div className="md:hidden flex justify-center z-50 ">
+      <div className="md:hidden fixed top-5 right-5 flex justify-center z-50 ">
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className={`text-2xl ${

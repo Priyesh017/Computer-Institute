@@ -51,8 +51,8 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className="w-full min-h-screen py-4 flex items-center">
-      <div className="flex flex-col justify-center items-center mx-auto lg:max-w-6xl px-3">
+    <div className="lg:w-full max-w-[100%] min-h-screen py-4 flex justify-center items-center">
+      <div className="flex flex-col justify-center items-center mx-auto max-w-sm lg:max-w-6xl px-3">
         <span className="text-5xl font-bold">Testimonials</span>
         <Carousel
           opts={{
@@ -64,12 +64,13 @@ export default function Testimonials() {
               delay: 2000,
             }),
           ]}
+          className="w-[95%] md:w-full"
         >
           <CarouselContent>
             {testimonials.map((testimonial, index) => (
-              <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+              <CarouselItem key={index} className="sm:basis-1/2 lg:basis-1/3">
                 <div className="flex flex-col px-4 py-5 sm:p-6">
-                  <div className="flex flex-col justify-center items-center mt-6 rounded-lg shadow-[8px_8px_16px_#b8b9be,-8px_-8px_16px_#ffffff]">
+                  <div className="flex flex-col justify-center items-center mt-6 rounded-lg shadow-lg md:shadow-[8px_8px_16px_#b8b9be,-8px_-8px_16px_#ffffff]">
                     <Image
                       src={testimonial.imgSrc}
                       alt="Image"
@@ -88,10 +89,10 @@ export default function Testimonials() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="absolute left-[-50px] top-1/2 -translate-y-1/2 fill-black" />
-          <CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2 fill-black" />
+          <CarouselPrevious className="absolute left-0 md:left-[-50px] top-1/2 -translate-y-1/2 fill-black" />
+          <CarouselNext className="absolute right-0 md:right-[-50px] top-1/2 -translate-y-1/2 fill-black" />
         </Carousel>
       </div>
-    </section>
+    </div>
   );
 }
