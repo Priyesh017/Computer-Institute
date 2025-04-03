@@ -23,7 +23,7 @@ import {
 import { EnrollmentDetails } from "@/components/enrollmentdatashow";
 import { Enrollmenttype } from "@/lib/typs";
 import Loader from "@/components/Loader";
-import { Loader2 } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 
 const PAGE_SIZE = 5;
 
@@ -198,12 +198,12 @@ const EnrollmentList = () => {
       </Pagination>
       {isModalOpen && selectedEnrollment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="relative bg-white rounded-lg w-full max-w-4xl">
+          <div className="relative bg-white rounded-xl w-full max-w-fit">
             <button
-              className="absolute top-4 right-4 p-2"
+              className="relative mx-4 p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
               onClick={() => setIsModalOpen(false)}
             >
-              ✖
+              <X size={24} />
             </button>
             <EnrollmentDetails enrollment={selectedEnrollment} />
           </div>

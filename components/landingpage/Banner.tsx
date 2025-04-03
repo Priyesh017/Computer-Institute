@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import anime from "animejs";
 import Image from "next/image";
+import Link from "next/link";
 
 const Banner = () => {
   const bannerRef = useRef<HTMLDivElement>(null);
@@ -13,12 +14,6 @@ const Banner = () => {
   };
 
   useEffect(() => {
-    // anime.timeline({ loop: false }).add({
-    //   targets: textRef.current?.querySelectorAll("span"),
-    //   translateY: [20, 0],
-    //   opacity: [0, 1],
-    //   delay: anime.stagger(100),
-    // });
     anime({
       targets: bannerRef.current,
       opacity: [0, 1],
@@ -80,12 +75,11 @@ const Banner = () => {
             >
               Contact Us
             </button>
-            <button
-              className="px-6 py-3 bg-gray-900 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 transition-all"
-              onClick={() => scrollToSection("about")}
-            >
-              Learn More
-            </button>
+            <Link href="/certificate">
+              <button className="px-6 py-3 bg-gray-900 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 transition-all">
+                Download Certificate
+              </button>
+            </Link>
           </div>
         </div>
       </div>
