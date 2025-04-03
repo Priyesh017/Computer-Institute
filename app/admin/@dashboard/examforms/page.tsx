@@ -34,7 +34,7 @@ const ExamForm = () => {
     isError,
   } = useQuery<DataItem[]>({
     queryKey: ["exmforms"],
-    queryFn: () => fetcherWc("/exmformsfetch", "GET").then((res) => res.data),
+    queryFn: () => fetcherWc("/exmformsfetch", "GET"),
     staleTime: 1000 * 60 * 5,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

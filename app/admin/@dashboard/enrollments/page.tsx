@@ -98,7 +98,7 @@ const EnrollmentList = () => {
         .toLowerCase()
         .includes(search.toLowerCase()) &&
       (filterStatus === "All" ||
-        enrollment.status.toLowerCase() === filterStatus.toLowerCase())
+        enrollment.status.value.toLowerCase() === filterStatus.toLowerCase())
     );
   });
 
@@ -132,7 +132,7 @@ const EnrollmentList = () => {
       <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No.</span>
-        <span>Date</span>
+        <span>Branch Id</span>
         <span>Status</span>
         <span>Approval</span>
         <span>Generate</span>
@@ -152,8 +152,8 @@ const EnrollmentList = () => {
             {enrollment.name}
           </div>
           <div>{enrollment.Enrollmentno}</div>
-          <span>{new Date(enrollment.createdAt).toDateString()}</span>
-          <div className="p-2 border rounded-md">{enrollment.status}</div>
+          <span>{enrollment.centerid}</span>
+          <div className="p-2 border rounded-md">{enrollment.status.value}</div>
           <div className="flex items-center justify-center gap-2">
             <Switch
               className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"

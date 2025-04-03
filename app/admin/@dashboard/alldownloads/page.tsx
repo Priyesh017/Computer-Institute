@@ -18,14 +18,6 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import ProgressBar from "@/components/ProgressBar";
 
-const stages = [
-  { label: "Enrollment Done", completed: true },
-  { label: "Enrollment Verified", completed: true },
-  { label: "Exam Form Verified", completed: true },
-  { label: "Marksheet Verified", completed: false },
-  { label: "Passout", completed: false },
-];
-
 const PAGE_SIZE = 5;
 
 const ExamForm = () => {
@@ -47,7 +39,7 @@ const ExamForm = () => {
     data: exmforms,
     isLoading,
     isError,
-  } = useQuery({
+  } = useQuery<Enrollmenttype[]>({
     queryKey: ["enrollments", "alldownloads", currentPage],
     queryFn: async () => {
       // Use fetchfn to fetch the main data
@@ -150,7 +142,7 @@ const ExamForm = () => {
           <div className="relative bg-white rounded-xl w-full max-w-fit h-full overflow-auto">
             <div className="flex justify-between items-center mb-4">
               <div className="w-full p-6">
-                <ProgressBar stages={stages} />
+                <ProgressBar value={selectedEnrollment.status.id} />
               </div>
               <button
                 className="relative mx-4 p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"

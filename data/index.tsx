@@ -698,8 +698,8 @@ export const CategoryValue = [
 ];
 export const IdCardType = [
   {
-    value: "aadhar",
-    label: "Aadhar",
+    value: "aadhaar",
+    label: "Aadhaar",
   },
   {
     value: "voter",
@@ -708,6 +708,21 @@ export const IdCardType = [
   {
     value: "drivingLicense",
     label: "DrivingLicense",
+  },
+];
+
+export const IdCardType2 = [
+  {
+    value: "aadhaar",
+    label: "Aadhaar",
+  },
+  {
+    value: "BirthCertificate",
+    label: "Birth Certificate",
+  },
+  {
+    value: "Admit",
+    label: "Admit",
   },
 ];
 
