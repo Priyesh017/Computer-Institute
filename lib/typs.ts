@@ -31,7 +31,11 @@ export interface Enrollmenttype {
   Enrollmentno: string;
   id: number;
   activated: boolean;
-  status: string;
+  status: {
+    id: number;
+    value: string;
+  };
+  centerid: number;
 }
 
 export interface Enrollment {

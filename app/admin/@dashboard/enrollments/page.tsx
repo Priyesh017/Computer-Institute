@@ -35,6 +35,7 @@ const EnrollmentList = () => {
     useState<Enrollmenttype | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
+  const [loading, setloading] = useState<string | null>(null);
 
   interface etype {
     enrollments: Enrollmenttype[];
@@ -69,13 +70,23 @@ const EnrollmentList = () => {
   });
 
   const generateHandler = useMutation({
-    mutationFn: (Enrollmentno: string) =>
-      fetcherWc("/generateId", "POST", { Enrollmentno }),
-    onSuccess: (data) =>
+    mutationFn: async (Enrollmentno: string) => {
+      setloading(Enrollmentno);
+      const data = await fetcherWc("/generateId", "POST", { Enrollmentno });
+      return data;
+    },
+
+    onSuccess: (data) => {
       toast(
         data.success ? "ID generated successfully" : "ID generation failed"
-      ),
-    onError: () => toast("Some error happened"),
+      );
+      setloading(null);
+    },
+
+    onError: () => {
+      setloading(null);
+      toast("Some error happened");
+    },
   });
 
   if (isLoading) return <Loader />;
@@ -87,7 +98,7 @@ const EnrollmentList = () => {
         .toLowerCase()
         .includes(search.toLowerCase()) &&
       (filterStatus === "All" ||
-        enrollment.status.toLowerCase() === filterStatus.toLowerCase())
+        enrollment.status.value.toLowerCase() === filterStatus.toLowerCase())
     );
   });
 
@@ -100,7 +111,7 @@ const EnrollmentList = () => {
             {filterStatus}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {["All", "Pending", "Pass Out", "Drop Out"].map((option) => (
+            {["All", "Pending", "Pass Out"].map((option) => (
               <DropdownMenuItem
                 key={option}
                 onClick={() => setFilterStatus(option)}
@@ -121,7 +132,7 @@ const EnrollmentList = () => {
       <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No.</span>
-        <span>Date</span>
+        <span>Branch Id</span>
         <span>Status</span>
         <span>Approval</span>
         <span>Generate</span>
@@ -141,8 +152,8 @@ const EnrollmentList = () => {
             {enrollment.name}
           </div>
           <div>{enrollment.Enrollmentno}</div>
-          <span>{new Date(enrollment.createdAt).toDateString()}</span>
-          <div className="p-2 border rounded-md">{enrollment.status}</div>
+          <span>{enrollment.centerid}</span>
+          <div className="p-2 border rounded-md">{enrollment.status.value}</div>
           <div className="flex items-center justify-center gap-2">
             <Switch
               className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
@@ -160,7 +171,10 @@ const EnrollmentList = () => {
             disabled={!enrollment.activated}
           >
             Generate ID
-            {generateHandler.isPending && <Loader2 className="animate-spin" />}
+            {generateHandler.isPending &&
+              loading === enrollment.Enrollmentno && (
+                <Loader2 className="animate-spin" />
+              )}
           </Button>
         </div>
       ))}

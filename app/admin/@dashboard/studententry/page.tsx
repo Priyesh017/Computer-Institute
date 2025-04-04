@@ -11,7 +11,7 @@ import {
   CategoryValue,
   frameworksCourse,
   frameworksEdu,
-  IdCardType,
+  IdCardType2,
   indianStatesWithDistricts,
   Nationality,
   sexValue,
@@ -146,7 +146,7 @@ const AddStudent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 md:px-8">
+    <div className="flex flex-col items-center justify-center  md:px-8">
       <form
         className="w-full min-w-md bg-white shadow-lg rounded-2xl p-6 space-y-6"
         onSubmit={handleSubmit}
@@ -189,7 +189,7 @@ const AddStudent: React.FC = () => {
             { label: "Nationality", key: "nationality", values: Nationality },
             { label: "Category", key: "category", values: CategoryValue },
             { label: "Sex", key: "sex", values: sexValue },
-            { label: "ID Type", key: "idtype", values: IdCardType },
+            { label: "ID Type", key: "idtype", values: IdCardType2 },
           ].map(({ label, key, values }) => (
             <ComboboxDemo
               key={key}

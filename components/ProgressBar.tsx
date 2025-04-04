@@ -5,16 +5,23 @@ import anime from "animejs";
 import { useEffect, useRef } from "react";
 import { Check, X } from "lucide-react";
 
-type Stage = {
-  label: string;
-  completed: boolean;
-};
-
 type ProgressBarProps = {
-  stages: Stage[];
+  value: number;
 };
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ stages }) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({ value }) => {
+  const stages = [
+    { label: "Enrollment Done", completed: false },
+    { label: "Enrollment Verified", completed: false },
+    { label: "Exam Form Verified", completed: false },
+    { label: "Marksheet Verified", completed: false },
+    { label: "Passout", completed: false },
+  ];
+
+  for (let i = 0; i < value; i++) {
+    stages[i].completed = true;
+  }
+
   const progressRef = useRef<HTMLDivElement>(null);
 
   const completedStages = stages.filter((stage) => stage.completed).length;

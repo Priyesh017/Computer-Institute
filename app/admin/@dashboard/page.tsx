@@ -1,7 +1,10 @@
+import Display from "@/components/display";
+
 export default function AdminDashboardHome() {
   return (
     <div className="flex flex-col items-center justify-center h-full">
       <h1 className="text-2xl font-bold">Welcome to the Admin Dashboard</h1>
+      <Display />
       <p className="text-lg text-gray-600 mt-2">
         Select an option from the sidebar to manage the system.
       </p>

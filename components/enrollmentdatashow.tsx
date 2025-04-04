@@ -17,7 +17,9 @@ export const EnrollmentDetails = ({
               {key.replace(/([A-Z])/g, " $1").trim()}:
             </span>
             <span className="block text-gray-900">
-              {key === "createdAt" || key === "dob"
+              {key === "status"
+                ? value.value
+                : key === "createdAt" || key === "dob"
                 ? new Date(value).toDateString()
                 : value || "-"}
             </span>

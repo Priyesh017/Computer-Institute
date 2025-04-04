@@ -34,6 +34,7 @@ interface iDatatype {
   cid?: string;
   Prefix?: string;
   Links?: {};
+  filteredVal?: number;
 }
 
 const ApiEnd = axios.create({
