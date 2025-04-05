@@ -4,21 +4,17 @@ export const EnrollmentDetails = ({ enrollment }: { enrollment: DataItem }) => {
   const data = {
     id: enrollment.id,
     EnrollmentNo: enrollment.EnrollmentNo,
-    verified: enrollment.verified,
+
     createdAt: enrollment.createdAt,
-    name: enrollment.enrollment.name,
-    mobileNo: enrollment.enrollment.name,
-    wpNo: enrollment.enrollment.name,
-    Enrollmentno: enrollment.enrollment.name,
-    address: enrollment.enrollment.name,
-
-    Centername: enrollment.enrollment.center.Centername,
-
+    Name: enrollment.enrollment.name,
+    MobileNo: enrollment.enrollment.name,
+    WhatsaAppNo: enrollment.enrollment.wpNo,
+    address: enrollment.enrollment.address,
+    CenterName: enrollment.enrollment.center.Centername,
     IdCardNo: enrollment.enrollment.IdCardNo,
     "Last Payment Reciept No":
       enrollment.enrollment.amount.lastPaymentRecieptno,
-
-    CName: enrollment.enrollment.course.CName,
+    "Course Name": enrollment.enrollment.course.CName,
   };
 
   return (
@@ -30,7 +26,7 @@ export const EnrollmentDetails = ({ enrollment }: { enrollment: DataItem }) => {
         {Object.entries(data).map(([key, value]) => (
           <div key={key} className="p-3 border-b border-gray-300">
             <span className="font-semibold capitalize text-gray-600">
-              {key.replace(/([A-Z])/g, " $1").trim()}:
+              {key}:
             </span>
             <span className="block text-gray-900">
               {key === "createdAt"

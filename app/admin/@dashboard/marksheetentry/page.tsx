@@ -84,16 +84,19 @@ const Marksheet = () => {
       const data = (await fetcherWc("/exmformfillupDatafetch", "POST", {
         enrollmentNo,
       })) as ApiResponse;
-      if (data.success && data.data == null) toast("invalid enrollment id");
+      if (data.success && data.data == null) {
+        toast("invalid enrollment id");
+        return;
+      }
 
       setfd(data.data);
       const subjectName = data.data.course.subjects;
 
       setSubjects(
-        subjectName.map((name: string) => ({
-          subject: name,
-          theoryFullMarks: "",
-          practicalFullMarks: "",
+        subjectName.map((sub) => ({
+          subject: sub.SubName,
+          theoryFullMarks: sub.theoryFullMarks.toString(),
+          practicalFullMarks: sub.practFullMarks.toString(),
           theoryMarks: "",
           practicalMarks: "",
         }))
@@ -117,11 +120,6 @@ const Marksheet = () => {
     if (value.length <= 14) {
       setenrollmentNo(value);
     }
-  };
-
-  const fetchHandler = async () => {
-    toast("plz wait while data is fetching...");
-    await fetchData();
   };
 
   const getGrade = (percentage: number): string => {
@@ -226,7 +224,7 @@ const Marksheet = () => {
             />
             <Button
               className="h-10"
-              onClick={fetchHandler}
+              onClick={fetchData}
               disabled={loading === "fetch"}
             >
               Fetch{" "}

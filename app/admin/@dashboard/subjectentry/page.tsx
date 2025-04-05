@@ -10,7 +10,7 @@ import { frameworksCourse } from "@/data";
 import { ComboboxDemo } from "@/components/combo";
 import { Button } from "@/components/ui/button";
 
-type Subject = {
+export type Subject = {
   name: string;
   practical: string;
   theory: string;
@@ -90,9 +90,10 @@ const SubjectEntry = () => {
     try {
       setLoading(true);
       const data = await fetcherWc("/subjectAdd", "POST", {
-        c: JSON.stringify(subjects),
+        c: subjects,
         cid: fd.courseid,
       });
+
       if (data.success) toast("Subjects added successfully!");
     } catch (error) {
       console.error(error);
@@ -134,7 +135,7 @@ const SubjectEntry = () => {
         <div className="flex flex-row gap-4">
           <input
             type="text"
-            placeholder="Practical Marks"
+            placeholder="Practical Full Marks"
             value={subjectInput.practical}
             onChange={(e) =>
               setSubjectInput({ ...subjectInput, practical: e.target.value })
@@ -143,7 +144,7 @@ const SubjectEntry = () => {
           />
           <input
             type="text"
-            placeholder="Theory Marks"
+            placeholder="Theory Full Marks"
             value={subjectInput.theory}
             onChange={(e) =>
               setSubjectInput({ ...subjectInput, theory: e.target.value })

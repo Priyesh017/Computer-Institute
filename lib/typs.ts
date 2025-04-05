@@ -99,7 +99,11 @@ export type EnrollmentData = {
   };
   course: {
     CName: string;
-    subjects: string[];
+    subjects: {
+      SubName: string;
+      theoryFullMarks: number;
+      practFullMarks: number;
+    }[];
   };
 };
 
@@ -164,6 +168,7 @@ export type DataItem = {
     address: string;
     center: {
       Centername: string;
+      code: number;
     };
     father: string;
     IdCardNo: string;
