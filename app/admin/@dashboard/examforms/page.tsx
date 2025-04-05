@@ -69,8 +69,9 @@ const ExamForm = () => {
   if (isError) return <p>Error loading data</p>;
 
   // Filter and paginate data
-  const filteredEnrollment = exmforms.filter((e) =>
-    e.EnrollmentNo.toString().toLowerCase().includes(search.toLowerCase())
+  const filteredEnrollment = exmforms.filter(
+    (e) =>
+      e.EnrollmentNo.toString().toLowerCase().includes(search.toLowerCase()) // replace the EnrollmentNo with the Branch ID
   );
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const currentEnrollments = filteredEnrollment.slice(
@@ -79,7 +80,7 @@ const ExamForm = () => {
   );
 
   return (
-    <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
+    <div className="min-w-lg mx-auto mt-10 p-4">
       <div className="flex justify-between items-center px-4 py-2">
         <h2 className="text-xl font-bold">Exam Form Verify</h2>
         <Input
@@ -94,7 +95,7 @@ const ExamForm = () => {
       <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
-        <span>Date</span>
+        <span>Branch ID</span>
         <span>Approval</span>
         <span>Generate</span>
       </div>
@@ -111,7 +112,7 @@ const ExamForm = () => {
             {enrollment.enrollment.name}
           </div>
           <div>{enrollment.EnrollmentNo}</div>
-          <span>{new Date(enrollment.createdAt).toDateString()}</span>
+          <span>Branch ID</span> {/* Fix me */}
           <div className="flex items-center justify-center gap-2">
             <Switch
               id={`activation-${startIndex + index}`}

@@ -99,7 +99,7 @@ const ExamForm = () => {
   });
 
   const filteredEnrollment = enrollments.filter((enrollment) =>
-    enrollment.EnrollmentNo.toString()
+    enrollment.EnrollmentNo.toString() // Replace EnrollmentNo with Branch ID
       .toLowerCase()
       .includes(search.toLowerCase())
   );
@@ -111,7 +111,7 @@ const ExamForm = () => {
   );
 
   return (
-    <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
+    <div className="min-w-lg mx-auto mt-10 p-4">
       {/* Header & Search */}
       <div className="flex justify-between items-center px-4 py-2">
         <h2 className="text-xl font-bold">Marksheet Verify</h2>
@@ -128,7 +128,7 @@ const ExamForm = () => {
       <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
-        <span>Date</span>
+        <span>Branch ID</span>
         <span>Approval</span>
         <span>Generate</span>
       </div>
@@ -152,7 +152,7 @@ const ExamForm = () => {
               {d.enrollment.name}
             </div>
             <div>{d.EnrollmentNo}</div>
-            <span>{new Date(d.createdAt).toDateString()}</span>
+            <span>Branch ID</span> {/* Fix me Branch ID */}
             <div className="flex items-center justify-center">
               <Switch
                 checked={d.verified}

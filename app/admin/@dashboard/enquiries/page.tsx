@@ -8,6 +8,8 @@ import { fetcherWc } from "@/helper";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
+import Image from "next/image";
+
 interface idata {
   data: Notification[];
 }
@@ -15,7 +17,29 @@ interface Notification {
   id: number;
   name: string;
   email: string;
-  message: string;
+  father: string;
+  coName: string;
+  dob: string;
+  mobileNo: string;
+  AddressLine: string;
+  vill: string;
+  po: string;
+  ps: string;
+  pin: string;
+  state: string;
+  dist: string;
+  nationality: string;
+  sex: string;
+  category: string;
+  idProof: string;
+  idProofNo: string;
+  eduqualification: string;
+  bathroom: boolean;
+  tradeLicense: string;
+  squareFit: string;
+  houseRoomNo: string;
+  ImageLink: string;
+  signatureLink: string;
   createdAt: string;
 }
 
@@ -31,6 +55,8 @@ export default function Notifications() {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
+
+  console.log(data);
 
   if (isPending) {
     <Loader />;
@@ -79,7 +105,7 @@ export default function Notifications() {
 
   return (
     <motion.div
-      className="min-w-4xl min-h-80vh] mx-auto rounded-2xl p-6 bg-gray-50 shadow-lg"
+      className="min-w-4xl min-h-80vh] mx-auto p-6"
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
@@ -100,9 +126,6 @@ export default function Notifications() {
             <div className="flex flex-col max-h-20">
               <p className="font-semibold text-red-600">{notif.name}</p>
               <p className="font-bold">{notif.email}</p>
-              <p className="text-sm text-gray-600 whitespace-nowrap overflow-hidden text-ellipsis max-w-xs md:max-w-4xl">
-                {notif.message}
-              </p>
               <p className="text-xs text-gray-400">
                 {new Date(notif.createdAt).toDateString()}
               </p>
@@ -119,24 +142,96 @@ export default function Notifications() {
           exit={{ opacity: 0 }}
           onClick={() => setSelectedNotification(null)}
         >
-          <div className="flex flex-col justify-center items-center bg-white p-6 rounded-lg max-w-[70%] relative">
-            <div>
-              <button
-                className="absolute top-2 right-2"
-                onClick={() => setSelectedNotification(null)}
-              >
-                <X className="w-5 h-5 text-gray-600 hover:text-red-500" />
-              </button>
-              <p className="font-semibold text-red-600">
-                {selectedNotification.name}
-              </p>
-              <h3 className="text-lg font-bold">
-                {selectedNotification.email}
-              </h3>
-              <p className="mt-2 text-gray-600 dark:text-gray-300">
-                {selectedNotification.message}
-              </p>
-              <p className="mt-2 text-xs text-gray-400">
+          <div className="flex flex-col justify-center items-center p-6 bg-white rounded-lg max-w-5xl h-[90%] relative">
+            <p className="text-3xl font-bold mb-2">Enquiry</p>
+            <button
+              className="absolute top-2 right-2 w-8 h-8 text-gray-600 rounded-full hover:text-red-500 hover:bg-gray-100"
+              onClick={() => setSelectedNotification(null)}
+            >
+              <X className="mx-auto" size={20} />
+            </button>
+            <div className="w-full overflow-y-auto">
+              <div className="grid grid-cols-2 w-full gap-2">
+                {[
+                  { label: "Applicant Name", value: selectedNotification.name },
+                  { label: "Email ID", value: selectedNotification.email },
+                  { label: "Father Name", value: selectedNotification.father },
+                  { label: "C/O Name", value: selectedNotification.coName },
+                  {
+                    label: "Date of Birth",
+                    value: new Date(selectedNotification.dob)
+                      .toISOString()
+                      .split("T")[0],
+                  },
+                  { label: "Mobile No", value: selectedNotification.mobileNo },
+                  { label: "Address", value: selectedNotification.AddressLine },
+                  { label: "Village", value: selectedNotification.vill },
+                  { label: "Post Office", value: selectedNotification.po },
+                  { label: "Police Station", value: selectedNotification.ps },
+                  { label: "Pin Code", value: selectedNotification.pin },
+                  { label: "State", value: selectedNotification.state },
+                  { label: "District", value: selectedNotification.dist },
+                  {
+                    label: "Nationality",
+                    value: selectedNotification.nationality,
+                  },
+                  { label: "Gender", value: selectedNotification.sex },
+                  { label: "Category", value: selectedNotification.category },
+                  { label: "ID Proof", value: selectedNotification.idProof },
+                  {
+                    label: "ID Proof No",
+                    value: selectedNotification.idProofNo,
+                  },
+                  {
+                    label: "Education Qualification",
+                    value: selectedNotification.eduqualification,
+                  },
+                  {
+                    label: "Bathroom",
+                    value: selectedNotification.bathroom ? "Yes" : "No",
+                  },
+                  {
+                    label: "Trade License",
+                    value: selectedNotification.tradeLicense,
+                  },
+                  {
+                    label: "Square Fit",
+                    value: selectedNotification.squareFit,
+                  },
+                  {
+                    label: "House Room No",
+                    value: selectedNotification.houseRoomNo,
+                  },
+                ].map((field, index) => (
+                  <div key={index} className="p-2">
+                    <label className="font-semibold">{field.label}: </label>
+                    <span className="text-wrap">{field.value}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex justify-center items-center my-2 gap-5">
+                <div>
+                  <Image
+                    src={selectedNotification.ImageLink}
+                    alt="Uploaded image"
+                    width={200}
+                    height={200}
+                    className="rounded shadow object-contain"
+                  />
+                  <p className="text-center mt-1">Applicant Image</p>
+                </div>
+                <div>
+                  <Image
+                    src={selectedNotification.ImageLink}
+                    alt="Uploaded image"
+                    width={200}
+                    height={200}
+                    className="rounded shadow object-contain"
+                  />
+                  <p className="text-center mt-1">Applicant Signature</p>
+                </div>
+              </div>
+              <p className="mt-2 text-sm text-gray-400">
                 {new Date(selectedNotification.createdAt).toDateString()}
               </p>
             </div>

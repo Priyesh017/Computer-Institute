@@ -94,7 +94,8 @@ const EnrollmentList = () => {
 
   const filteredEnrollment = data!.enrollments.filter((enrollment) => {
     return (
-      enrollment.Enrollmentno.toString()
+      enrollment.centerid
+        .toString()
         .toLowerCase()
         .includes(search.toLowerCase()) &&
       (filterStatus === "All" ||
@@ -103,7 +104,7 @@ const EnrollmentList = () => {
   });
 
   return (
-    <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
+    <div className="min-w-lg mx-auto mt-10 p-4">
       <div className="flex justify-between items-center px-4 py-2">
         <h2 className="text-xl font-bold">Enrollment Verify</h2>
         <DropdownMenu>
@@ -132,7 +133,7 @@ const EnrollmentList = () => {
       <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No.</span>
-        <span>Branch Id</span>
+        <span>Branch ID</span>
         <span>Status</span>
         <span>Approval</span>
         <span>Generate</span>
