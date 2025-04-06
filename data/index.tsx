@@ -169,6 +169,18 @@ export const navMain = [
     ],
   },
   {
+    title: "All Branches",
+    role: "admin",
+    url: "#",
+    icon: Settings2,
+    items: [
+      {
+        title: "All Branches",
+        url: "/admin/allbranches",
+      },
+    ],
+  },
+  {
     title: "Education",
     role: "center",
     url: "#",

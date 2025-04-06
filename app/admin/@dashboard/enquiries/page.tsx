@@ -222,7 +222,7 @@ export default function Notifications() {
                 </div>
                 <div>
                   <Image
-                    src={selectedNotification.ImageLink}
+                    src={selectedNotification.signatureLink}
                     alt="Uploaded image"
                     width={200}
                     height={200}

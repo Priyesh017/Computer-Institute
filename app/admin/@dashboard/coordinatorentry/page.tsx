@@ -10,6 +10,7 @@ interface Member {
   id: number;
   name: string;
   image: string | null; // Updated to allow data URLs
+  area: string;
 }
 
 export default function EntryForm() {
@@ -18,7 +19,6 @@ export default function EntryForm() {
     image: null as string | null, // Updated to allow data URLs
     district: "",
   });
-
   const [members, setMembers] = useState<Member[]>([]);
 
   const addMember = () => {
@@ -74,7 +74,7 @@ export default function EntryForm() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     // const fd = {
     //   coordinator,
     //   members,
@@ -162,17 +162,35 @@ export default function EntryForm() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Sub-District Co-Ordinator Name
-            </label>
-            <input
-              type="text"
-              placeholder="Sub-District Co-Ordinator Name"
-              className="w-full p-2 bg-gray-200 text-black rounded-md"
-              value={member.name}
-              onChange={(e) => updateMember(member.id, "name", e.target.value)}
-            />
+          <div className="grid grid-cols-2 gap-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Sub-District Co-Ordinator Name
+              </label>
+              <input
+                type="text"
+                placeholder="Sub-District Co-Ordinator Name"
+                className="w-full p-2 bg-gray-200 text-black rounded-md"
+                value={member.name}
+                onChange={(e) =>
+                  updateMember(member.id, "name", e.target.value)
+                }
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Sub-District Name
+              </label>
+              <input
+                type="text"
+                placeholder="Sub-District Name"
+                className="w-full p-2 bg-gray-200 text-black rounded-md"
+                value={member.area}
+                onChange={(e) =>
+                  updateMember(member.id, "area", e.target.value)
+                }
+              />
+            </div>
           </div>
 
           <div className="flex flex-col md:flex-row justify-start items-center w-full gap-4">
