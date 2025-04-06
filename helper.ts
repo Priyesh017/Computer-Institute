@@ -1,5 +1,6 @@
 import axios from "axios";
 import { DataItem } from "./lib/typs";
+import { Subject } from "./app/admin/@dashboard/subjectentry/page";
 
 interface iDatatype {
   email?: string;
@@ -25,7 +26,7 @@ interface iDatatype {
   imageUrl?: string;
   enrollment?: DataItem;
   signatureLink?: string;
-  c?: string;
+  c?: Subject[];
   subject?: string;
   details?: string;
   expiryDate?: string;
@@ -35,6 +36,7 @@ interface iDatatype {
   Prefix?: string;
   Links?: {};
   filteredVal?: number;
+  fd?: {};
 }
 
 const ApiEnd = axios.create({

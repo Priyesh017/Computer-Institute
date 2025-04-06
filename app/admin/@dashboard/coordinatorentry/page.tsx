@@ -10,7 +10,6 @@ interface Member {
   id: number;
   name: string;
   image: string | null; // Updated to allow data URLs
-  area: string;
 }
 
 export default function EntryForm() {
@@ -19,6 +18,7 @@ export default function EntryForm() {
     image: null as string | null, // Updated to allow data URLs
     district: "",
   });
+
   const [members, setMembers] = useState<Member[]>([]);
 
   const addMember = () => {
@@ -74,32 +74,17 @@ export default function EntryForm() {
     }
   };
 
-  const handleSubmit = () => {
-    const formData = {
-      coordinator,
-      members,
-    };
+  const handleSubmit = async () => {
+    // const fd = {
+    //   coordinator,
+    //   members,
+    // };
 
-    console.log("Submitting Data:", formData);
-
-    fetch("/api/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => {
-        if (response.ok) {
-          alert("Data submitted successfully!");
-        } else {
-          alert("Failed to submit data.");
-        }
-      })
-      .catch((error) => {
-        console.error("Error submitting data:", error);
-        alert("An error occurred while submitting data.");
-      });
+    try {
+      // const data = await fetcherWc("/Coordinator_Update", "POST", { fd });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -177,35 +162,17 @@ export default function EntryForm() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="grid grid-cols-2 gap-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Sub-District Co-Ordinator Name
-              </label>
-              <input
-                type="text"
-                placeholder="Sub-District Co-Ordinator Name"
-                className="w-full p-2 bg-gray-200 text-black rounded-md"
-                value={member.name}
-                onChange={(e) =>
-                  updateMember(member.id, "name", e.target.value)
-                }
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Sub-District Name
-              </label>
-              <input
-                type="text"
-                placeholder="Sub-District Name"
-                className="w-full p-2 bg-gray-200 text-black rounded-md"
-                value={member.area}
-                onChange={(e) =>
-                  updateMember(member.id, "area", e.target.value)
-                }
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Sub-District Co-Ordinator Name
+            </label>
+            <input
+              type="text"
+              placeholder="Sub-District Co-Ordinator Name"
+              className="w-full p-2 bg-gray-200 text-black rounded-md"
+              value={member.name}
+              onChange={(e) => updateMember(member.id, "name", e.target.value)}
+            />
           </div>
 
           <div className="flex flex-col md:flex-row justify-start items-center w-full gap-4">

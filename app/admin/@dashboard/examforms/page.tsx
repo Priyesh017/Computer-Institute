@@ -71,7 +71,10 @@ const ExamForm = () => {
   // Filter and paginate data
   const filteredEnrollment = exmforms.filter(
     (e) =>
-      e.EnrollmentNo.toString().toLowerCase().includes(search.toLowerCase()) // replace the EnrollmentNo with the Branch ID
+      e.enrollment.center.code
+        .toString()
+        .toLowerCase()
+        .includes(search.toLowerCase()) // replace the EnrollmentNo with the Branch ID
   );
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const currentEnrollments = filteredEnrollment.slice(
@@ -112,7 +115,7 @@ const ExamForm = () => {
             {enrollment.enrollment.name}
           </div>
           <div>{enrollment.EnrollmentNo}</div>
-          <span>Branch ID</span> {/* Fix me */}
+          <span>{enrollment.enrollment.center.code}</span>
           <div className="flex items-center justify-center gap-2">
             <Switch
               id={`activation-${startIndex + index}`}

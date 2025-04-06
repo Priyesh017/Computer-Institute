@@ -99,7 +99,8 @@ const ExamForm = () => {
   });
 
   const filteredEnrollment = enrollments.filter((enrollment) =>
-    enrollment.EnrollmentNo.toString() // Replace EnrollmentNo with Branch ID
+    enrollment.enrollment.center.code
+      .toString()
       .toLowerCase()
       .includes(search.toLowerCase())
   );
@@ -152,7 +153,7 @@ const ExamForm = () => {
               {d.enrollment.name}
             </div>
             <div>{d.EnrollmentNo}</div>
-            <span>Branch ID</span> {/* Fix me Branch ID */}
+            <span>{d.enrollment.center.code}</span>
             <div className="flex items-center justify-center">
               <Switch
                 checked={d.verified}

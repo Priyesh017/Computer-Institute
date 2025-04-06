@@ -67,7 +67,7 @@ const ExamForm = () => {
     }
   };
 
-  const fetchHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const fetchHandler = (event: React.FormEvent) => {
     event.preventDefault();
     fetchData();
   };
@@ -95,16 +95,16 @@ const ExamForm = () => {
       if (response.success) {
         toast("✅ Success!");
       } else {
-        if (response.error?.code === "P2002") {
-          toast("❌ EnrollmentNo already exists!");
-        } else {
-          toast("❌ Submission failed!");
-        }
+        toast.error(
+          response.error.code == "P2002"
+            ? "❌ duplicate entry!"
+            : "Submission failed!"
+        );
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.error("Error:", error);
-      toast("⚠️ Some error happened");
+      toast("code break error");
+      console.log(error);
     } finally {
       setLoading(null);
     }
