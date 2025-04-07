@@ -12,13 +12,13 @@ import { toast } from "react-toastify";
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export default function CertificateGenerator() {
-  const [enrollmentNo, setEnrollmentNo] = useState("");
+  const [EnrollmentNo, setEnrollmentNo] = useState("");
   const [certificateVisible, setCertificateVisible] = useState(false);
 
   const [link, setlink] = useState<string | null>(null);
 
   const handler = async () => {
-    const filteredVal = parseInt(enrollmentNo.split("/")[1]);
+    const filteredVal = parseInt(EnrollmentNo.split("/")[1]);
     const data = await fetcher("/Certi_fetch", "POST", {
       filteredVal,
     });
@@ -39,7 +39,7 @@ export default function CertificateGenerator() {
       <input
         type="text"
         placeholder="Enter Enrollment No"
-        value={enrollmentNo}
+        value={EnrollmentNo}
         onChange={(e) => setEnrollmentNo(e.target.value)}
         className="p-2 mt-4 rounded-lg border border-gray-600 bg-gray-800 focus:outline-none focus:ring-2 focus:ring-violet-400"
       />
@@ -51,10 +51,10 @@ export default function CertificateGenerator() {
       </Button>
 
       {certificateVisible && link && (
-        <div className="mt-6 p-6 bg-white text-black rounded-lg shadow-lg w-96 text-center">
+        <div className="mt-6 text-violet-400 text-center">
           <h2 className="text-xl font-bold">Certificate of Completion</h2>
           <p className="mt-2">This is to certify that</p>
-          <p className="text-lg font-semibold">Student ID: {enrollmentNo}</p>
+          <p className="text-lg font-semibold">Student ID: {EnrollmentNo}</p>
           <p className="mt-2">has successfully completed the course.</p>
 
           <div className="mt-4">

@@ -562,7 +562,7 @@ export const idCardFields = [
   { key: "sName", label: "Student Name", type: "text" },
   { key: "cName", label: "Course Name", type: "text" },
   { key: "idCardNo", label: "ID Card No.", type: "number" },
-  { key: "enrollmentNo", label: "Enrollment No", type: "text" },
+  { key: "EnrollmentNo", label: "Enrollment No", type: "text" },
   { key: "address", label: "Address", type: "text" },
   { key: "centerName", label: "Center Name", type: "text" },
 ];
@@ -666,6 +666,33 @@ export const Nationality = [
     label: "Foreigner",
   },
 ];
+
+export const WestBengalDistricts = [
+  { value: "ALIPURDUAR", label: "Alipurduar" },
+  { value: "BANKURA", label: "Bankura" },
+  { value: "BIRBHUM", label: "Birbhum" },
+  { value: "COOCH_BEHAR", label: "Cooch Behar" },
+  { value: "DARJEELING", label: "Darjeeling" },
+  { value: "DAKSHIN_DINAJPUR", label: "Dakshin Dinajpur" },
+  { value: "HOOGHLY", label: "Hooghly" },
+  { value: "HOWRAH", label: "Howrah" },
+  { value: "JALPAIGURI", label: "Jalpaiguri" },
+  { value: "JHARGRAM", label: "Jhargram" },
+  { value: "KALIMPONG", label: "Kalimpong" },
+  { value: "KOLKATA", label: "Kolkata" },
+  { value: "MALDA", label: "Malda" },
+  { value: "MURSHIDABAD", label: "Murshidabad" },
+  { value: "NADIA", label: "Nadia" },
+  { value: "NORTH_24_PARGANAS", label: "North 24 Parganas" },
+  { value: "PASCHIM_BARDHAMAN", label: "Paschim Bardhaman" },
+  { value: "PASCHIM_MEDINIPUR", label: "Paschim Medinipur" },
+  { value: "PURBA_BARDHAMAN", label: "Purba Bardhaman" },
+  { value: "PURBA_MEDINIPUR", label: "Purba Medinipur" },
+  { value: "PURULIA", label: "Purulia" },
+  { value: "SOUTH_24_PARGANAS", label: "South 24 Parganas" },
+  { value: "UTTAR_DINAJPUR", label: "Uttar Dinajpur" },
+];
+
 export const sexValue = [
   {
     value: "MALE",

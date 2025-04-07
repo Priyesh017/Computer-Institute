@@ -8,19 +8,12 @@ import Image from "next/image";
 interface Coordinator {
   name: string;
   image: string;
-  role: "District Coordinator" | "Sub-District Coordinator";
 }
 
 const coordinators: Coordinator[] = [
   {
     name: "John Doe",
     image: "/project.png",
-    role: "District Coordinator",
-  },
-  {
-    name: "Jane Smith",
-    image: "/project.png",
-    role: "Sub-District Coordinator",
   },
 ];
 
@@ -55,7 +48,7 @@ export default function CoordinatorCard() {
             <h3 className="text-lg font-semibold text-gray-800">
               {coordinator.name}
             </h3>
-            <p className="text-sm text-gray-500">{coordinator.role}</p>
+            <p className="text-sm text-gray-500">District Coordinator</p>
           </div>
         </motion.div>
       ))}

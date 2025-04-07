@@ -12,7 +12,7 @@ const ExamForm = () => {
   const [fd, setfd] = useState<EnrollmentData>();
   const [loading, setLoading] = useState<"fetch" | "send" | null>(null);
 
-  const [enrollmentNo, setEnrollmentNo] = useState<string>("");
+  const [EnrollmentNo, setEnrollmentNo] = useState<string>("");
 
   const [remain, setremain] = useState({
     ATI_CODE: "",
@@ -52,9 +52,10 @@ const ExamForm = () => {
 
   const fetchData = async () => {
     setLoading("fetch");
+
     try {
       const data = (await fetcherWc("/exmformfillupDatafetch", "POST", {
-        enrollmentNo,
+        EnrollmentNo: parseInt(EnrollmentNo),
       })) as ApiResponse;
 
       if (data.success && data.data == null) toast("invalid enrollment id");
@@ -83,12 +84,15 @@ const ExamForm = () => {
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (!fd!.activated) {
+      toast("enrollment isn't activated yet");
+      return;
+    }
     try {
       setLoading("send");
 
       const response = await fetcherWc("/examFormFillup", "POST", {
-        enrollmentNo,
+        EnrollmentNo: parseInt(EnrollmentNo),
         ...remain,
       });
 
@@ -132,7 +136,7 @@ const ExamForm = () => {
             <div className="w-full flex justify-center items-center gap-5">
               <input
                 type="text"
-                value={enrollmentNo}
+                value={EnrollmentNo}
                 onChange={handleChange}
                 className="w-full p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
               />
