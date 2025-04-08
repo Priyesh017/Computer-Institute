@@ -41,7 +41,7 @@ export default function CoordinatorCard() {
     });
   }, []);
 
-  if (isPending || !coordinator) return;
+  if (isPending || !coordinator?.data2 || error) return;
 
   return (
     <div className="fixed top-0 right-0 flex flex-wrap justify-center gap-3 p-2">
