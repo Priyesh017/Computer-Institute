@@ -8,38 +8,44 @@ import { useAuthStore } from "@/store";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
   const { user } = useAuthStore();
   const router = useRouter();
+  const [loading, setloading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (newPassword !== confirmPassword) {
-      setError("New passwords do not match");
+      toast.error("New passwords do not match");
       animateError();
       return;
     }
+    try {
+      setloading(true);
+      const data = await fetcherWc("/ChangePassword", "POST", {
+        oldPassword,
+        email: user?.email,
+        newPassword,
+      });
 
-    const data = await fetcherWc("/ChangePassword", "POST", {
-      oldPassword,
-      email: user?.email,
-      newPassword,
-    });
+      if (!data.success) {
+        toast("failed to update");
+        return;
+      }
 
-    if (!data.success) {
-      toast("failed to update");
-      return;
+      toast.success("successful");
+      router.replace("/admin");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setloading(false);
     }
-
-    toast.success("successful");
-    router.replace("/admin");
-    setError("");
   };
 
   const animateError = () => {
@@ -90,25 +96,13 @@ const ChangePassword = () => {
             whileFocus={{ scale: 1.05 }}
           />
 
-          {error && (
-            <motion.p
-              id="error-text"
-              className="text-red-500 text-sm text-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              {error}
-            </motion.p>
-          )}
-
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              type="submit"
-              className="w-full p-3 bg-violet-700 hover:bg-violet-800 text-white rounded-lg"
-            >
-              Change Password
-            </Button>
-          </motion.div>
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full p-3 bg-violet-700 hover:bg-violet-800 text-white rounded-lg"
+          >
+            Change Password {loading && <Loader2 className="animate-spin" />}
+          </Button>
         </form>
       </motion.div>
     </div>
