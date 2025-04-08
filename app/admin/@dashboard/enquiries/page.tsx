@@ -41,6 +41,7 @@ interface Notification {
   ImageLink: string;
   signatureLink: string;
   createdAt: string;
+  verified: boolean;
 }
 
 export default function Notifications() {
@@ -238,13 +239,15 @@ export default function Notifications() {
                 {new Date(selectedNotification.createdAt).toDateString()}
               </p>
             </div>
-            <Button
-              className="mt-5 bg-purple-700 hover:bg-purple-800"
-              onClick={verifyhandler}
-              disabled={loading}
-            >
-              Verify {loading && <Loader2 className="animate-spin" />}
-            </Button>
+            {!selectedNotification.verified && (
+              <Button
+                className="mt-5 bg-purple-700 hover:bg-purple-800"
+                onClick={verifyhandler}
+                disabled={loading}
+              >
+                Verify {loading && <Loader2 className="animate-spin" />}
+              </Button>
+            )}
           </div>
         </motion.div>
       )}

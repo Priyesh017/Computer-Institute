@@ -62,7 +62,9 @@ const formSchema = z.object({
     },
     { message: "Invalid date of birth" }
   ),
-  sex: z.enum(["MALE", "FEMALE", "OTHER"], { message: "Invalid selection" }),
+  sex: z.enum(["MALE", "FEMALE", "TRANSGENDER"], {
+    message: "Invalid Sex Selection",
+  }),
   category: z.string().min(2, "Category is required"),
   nationality: z.string().min(2, "Nationality is required"),
   mobileNo: z.string().regex(/^\d{10}$/, "Mobile number must be 10 digits"),
