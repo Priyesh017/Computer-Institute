@@ -19,7 +19,7 @@ const Marksheet = () => {
   const [totalMarks, setTotalMarks] = useState<number>(0);
   const [percentage, setPercentage] = useState<number>(0);
   const [grade, setGrade] = useState<string>("N/A");
-  const [enrollmentNo, setenrollmentNo] = useState("");
+  const [EnrollmentNo, setEnrollmentNo] = useState("");
   const [year, setyear] = useState("");
   const [fd, setfd] = useState<EnrollmentData>();
   const [selected, setSelected] = useState<"PASS" | "FAIL" | "Select">(
@@ -82,7 +82,7 @@ const Marksheet = () => {
     try {
       setloading("fetch");
       const data = (await fetcherWc("/exmformfillupDatafetch", "POST", {
-        enrollmentNo,
+        EnrollmentNo: parseInt(EnrollmentNo),
       })) as ApiResponse;
       if (data.success && data.data == null) {
         toast("invalid enrollment id");
@@ -112,16 +112,6 @@ const Marksheet = () => {
   const check = () =>
     !allFieldsFilled || !fd?.name || year === "" || selected === "Select";
 
-  const handleChange3 = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const value = e.target.value;
-
-    if (value.length <= 14) {
-      setenrollmentNo(value);
-    }
-  };
-
   const getGrade = (percentage: number): string => {
     if (percentage >= 90) return "AA";
     if (percentage >= 80) return "A+";
@@ -148,6 +138,11 @@ const Marksheet = () => {
   };
 
   const handleSubmit = async () => {
+    // add if exmformfillup not verfied
+    if (!fd!.examformFillup.verified) {
+      toast("exam form isn't verified yet.");
+      return;
+    }
     if (check()) {
       toast("Please fill all fields before submitting!");
       return;
@@ -155,7 +150,7 @@ const Marksheet = () => {
     try {
       setloading("send");
       const data = await fetcherWc("/exmmarksentry", "POST", {
-        EnrollmentNo: enrollmentNo,
+        EnrollmentNo: parseInt(EnrollmentNo),
         marks: subjects,
         remarks: selected,
         grade,
@@ -218,8 +213,8 @@ const Marksheet = () => {
           <div className="w-full flex justify-center items-center gap-5">
             <input
               type="text"
-              value={enrollmentNo}
-              onChange={handleChange3}
+              value={EnrollmentNo}
+              onChange={(e) => setEnrollmentNo(e.target.value)}
               className="w-full p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
             <Button

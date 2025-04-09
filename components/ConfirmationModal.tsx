@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 type ConfirmationModalProps = {
   isOpen: boolean;
@@ -7,6 +8,7 @@ type ConfirmationModalProps = {
   onConfirm: () => void;
   title: string;
   message: string;
+  loading: boolean;
 };
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
@@ -15,6 +17,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   onConfirm,
   title,
   message,
+  loading,
 }) => {
   if (!isOpen) return null;
 
@@ -28,7 +31,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             Cancel
           </Button>
           <Button variant="destructive" onClick={onConfirm}>
-            Confirm
+            Confirm {loading && <Loader2 className="animate-spin" />}
           </Button>
         </div>
       </div>

@@ -44,6 +44,7 @@ export function useAuth() {
       "/studentlogin",
       "/enquiry",
       "/resetpassword",
+      "/certificate",
     ];
 
     if (!loading && !user && !allowedRoutes.includes(pathname)) {

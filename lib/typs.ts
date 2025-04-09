@@ -1,6 +1,6 @@
 export interface StudentProfileProps {
   name: string;
-  Enrollmentno: string;
+  EnrollmentNo: number;
   imageLink: string;
   IdCardNo: string;
   mobileNo: string;
@@ -28,19 +28,19 @@ export interface Enrollmenttype {
   imageLink: string;
   name: string;
   createdAt: string; // or Date
-  Enrollmentno: string;
+  EnrollmentNo: number;
   id: number;
   activated: boolean;
   status: {
     id: number;
-    value: string;
+    val: string;
   };
   centerid: number;
 }
 
 export interface Enrollment {
   name: string;
-  Enrollmentno: string;
+  EnrollmentNo: number;
   activated: boolean;
   id: number;
 
@@ -74,7 +74,7 @@ export interface PreviewModalProps {
 }
 export type EnrollmentData = {
   id: number;
-  Enrollmentno: string;
+  EnrollmentNo: number;
   IdCardNo: string;
   idCardLink: string;
   admitLink: string;
@@ -92,7 +92,9 @@ export type EnrollmentData = {
   courseId: number;
   centerid: number;
   createdAt: string;
-
+  examformFillup: {
+    verified: boolean;
+  };
   center: {
     Centername: string;
     address: string;
@@ -116,7 +118,7 @@ export type MarksWithEnrollment = {
   id: number;
   marks: Mark[];
   remarks: "PASS" | "FAIL";
-  EnrollmentNo: string;
+  EnrollmentNo: number;
   grade: string;
   totalMarks: number;
   percentage: number;
@@ -149,7 +151,7 @@ type Mark = {
 };
 export type DataItem = {
   id: number;
-  EnrollmentNo: string;
+  EnrollmentNo: number;
   verified: boolean;
   createdAt: string;
   ExamCenterCode: string;
@@ -163,7 +165,7 @@ export type DataItem = {
     name: string;
     mobileNo: string;
     wpNo: string;
-    Enrollmentno: string;
+    EnrollmentNo: number;
     imageLink: string;
     address: string;
     center: {

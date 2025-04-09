@@ -99,7 +99,7 @@ const ExamForm = () => {
             >
               {enrollment.name}
             </div>
-            <div>{enrollment.Enrollmentno}</div>
+            <div>{enrollment.EnrollmentNo}</div>
             <span>{new Date(enrollment.createdAt).toDateString()}</span>
             <Button
               className="mx-2 hover:bg-violet-800"

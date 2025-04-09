@@ -6,9 +6,8 @@ interface iDatatype {
   email?: string;
   name?: string;
   password?: string;
-  enrollmentNo?: string;
+  EnrollmentNo?: number;
   id?: number;
-  EnrollmentNo?: string;
   marks?: any;
   remarks?: "PASS" | "FAIL" | "Select";
   grade?: string;
@@ -21,7 +20,6 @@ interface iDatatype {
   tp?: number;
   ar?: number;
   lprn?: string;
-  Enrollmentno?: string;
   data?: any;
   imageUrl?: string;
   enrollment?: DataItem;
@@ -36,7 +34,6 @@ interface iDatatype {
   Prefix?: string;
   Links?: {};
   filteredVal?: number;
-  fd?: {};
 }
 
 const ApiEnd = axios.create({

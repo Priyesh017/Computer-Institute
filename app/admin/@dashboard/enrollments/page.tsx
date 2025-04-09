@@ -35,7 +35,7 @@ const EnrollmentList = () => {
     useState<Enrollmenttype | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
-  const [loading, setloading] = useState<string | null>(null);
+  const [loading, setloading] = useState<number | null>(null);
 
   interface etype {
     enrollments: Enrollmenttype[];
@@ -70,9 +70,9 @@ const EnrollmentList = () => {
   });
 
   const generateHandler = useMutation({
-    mutationFn: async (Enrollmentno: string) => {
-      setloading(Enrollmentno);
-      const data = await fetcherWc("/generateId", "POST", { Enrollmentno });
+    mutationFn: async (EnrollmentNo: number) => {
+      setloading(EnrollmentNo);
+      const data = await fetcherWc("/generateId", "POST", { EnrollmentNo });
       return data;
     },
 
@@ -99,7 +99,7 @@ const EnrollmentList = () => {
         .toLowerCase()
         .includes(search.toLowerCase()) &&
       (filterStatus === "All" ||
-        enrollment.status.value.toLowerCase() === filterStatus.toLowerCase())
+        enrollment.status.val.toLowerCase() === filterStatus.toLowerCase())
     );
   });
 
@@ -152,9 +152,9 @@ const EnrollmentList = () => {
           >
             {enrollment.name}
           </div>
-          <div>{enrollment.Enrollmentno}</div>
+          <div>{enrollment.EnrollmentNo}</div>
           <span>{enrollment.centerid}</span>
-          <div className="p-2 border rounded-md">{enrollment.status.value}</div>
+          <div className="p-2 border rounded-md">{enrollment.status.val}</div>
           <div className="flex items-center justify-center gap-2">
             <Switch
               className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
@@ -168,12 +168,12 @@ const EnrollmentList = () => {
                 ? "bg-purple-600 hover:bg-purple-700"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
-            onClick={() => generateHandler.mutate(enrollment.Enrollmentno)}
+            onClick={() => generateHandler.mutate(enrollment.EnrollmentNo)}
             disabled={!enrollment.activated}
           >
             Generate ID
             {generateHandler.isPending &&
-              loading === enrollment.Enrollmentno && (
+              loading === enrollment.EnrollmentNo && (
                 <Loader2 className="animate-spin" />
               )}
           </Button>

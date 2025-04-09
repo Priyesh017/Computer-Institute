@@ -36,11 +36,11 @@ const ExamFee = () => {
 
   const mutation = useMutation({
     mutationFn: async ({
-      enrollmentNo,
+      EnrollmentNo,
       id,
       remainingAmount,
     }: {
-      enrollmentNo: string;
+      EnrollmentNo: number;
       id: number;
       remainingAmount: number;
     }) => {
@@ -49,7 +49,7 @@ const ExamFee = () => {
         throw new Error("Invalid amount entered.");
       }
       return fetcherWc("/amountEdit", "POST", {
-        EnrollmentNo: enrollmentNo,
+        EnrollmentNo: EnrollmentNo,
         tp: amountPaid,
         ar: remainingAmount - amountPaid,
       });
@@ -97,7 +97,7 @@ const ExamFee = () => {
                 className="grid md:grid-cols-7 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer hover:bg-blue-100"
               >
                 <div className="hover:text-violet-800">{enrollment.name}</div>
-                <div>{enrollment.Enrollmentno}</div>
+                <div>{enrollment.EnrollmentNo}</div>
                 <span>{enrollment.course.price}</span>
                 <input
                   type="number"
@@ -118,7 +118,7 @@ const ExamFee = () => {
                   className="mx-4 bg-green-600 hover:bg-green-500"
                   onClick={() =>
                     mutation.mutate({
-                      enrollmentNo: enrollment.Enrollmentno,
+                      EnrollmentNo: enrollment.EnrollmentNo,
                       id: enrollment.id,
                       remainingAmount,
                     })

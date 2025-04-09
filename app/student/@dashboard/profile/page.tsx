@@ -34,7 +34,7 @@ const StudentProfile: React.FC = () => {
     {
       id: "enrollment",
       label: "Enrollment No:",
-      value: student.Enrollmentno,
+      value: student.EnrollmentNo,
     },
     { id: "card", label: "Student Card:", value: student.IdCardNo },
     { id: "phone", label: "Phone:", value: student.mobileNo },

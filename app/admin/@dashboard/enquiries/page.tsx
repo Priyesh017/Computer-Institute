@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { fetcherWc } from "@/helper";
 import Loader from "@/components/Loader";
@@ -41,11 +41,13 @@ interface Notification {
   ImageLink: string;
   signatureLink: string;
   createdAt: string;
+  verified: boolean;
 }
 
 export default function Notifications() {
   const [selectedNotification, setSelectedNotification] =
     useState<Notification | null>(null);
+  const [loading, setloading] = useState(false);
 
   const { isPending, error, data } = useQuery<idata>({
     queryKey: ["repoData"],
@@ -56,8 +58,6 @@ export default function Notifications() {
     refetchOnReconnect: false,
   });
 
-  console.log(data);
-
   if (isPending) {
     <Loader />;
     return;
@@ -66,11 +66,13 @@ export default function Notifications() {
   if (error) return;
 
   const notifications = data.data;
+
   const openNotification = (notif: Notification) => {
     setSelectedNotification(notif);
   };
 
   const verifyhandler = async () => {
+    setloading(true);
     const email = selectedNotification!.email;
     const name = selectedNotification!.name;
 
@@ -87,6 +89,8 @@ export default function Notifications() {
         // Handle completion case
         if (data.step === 2) {
           toast("Process completed, closing connection.");
+          setloading(false);
+          setSelectedNotification(null);
           eventSource.close();
         }
       } catch (error) {
@@ -98,6 +102,7 @@ export default function Notifications() {
       console.error("SSE error:", error);
       eventSource.close();
     };
+
     return () => {
       eventSource.close();
     };
@@ -140,7 +145,6 @@ export default function Notifications() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={() => setSelectedNotification(null)}
         >
           <div className="flex flex-col justify-center items-center p-6 bg-white rounded-lg max-w-5xl h-[90%] relative">
             <p className="text-3xl font-bold mb-2">Enquiry</p>
@@ -235,12 +239,15 @@ export default function Notifications() {
                 {new Date(selectedNotification.createdAt).toDateString()}
               </p>
             </div>
-            <Button
-              className="mt-5 bg-purple-700 hover:bg-purple-800"
-              onClick={verifyhandler}
-            >
-              Verify
-            </Button>
+            {!selectedNotification.verified && (
+              <Button
+                className="mt-5 bg-purple-700 hover:bg-purple-800"
+                onClick={verifyhandler}
+                disabled={loading}
+              >
+                Verify {loading && <Loader2 className="animate-spin" />}
+              </Button>
+            )}
           </div>
         </motion.div>
       )}

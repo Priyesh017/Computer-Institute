@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 
 export default function StudentLogin() {
   const router = useRouter();
-  const [enrollmentNo, setEnrollmentNo] = useState("");
+  const [EnrollmentNo, setEnrollmentNo] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const { user, login } = useAuthStore();
@@ -40,14 +40,16 @@ export default function StudentLogin() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!enrollmentNo || !password) {
+    if (!EnrollmentNo || !password) {
       setError("Please enter both Enrollment No. and Password.");
       return;
     }
     settemploading(true);
+    const ParsedVal = EnrollmentNo.split("/")[1];
+
     try {
       const data = await fetcherWc("/studentLogin", "POST", {
-        enrollmentNo: enrollmentNo,
+        EnrollmentNo: parseInt(ParsedVal),
         password,
       });
       if (data.success) {
@@ -80,16 +82,16 @@ export default function StudentLogin() {
               type="text"
               className="w-full px-4 py-2 mt-1 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
               placeholder="Enter Enrollment No."
-              value={enrollmentNo}
+              value={EnrollmentNo}
               onChange={(e) => setEnrollmentNo(e.target.value)}
             />
           </div>
           <div>
-            <label className="block text-white">Password</label>
+            <label className="block text-white">Date Of Birth</label>
             <input
               type="password"
               className="w-full px-4 py-2 mt-1 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
-              placeholder="Enter Password"
+              placeholder="dd-mm-yyyy"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
