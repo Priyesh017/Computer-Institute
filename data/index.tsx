@@ -248,84 +248,83 @@ export const stats = [
 
 export const frameworksCourse = [
   {
-    label: "DOAP",
-    value: "15",
-  },
-  {
-    label: "DITA",
-    value: "16",
-  },
-  {
-    label: "ADCA",
-    value: "17",
-  },
-  {
-    label: "ADOAP",
-    value: "18",
-  },
-  {
     label: "WEBSITE DESIGNING & DEVELOPMENT",
     value: "19",
   },
   {
+    label: "DOAP",
+    value: "16",
+  },
+  {
+    label: "DITA",
+    value: "17",
+  },
+  {
+    label: "ADCA",
+    value: "18",
+  },
+  {
+    label: "ADOAP",
+    value: "20",
+  },
+
+  {
     label: "COMPUTER HARDWARE & NETWORKING",
-    value: "14",
+    value: "15",
   },
   {
     label: "DCA",
-    value: "13",
+    value: "14",
   },
   {
     label: "TYPING",
-    value: "12",
+    value: "13",
   },
   {
     label: "DTP",
+    value: "12",
+  },
+
+  {
+    label: "CCTV INSTALLATION & MAINTENANCE",
     value: "11",
   },
   {
-    label: "KNOWLEDGE ON C/C++ PROGRAMMING",
-    value: "7",
-  },
-  {
-    label: "CCTV INSTALLATION & MAINTENANCE",
+    label: "ADVANCE EXCEL",
     value: "10",
   },
   {
-    label: "ADVANCE EXCEL",
+    label: "PYTHON",
     value: "9",
   },
   {
-    label: "PYTHON",
+    label: "KNOWLEDGE ON C/C++ PROGRAMMING",
     value: "8",
   },
   {
     label: "Knowledge on LINUX",
-    value: "6",
+    value: "7",
   },
   {
     label: "CITA",
-    value: "5",
+    value: "6",
   },
   {
     label: "CCA",
-    value: "4",
+    value: "5",
   },
   {
     label: "BASIC HARDWARE MAINTENANCE",
-    value: "3",
+    value: "4",
   },
   {
     label: "TALLY",
-    value: "2",
+    value: "3",
   },
-  {
-    label: "OFFICE MANAGEMENT",
-    value: "",
-  },
+
   {
     label: "BASIC COMPUTER CONCEPT",
-    value: "1",
+    value: "2",
   },
 ];
 // course
