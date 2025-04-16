@@ -91,7 +91,7 @@ export default function StudentLogin() {
             <input
               type="password"
               className="w-full px-4 py-2 mt-1 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
-              placeholder="dd-mm-yyyy"
+              placeholder="ddmmyyyy"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />

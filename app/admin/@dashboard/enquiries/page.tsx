@@ -195,7 +195,7 @@ export default function Notifications() {
                     value: selectedNotification.bathroom ? "Yes" : "No",
                   },
                   {
-                    label: "Trade License",
+                    label: "Trade License No",
                     value: selectedNotification.tradeLicense,
                   },
                   {

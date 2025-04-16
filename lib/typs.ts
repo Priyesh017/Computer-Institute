@@ -4,7 +4,7 @@ export interface StudentProfileProps {
   imageLink: string;
   IdCardNo: string;
   mobileNo: string;
-  wpNo: string;
+  email: string;
   dob: string;
   father: string;
   mother: string;
@@ -86,7 +86,7 @@ export type EnrollmentData = {
   mother: string;
   address: string;
   mobileNo: string;
-  wpNo: string;
+  email: string;
   eduqualification: string;
   activated: boolean;
   courseId: number;
@@ -164,7 +164,7 @@ export type DataItem = {
   enrollment: {
     name: string;
     mobileNo: string;
-    wpNo: string;
+    email: string;
     EnrollmentNo: number;
     imageLink: string;
     address: string;

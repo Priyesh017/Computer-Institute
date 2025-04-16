@@ -77,7 +77,7 @@ const Banner = () => {
             </button>
             <Link href="/certificate">
               <button className="px-6 py-3 bg-gray-900 text-white font-semibold rounded-lg shadow-md hover:bg-gray-800 transition-all">
-                Download Certificate
+                Search Enrollment
               </button>
             </Link>
           </div>

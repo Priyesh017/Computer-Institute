@@ -8,7 +8,7 @@ export const EnrollmentDetails = ({ enrollment }: { enrollment: DataItem }) => {
     createdAt: enrollment.createdAt,
     Name: enrollment.enrollment.name,
     MobileNo: enrollment.enrollment.name,
-    WhatsaAppNo: enrollment.enrollment.wpNo,
+    "Email Id": enrollment.enrollment.email,
     address: enrollment.enrollment.address,
     CenterName: enrollment.enrollment.center.Centername,
     IdCardNo: enrollment.enrollment.IdCardNo,

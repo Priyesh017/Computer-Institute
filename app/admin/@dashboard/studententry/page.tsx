@@ -19,6 +19,7 @@ import {
 import { ComboboxDemo } from "@/components/combo";
 import { Dropzone } from "@/components/dropzone";
 import { Button } from "@/components/ui/button";
+import { Label } from "@radix-ui/react-dropdown-menu";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -34,7 +35,7 @@ const formSchema = z.object({
   nationality: z.string().min(1, "nationality Required"),
   sex: z.string().min(1, "sex Required"),
   mobile: z.string().regex(/^\d{10}$/, "Invalid mobile number"),
-  whatsapp: z.string().regex(/^\d{10}$/, "Invalid WhatsApp number"),
+  email: z.string().email("Invalid email address"),
   pincode: z.string().min(6, "pincode Required"),
 });
 
@@ -50,7 +51,7 @@ const AddStudent: React.FC = () => {
     address: "",
     dob: "",
     mobile: "",
-    whatsapp: "",
+    email: "",
     eduqualification: "",
     courseid: "",
     category: "",
@@ -159,23 +160,26 @@ const AddStudent: React.FC = () => {
             "name",
             "father",
             "mother",
-            "address",
+
             "mobile",
-            "whatsapp",
+            "email",
+            "address",
             "pincode",
             "po",
             "ps",
             "vill",
-          ].map((field) => (
-            <input
-              key={field}
-              id={field}
-              type="text"
-              placeholder={field}
-              value={fd[field as keyof typeof fd]}
-              onChange={handleInputChange}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
+          ].map((field, id) => (
+            <div className="flex flex-col" key={id}>
+              <Label className="text-sm font-medium mb-1">{field}</Label>
+              <input
+                id={field}
+                type="text"
+                placeholder={`enter ${field}`}
+                value={fd[field as keyof typeof fd]}
+                onChange={handleInputChange}
+                className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+              />
+            </div>
           ))}
           {[
             { label: "State", values: indianStatesWithDistricts, key: "state" },
@@ -200,21 +204,27 @@ const AddStudent: React.FC = () => {
               data={key}
             />
           ))}
-          <input
-            id="idProofNo"
-            type="text"
-            placeholder={"idProofNo"}
-            value={fd.idProofNo}
-            onChange={handleInputChange}
-            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-          <input
-            id="dob"
-            type="date"
-            value={fd.dob}
-            onChange={handleInputChange}
-            className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
+          <div className="flex flex-col">
+            <Label className="text-sm font-medium mb-1">ID Proof No</Label>
+            <input
+              id="idProofNo"
+              type="text"
+              placeholder={"idProofNo"}
+              value={fd.idProofNo}
+              onChange={handleInputChange}
+              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+          </div>
+          <div className="flex flex-col">
+            <Label className="text-sm font-medium mb-1">Enter DOB</Label>
+            <input
+              id="dob"
+              type="date"
+              value={fd.dob}
+              onChange={handleInputChange}
+              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+          </div>
           <div className="flex flex-col md:flex-row w-full gap-4">
             {/* Dropzone Section */}
             <div className="w-full md:w-auto">

@@ -76,10 +76,12 @@ const ExamForm = () => {
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
       <h2 className="text-xl text-center font-bold mb-6">All Enrollments</h2>
-      <div className="grid grid-cols-4 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
-        <span>Date</span>
+        <span>Admission Date</span>
+        <span>Course </span>
+        <span>Duration</span>
         <span>Action</span>
       </div>
       <div>

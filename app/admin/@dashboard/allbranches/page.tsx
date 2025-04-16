@@ -102,14 +102,14 @@ export default function BranchesPage() {
                 </p>
               </div>
             </div>
-            <Button
+            {/* <Button
               variant="destructive"
               onClick={() => openModal(branch.admin.id)}
               className="w-full sm:w-auto flex items-center justify-center gap-2"
             >
               <Trash2 className="w-4 h-4" />
               Delete
-            </Button>
+            </Button> */}
           </motion.div>
         ))}
       </div>
