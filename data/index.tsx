@@ -706,7 +706,32 @@ export const sexValue = [
     label: "Transgender",
   },
 ];
-
+export const semValue = [
+  {
+    value: "1",
+    label: "1",
+  },
+  {
+    value: "2",
+    label: "2",
+  },
+  {
+    value: "3",
+    label: "3",
+  },
+  {
+    value: "4",
+    label: "4",
+  },
+  {
+    value: "5",
+    label: "5",
+  },
+  {
+    value: "6",
+    label: "6",
+  },
+];
 export const CategoryValue = [
   {
     value: "SC",
@@ -1141,7 +1166,7 @@ export const enqinp1 = [
 
 export const enqinp2 = [
   { label: "ID Proof No", field: "idProofNo" },
-  { label: "Trade License", field: "tradeLicense" },
+  { label: "Trade License No", field: "tradeLicense" },
   { label: "Square Fit", field: "squareFit" },
   { label: "House Room No", field: "houseRoomNo" },
 ];

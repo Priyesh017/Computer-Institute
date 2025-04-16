@@ -38,7 +38,7 @@ const StudentProfile: React.FC = () => {
     },
     { id: "card", label: "Student Card:", value: student.IdCardNo },
     { id: "phone", label: "Phone:", value: student.mobileNo },
-    { id: "whatsapp", label: "WhatsApp:", value: student.wpNo },
+    { id: "email", label: "Email:", value: student.email },
     {
       id: "dob",
       label: "Date of Birth:",

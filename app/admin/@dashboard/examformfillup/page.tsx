@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { ApiResponse, EnrollmentData } from "@/lib/typs";
 import { Loader2 } from "lucide-react";
+import { ComboboxDemo } from "@/components/combo";
+import { semValue } from "@/data";
 
 const ExamForm = () => {
   const [fd, setfd] = useState<EnrollmentData>();
@@ -47,7 +49,7 @@ const ExamForm = () => {
       value: fd?.course.CName || "",
     },
     { key: "mobileNo", label: "Mobile No", value: fd?.mobileNo || "" },
-    { key: "whatsappNo", label: "WhatsApp No", value: fd?.wpNo || "" },
+    { key: "email", label: "Email Id", value: fd?.email || "" },
   ];
 
   const fetchData = async () => {
@@ -200,12 +202,13 @@ const ExamForm = () => {
 
           <div className="flex flex-col">
             <label className="text-sm font-medium mb-1">Semester No</label>
-            <input
-              type="text"
-              name="SemNo"
+
+            <ComboboxDemo
+              frameworks={semValue}
+              heading={`Select Sem`}
               value={remain.SemNo}
-              onChange={handleChange2}
-              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+              setValue={setremain}
+              data="SemNo"
             />
           </div>
 

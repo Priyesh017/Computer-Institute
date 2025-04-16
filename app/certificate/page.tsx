@@ -32,9 +32,7 @@ export default function CertificateGenerator() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-900 text-white">
-      <h1 className="text-3xl font-bold text-violet-400">
-        Certificate Generator
-      </h1>
+      <h1 className="text-3xl font-bold text-violet-400">Certificate Viewer</h1>
 
       <input
         type="text"
@@ -47,7 +45,7 @@ export default function CertificateGenerator() {
         onClick={handler}
         className="mt-4 bg-violet-500 hover:bg-violet-600 text-white px-4 py-2 rounded-lg"
       >
-        Generate Certificate
+        View Certificate
       </Button>
 
       {certificateVisible && link && (
@@ -63,12 +61,12 @@ export default function CertificateGenerator() {
             </Document>
           </div>
 
-          <Button
+          {/* <Button
             onClick={() => window.open(link, "_blank")}
             className="mt-4 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
           >
             Download Certificate
-          </Button>
+          </Button> */}
         </div>
       )}
     </div>
