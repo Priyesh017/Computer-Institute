@@ -23,7 +23,7 @@ import {
 import { EnrollmentDetails } from "@/components/enrollmentdatashow";
 import { Enrollmenttype } from "@/lib/typs";
 import Loader from "@/components/Loader";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, Pen, Eye } from "lucide-react";
 
 const PAGE_SIZE = 5;
 
@@ -36,6 +36,7 @@ const EnrollmentList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
   const [loading, setloading] = useState<number | null>(null);
+  const [editable, setEditable] = useState(false);
 
   interface etype {
     enrollments: Enrollmenttype[];
@@ -199,14 +200,49 @@ const EnrollmentList = () => {
       </Pagination>
       {isModalOpen && selectedEnrollment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="relative bg-white rounded-xl w-full max-w-fit">
-            <button
-              className="relative mx-4 p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
-              onClick={() => setIsModalOpen(false)}
-            >
-              <X size={24} />
-            </button>
-            <EnrollmentDetails enrollment={selectedEnrollment} />
+          <div className="relative bg-white rounded-xl w-full max-w-fit max-h-[90vh] overflow-auto">
+            <div className="absolute top-5 right-0 flex items-center gap-2 p-2">
+              {editable ? (
+                <button
+                  onClick={() => setEditable((prev) => !prev)}
+                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-300 rounded-full"
+                  title="Edit"
+                >
+                  <Eye size={20} />
+                </button>
+              ) : (
+                <button
+                  onClick={() => setEditable((prev) => !prev)}
+                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-300 rounded-full"
+                  title="Edit"
+                >
+                  <Pen size={20} />
+                </button>
+              )}
+              <button
+                className="p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
+                onClick={() => setIsModalOpen(false)}
+              >
+                <X size={24} />
+              </button>
+            </div>
+            <EnrollmentDetails
+              enrollment={selectedEnrollment}
+              editable={editable}
+            />
+            {editable && (
+              <div className="flex justify-center mb-4">
+                <Button
+                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                  onClick={() => {
+                    // Handle save logic here
+                    setEditable(false);
+                  }}
+                >
+                  Save Changes
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}

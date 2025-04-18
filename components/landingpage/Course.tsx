@@ -68,7 +68,7 @@ export default function CourseCategories() {
   };
 
   return (
-    <div className="container py-14 xl:pt-24 px-6">
+    <div className="container mx-auto py-14 xl:pt-24 px-6">
       <motion.h2
         className="text-5xl font-bold fade-in text-center"
         initial={{ opacity: 0, y: 20 }}
@@ -150,7 +150,7 @@ export default function CourseCategories() {
             .map((course) => (
               <motion.div
                 key={course.id}
-                className="course-card relative bg-gray-100 dark:bg-gray-700 rounded-2xl shadow-2xl w-80 cursor-pointer overflow-hidden"
+                className="course-card relative bg-gray-100 rounded-2xl shadow-2xl w-80 cursor-pointer overflow-hidden"
                 whileHover={{ scale: 1.05 }}
               >
                 <Image
@@ -167,10 +167,6 @@ export default function CourseCategories() {
                     {course.description}
                   </p>
                   <div className="flex justify-between items-center mt-2 text-sm text-gray-600 dark:text-gray-300">
-                    {/* <span className="flex items-center gap-1">
-                      <FaBook className="text-pink-500" /> {course.lessons}{" "}
-                      Lessons
-                    </span> */}
                     <span className="flex items-center gap-1">
                       <FaClock className="text-pink-500" /> {course.duration}
                     </span>
@@ -178,11 +174,6 @@ export default function CourseCategories() {
                   <div className="mt-2 text-lg font-bold text-violet-600 dark:text-violet-400">
                     &#8377;{course.price}
                   </div>
-                  {/* {course.badge && (
-                    <span className="absolute top-2 right-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                      {course.badge}
-                    </span>
-                  )} */}
                 </div>
               </motion.div>
             ))}

@@ -8,6 +8,12 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from "@/components/ui/pagination";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { fetcherWc } from "@/helper";
 import { X } from "lucide-react";
 import { EnrollmentDetails } from "@/components/enrollmentdatashow";
@@ -17,6 +23,7 @@ import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import ProgressBar from "@/components/ProgressBar";
+import { Input } from "@/components/ui/input";
 
 const PAGE_SIZE = 5;
 
@@ -29,6 +36,8 @@ const ExamForm = () => {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [search, setSearch] = useState("");
 
   const fetchfn = async () => {
     const { enrollments } = await fetcherWc("/AllEnrollments", "GET");
@@ -73,23 +82,56 @@ const ExamForm = () => {
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const currentEnrollments = exmforms.slice(startIndex, startIndex + PAGE_SIZE);
 
+  const filteredEnrollment = currentEnrollments.filter((enrollment) => {
+    return (
+      enrollment.EnrollmentNo.toString()
+        .toLowerCase()
+        .includes(search.toLowerCase()) &&
+      (filterStatus === "All" ||
+        enrollment.status.val.toLowerCase() === filterStatus.toLowerCase())
+    );
+  });
+
   return (
-    <div className="min-w-lg mx-auto mt-10 p-4 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl text-center font-bold mb-6">All Enrollments</h2>
-      <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
+    <div className="min-w-lg mx-auto mt-10 p-4 bg-white rounded-lg">
+      <div className="flex justify-between items-center px-4 py-2">
+        <h2 className="text-xl text-center font-bold mb-6">All Enrollments</h2>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="w-40 border rounded-md p-1">
+            {filterStatus}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {["All", "Pending", "Pass Out"].map((option) => (
+              <DropdownMenuItem
+                key={option}
+                onClick={() => setFilterStatus(option)}
+              >
+                {option}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Input
+          type="text"
+          placeholder="Search enrollment..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-1/3 p-2 border border-gray-400 rounded-lg"
+        />
+      </div>
+      <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
         <span>Admission Date</span>
-        <span>Course </span>
-        <span>Duration</span>
+        <span>Status</span>
         <span>Action</span>
       </div>
       <div>
-        {currentEnrollments.map((enrollment, index: number) => (
+        {filteredEnrollment.map((enrollment, index: number) => (
           <div
             key={index}
             className={
-              "click grid grid-cols-4 items-center xs:text-xs text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer hover:bg-blue-100"
+              "click grid grid-cols-5 items-center xs:text-xs text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer hover:bg-blue-100"
             }
           >
             <div
@@ -103,6 +145,7 @@ const ExamForm = () => {
             </div>
             <div>{enrollment.EnrollmentNo}</div>
             <span>{new Date(enrollment.createdAt).toDateString()}</span>
+            <div className="p-2 border rounded-md">{enrollment.status.val}</div>
             <Button
               className="mx-2 hover:bg-violet-800"
               onClick={() => {

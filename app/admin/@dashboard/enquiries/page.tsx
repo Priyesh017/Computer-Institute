@@ -48,6 +48,8 @@ export default function Notifications() {
   const [selectedNotification, setSelectedNotification] =
     useState<Notification | null>(null);
   const [loading, setloading] = useState(false);
+  const [editable, setEditable] = useState(false);
+  const [editedData, setEditedData] = useState<Notification | null>(null);
 
   const { isPending, error, data } = useQuery<idata>({
     queryKey: ["repoData"],
@@ -69,6 +71,8 @@ export default function Notifications() {
 
   const openNotification = (notif: Notification) => {
     setSelectedNotification(notif);
+    setEditedData({ ...notif }); // clone for editing
+    setEditable(false); // default to not editable
   };
 
   const verifyhandler = async () => {
@@ -106,6 +110,12 @@ export default function Notifications() {
     return () => {
       eventSource.close();
     };
+  };
+
+  const getImagePreview = (file?: File | string) => {
+    if (!file) return "";
+    if (typeof file === "string") return file; // URL
+    return URL.createObjectURL(file); // File object
   };
 
   return (
@@ -154,62 +164,102 @@ export default function Notifications() {
             >
               <X className="mx-auto" size={20} />
             </button>
+            <Button
+              variant="outline"
+              className="absolute top-2 left-2"
+              onClick={() => setEditable((prev) => !prev)}
+            >
+              {editable ? "Cancel" : "Edit"}
+            </Button>
+
             <div className="w-full overflow-y-auto">
               <div className="grid grid-cols-2 w-full gap-2">
                 {[
-                  { label: "Applicant Name", value: selectedNotification.name },
-                  { label: "Email ID", value: selectedNotification.email },
-                  { label: "Father Name", value: selectedNotification.father },
-                  { label: "C/O Name", value: selectedNotification.coName },
+                  { label: "Applicant Name", key: "name" },
+                  { label: "Email ID", key: "email" },
+                  { label: "Father Name", key: "father" },
+                  { label: "C/O Name", key: "coName" },
+                  { label: "Date of Birth", key: "dob" },
+                  { label: "Mobile No", key: "mobileNo" },
+                  { label: "Address", key: "AddressLine" },
+                  { label: "Village", key: "vill" },
+                  { label: "Post Office", key: "po" },
+                  { label: "Police Station", key: "ps" },
+                  { label: "Pin Code", key: "pin" },
+                  { label: "State", key: "state" },
+                  { label: "District", key: "dist" },
+                  { label: "Nationality", key: "nationality" },
+                  { label: "Gender", key: "sex" },
+                  { label: "Category", key: "category" },
+                  { label: "ID Proof", key: "idProof" },
+                  { label: "ID Proof No", key: "idProofNo" },
+                  { label: "Education Qualification", key: "eduqualification" },
+                  { label: "Bathroom", key: "bathroom" },
+                  { label: "Trade License No", key: "tradeLicense" },
+                  { label: "Square Fit", key: "squareFit" },
+                  { label: "House Room No", key: "houseRoomNo" },
                   {
-                    label: "Date of Birth",
-                    value: new Date(selectedNotification.dob)
-                      .toISOString()
-                      .split("T")[0],
-                  },
-                  { label: "Mobile No", value: selectedNotification.mobileNo },
-                  { label: "Address", value: selectedNotification.AddressLine },
-                  { label: "Village", value: selectedNotification.vill },
-                  { label: "Post Office", value: selectedNotification.po },
-                  { label: "Police Station", value: selectedNotification.ps },
-                  { label: "Pin Code", value: selectedNotification.pin },
-                  { label: "State", value: selectedNotification.state },
-                  { label: "District", value: selectedNotification.dist },
-                  {
-                    label: "Nationality",
-                    value: selectedNotification.nationality,
-                  },
-                  { label: "Gender", value: selectedNotification.sex },
-                  { label: "Category", value: selectedNotification.category },
-                  { label: "ID Proof", value: selectedNotification.idProof },
-                  {
-                    label: "ID Proof No",
-                    value: selectedNotification.idProofNo,
-                  },
-                  {
-                    label: "Education Qualification",
-                    value: selectedNotification.eduqualification,
-                  },
-                  {
-                    label: "Bathroom",
-                    value: selectedNotification.bathroom ? "Yes" : "No",
-                  },
-                  {
-                    label: "Trade License No",
-                    value: selectedNotification.tradeLicense,
-                  },
-                  {
-                    label: "Square Fit",
-                    value: selectedNotification.squareFit,
-                  },
-                  {
-                    label: "House Room No",
-                    value: selectedNotification.houseRoomNo,
+                    label: "Franchise Subscription",
+                    key: "franchiseSubscription",
                   },
                 ].map((field, index) => (
                   <div key={index} className="p-2">
                     <label className="font-semibold">{field.label}: </label>
-                    <span className="text-wrap">{field.value}</span>
+                    {editable ? (
+                      typeof editedData?.[field.key as keyof Notification] ===
+                      "boolean" ? (
+                        <select
+                          className="border rounded px-2 py-1"
+                          value={
+                            editedData?.[field.key as keyof Notification]
+                              ? "Yes"
+                              : "No"
+                          }
+                          onChange={(e) =>
+                            setEditedData((prev) =>
+                              prev
+                                ? {
+                                    ...prev,
+                                    [field.key]:
+                                      e.target.value.toLowerCase() === "yes"
+                                        ? true
+                                        : false,
+                                  }
+                                : prev
+                            )
+                          }
+                        >
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                      ) : (
+                        <input
+                          className="border rounded px-2 py-1 w-full"
+                          value={
+                            editedData?.[
+                              field.key as keyof Notification
+                            ]?.toString() || ""
+                          }
+                          onChange={(e) =>
+                            setEditedData((prev) =>
+                              prev
+                                ? { ...prev, [field.key]: e.target.value }
+                                : prev
+                            )
+                          }
+                        />
+                      )
+                    ) : (
+                      <span>
+                        {field.key === "dob"
+                          ? new Date(selectedNotification?.dob ?? "")
+                              .toISOString()
+                              .split("T")[0]
+                          : selectedNotification?.[
+                              field.key as keyof Notification
+                            ]?.toString()}
+                      </span>
+                    )}
                   </div>
                 ))}
               </div>
@@ -238,6 +288,19 @@ export default function Notifications() {
               <p className="mt-2 text-sm text-gray-400">
                 {new Date(selectedNotification.createdAt).toDateString()}
               </p>
+              {editable && (
+                <div className="flex justify-center mb-4">
+                  <Button
+                    className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                    onClick={() => {
+                      // Handle save logic here
+                      setEditable(false);
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                </div>
+              )}
             </div>
             {!selectedNotification.verified && (
               <Button
