@@ -242,8 +242,6 @@ const FranchiseForm = () => {
             </div>
           ))}
 
-          <div></div>
-
           <div className="flex flex-col justify-center items-center w-full gap-4">
             {/* Dropzone for Profile Image */}
             <div className="w-full md:w-auto">

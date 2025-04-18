@@ -1,5 +1,5 @@
 "use client";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, Pen, Eye } from "lucide-react";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -31,6 +31,7 @@ const ExamForm = () => {
     useState<MarksWithEnrollment | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
+  const [editable, setEditable] = useState(false);
   const queryClient = useQueryClient();
 
   // Fetch enrollments using React Query
@@ -202,14 +203,49 @@ const ExamForm = () => {
       {/* Fullscreen Modal */}
       {isModalOpen && selectedEnrollment && (
         <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-xl shadow-xl w-full max-w-fit h-full overflow-auto">
-            <button
-              className="relative mx-4 p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
-              onClick={() => setIsModalOpen(false)}
-            >
-              <X size={24} />
-            </button>
-            <StudentReportCard selectedEnrollment={selectedEnrollment} />
+          <div className="relative bg-white rounded-xl max-w-fit h-full overflow-auto">
+            <div className="absolute top-0 right-0 flex items-center gap-2 p-2">
+              {editable ? (
+                <button
+                  onClick={() => setEditable((prev) => !prev)}
+                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-300 rounded-full"
+                  title="Edit"
+                >
+                  <Eye size={20} />
+                </button>
+              ) : (
+                <button
+                  onClick={() => setEditable((prev) => !prev)}
+                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-300 rounded-full"
+                  title="Edit"
+                >
+                  <Pen size={20} />
+                </button>
+              )}
+              <button
+                className="p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
+                onClick={() => setIsModalOpen(false)}
+              >
+                <X size={24} />
+              </button>
+            </div>
+            <StudentReportCard
+              selectedEnrollment={selectedEnrollment}
+              editable={editable}
+            />
+            {editable && (
+              <div className="flex justify-center mb-4">
+                <Button
+                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                  onClick={() => {
+                    // Handle save logic here
+                    setEditable(false);
+                  }}
+                >
+                  Save Changes
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}
