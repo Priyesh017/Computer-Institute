@@ -23,6 +23,16 @@ const StudentReportCard = ({
     marks: se.marks,
   });
 
+  const nonEditableFields = [
+    "name",
+    "father",
+    "dob",
+    "EnrollmentNo",
+    "course",
+    "center",
+    "address",
+  ];
+
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -51,44 +61,48 @@ const StudentReportCard = ({
     value: string,
     fieldName: string,
     isTextArea = false
-  ) => (
-    <div className="mb-2">
-      <label className={labelClass}>{label}: </label>
-      {editable ? (
-        isTextArea ? (
-          <textarea
-            className={inputClass}
-            rows={3}
-            value={value}
-            onChange={(e) => handleChange(fieldName, e.target.value)}
-          />
+  ) => {
+    const isEditable = editable && !nonEditableFields.includes(fieldName);
+
+    return (
+      <div className="mb-2">
+        <label className={labelClass}>{label}: </label>
+        {isEditable ? (
+          isTextArea ? (
+            <textarea
+              className={inputClass}
+              rows={3}
+              value={value}
+              onChange={(e) => handleChange(fieldName, e.target.value)}
+            />
+          ) : (
+            <input
+              type={fieldName === "dob" ? "date" : "text"}
+              className={inputClass}
+              value={
+                fieldName === "dob"
+                  ? new Date(value).toISOString().substring(0, 10)
+                  : value
+              }
+              onChange={(e) => handleChange(fieldName, e.target.value)}
+            />
+          )
         ) : (
-          <input
-            type={fieldName === "dob" ? "date" : "text"}
-            className={inputClass}
-            value={
-              fieldName === "dob"
-                ? new Date(value).toISOString().substring(0, 10)
-                : value
-            }
-            onChange={(e) => handleChange(fieldName, e.target.value)}
-          />
-        )
-      ) : (
-        <span
-          className={`mt-1 ${
-            fieldName === "remarks"
-              ? value === "PASS"
-                ? "text-green-600 font-bold"
-                : "text-red-600 font-bold"
-              : ""
-          }`}
-        >
-          {fieldName === "dob" ? new Date(value).toDateString() : value}
-        </span>
-      )}
-    </div>
-  );
+          <span
+            className={`mt-1 ${
+              fieldName === "remarks"
+                ? value === "PASS"
+                  ? "text-green-600 font-bold"
+                  : "text-red-600 font-bold"
+                : ""
+            }`}
+          >
+            {fieldName === "dob" ? new Date(value).toDateString() : value}
+          </span>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-2xl p-6">
