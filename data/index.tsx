@@ -1162,11 +1162,6 @@ export const enqinp1 = [
   { label: "Post Office", field: "po" },
   { label: "Police Station", field: "ps" },
   { label: "Pincode", field: "pin" },
-  {
-    label: "Franchise Subscription",
-    field: "franchiseSubscription",
-    type: "date",
-  },
 ];
 
 export const enqinp2 = [

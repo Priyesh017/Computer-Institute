@@ -33,7 +33,6 @@ const EnrollmentList = () => {
   const [filterStatus, setFilterStatus] = useState("All");
   const [selectedEnrollment, setSelectedEnrollment] =
     useState<Enrollmenttype | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
   const [loading, setloading] = useState<number | null>(null);
   const [editable, setEditable] = useState(false);
@@ -147,7 +146,6 @@ const EnrollmentList = () => {
           <div
             onClick={() => {
               setSelectedEnrollment(enrollment);
-              setIsModalOpen(true);
             }}
             className="hover:text-red-600 cursor-pointer"
           >
@@ -198,10 +196,10 @@ const EnrollmentList = () => {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      {isModalOpen && selectedEnrollment && (
+      {selectedEnrollment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="relative bg-white rounded-xl w-full max-w-fit max-h-[90vh] overflow-auto">
-            <div className="absolute top-5 right-0 flex items-center gap-2 p-2">
+          <div className="relative bg-white rounded-xl">
+            <div className="absolute top-5 right-[0] flex items-center gap-1">
               {editable ? (
                 <button
                   onClick={() => setEditable((prev) => !prev)}
@@ -221,7 +219,7 @@ const EnrollmentList = () => {
               )}
               <button
                 className="p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => setSelectedEnrollment(null)}
               >
                 <X size={24} />
               </button>

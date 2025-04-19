@@ -47,9 +47,9 @@ interface Notification {
 export default function Notifications() {
   const [selectedNotification, setSelectedNotification] =
     useState<Notification | null>(null);
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState<"verify" | "update" | null>(null);
   const [editable, setEditable] = useState(false);
-  const [editedData, setEditedData] = useState<Notification | null>(null);
+  const [editedData, setEditedData] = useState<Notification>();
 
   const { isPending, error, data } = useQuery<idata>({
     queryKey: ["repoData"],
@@ -76,7 +76,7 @@ export default function Notifications() {
   };
 
   const verifyhandler = async () => {
-    setloading(true);
+    setloading("verify");
     const email = selectedNotification!.email;
     const name = selectedNotification!.name;
 
@@ -93,7 +93,7 @@ export default function Notifications() {
         // Handle completion case
         if (data.step === 2) {
           toast("Process completed, closing connection.");
-          setloading(false);
+          setloading(null);
           setSelectedNotification(null);
           eventSource.close();
         }
@@ -112,10 +112,22 @@ export default function Notifications() {
     };
   };
 
-  const getImagePreview = (file?: File | string) => {
-    if (!file) return "";
-    if (typeof file === "string") return file; // URL
-    return URL.createObjectURL(file); // File object
+  const savehandler = async () => {
+    try {
+      setloading("update");
+      const data = await fetcherWc(
+        `/updateEnquiry/${selectedNotification!.id}`,
+        "POST",
+        { editedData }
+      );
+      toast(data.success ? "success" : "failed");
+      setEditable(false);
+    } catch (error) {
+      console.log(error);
+      toast("code break error");
+    } finally {
+      setloading(null);
+    }
   };
 
   return (
@@ -200,7 +212,7 @@ export default function Notifications() {
                   { label: "House Room No", key: "houseRoomNo" },
                   {
                     label: "Franchise Subscription",
-                    key: "franchiseSubscription",
+                    key: "Subscription",
                   },
                 ].map((field, index) => (
                   <div key={index} className="p-2">
@@ -292,12 +304,13 @@ export default function Notifications() {
                 <div className="flex justify-center mb-4">
                   <Button
                     className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-                    onClick={() => {
-                      // Handle save logic here
-                      setEditable(false);
-                    }}
+                    onClick={savehandler}
+                    disabled={loading === "update"}
                   >
-                    Save Changes
+                    Save Changes{" "}
+                    {loading === "update" && (
+                      <Loader2 className="animate-spin" />
+                    )}
                   </Button>
                 </div>
               )}
@@ -306,9 +319,10 @@ export default function Notifications() {
               <Button
                 className="mt-5 bg-purple-700 hover:bg-purple-800"
                 onClick={verifyhandler}
-                disabled={loading}
+                disabled={loading === "verify"}
               >
-                Verify {loading && <Loader2 className="animate-spin" />}
+                Verify{" "}
+                {loading === "verify" && <Loader2 className="animate-spin" />}
               </Button>
             )}
           </div>

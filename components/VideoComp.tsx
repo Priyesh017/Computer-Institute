@@ -3,7 +3,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import anime from "animejs";
 import { useEffect, useState } from "react";
-import Plyr from "plyr-react";
 import "plyr-react/plyr.css";
 import { fetcher } from "@/helper";
 import Loader from "@/components/Loader";
