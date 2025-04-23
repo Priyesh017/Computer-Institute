@@ -168,7 +168,7 @@ export default function Notifications() {
           <motion.div
             key={notif.id}
             className="notification flex justify-between items-center p-3 rounded-lg cursor-pointer transition-all bg-gray-200 hover:bg-blue-200"
-            onClick={(e) => openNotification(notif)}
+            onClick={() => openNotification(notif)}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}

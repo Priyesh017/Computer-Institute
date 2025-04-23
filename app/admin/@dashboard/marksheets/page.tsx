@@ -25,7 +25,7 @@ const ExamForm = () => {
   const [loadingType, setLoadingType] = useState<
     "marksheet" | "certificate" | null
   >(null);
-  const [loading, setloading] = useState(false);
+
   const [search, setSearch] = useState("");
   const [selectedEnrollment, setSelectedEnrollment] =
     useState<MarksWithEnrollment>();
@@ -115,7 +115,6 @@ const ExamForm = () => {
   const updateHandler = async () => {
     setEditable(false);
     if (!selectedEnrollment) return;
-    setloading(true);
 
     const sendData = {
       marks: selectedEnrollment.marks,
@@ -127,7 +126,6 @@ const ExamForm = () => {
 
     const data = await fetcherWc("/updateMarksheet", "POST", { sendData });
 
-    setloading(false);
     toast(data.success ? "success" : "failed");
   };
 
