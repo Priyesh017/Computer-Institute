@@ -130,18 +130,20 @@ const EnrollmentList = () => {
           className="w-1/3 p-2 border border-gray-400 rounded-lg"
         />
       </div>
-      <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <div className="grid grid-cols-7 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No.</span>
+        <span>Admission Date</span>
         <span>Branch ID</span>
         <span>Status</span>
         <span>Approval</span>
         <span>Generate</span>
       </div>
+
       {filteredEnrollment.map((enrollment) => (
         <div
           key={enrollment.id}
-          className="grid md:grid-cols-6 items-center text-center py-3 border-b"
+          className="grid md:grid-cols-7 items-center text-center py-3 border-b"
         >
           <div
             onClick={() => {
@@ -152,6 +154,7 @@ const EnrollmentList = () => {
             {enrollment.name}
           </div>
           <div>{enrollment.EnrollmentNo}</div>
+          <span>{new Date(enrollment.createdAt).toLocaleDateString()}</span>
           <span>{enrollment.centerid}</span>
           <div className="p-2 border rounded-md">{enrollment.status.val}</div>
           <div className="flex items-center justify-center gap-2">

@@ -172,6 +172,10 @@ export type DataItem = {
       Centername: string;
       code: number;
     };
+    status: {
+      id: number;
+      val: string;
+    };
     father: string;
     IdCardNo: string;
     amount: {

@@ -3,11 +3,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import anime from "animejs";
 import { useEffect, useState } from "react";
-import "plyr-react/plyr.css";
 import { fetcher } from "@/helper";
 import Loader from "@/components/Loader";
 import { useQuery } from "@tanstack/react-query";
-import PlyrPlayer from "./VideoPlayer";
+import ReactPlyrExample from "./vdotemp";
 
 const ReceivedVideos: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -24,9 +23,10 @@ const ReceivedVideos: React.FC = () => {
   }, []);
 
   const fetchGalleryImages = async () => {
-    const { data } = await fetcher("/fetch_aws_res", "POST", {
-      Prefix: `videos/temp`,
+    const data = await fetcher("/fetch_master", "POST", {
+      Prefix: `hls/`,
     });
+
     return data as string[];
   };
 
@@ -44,6 +44,7 @@ const ReceivedVideos: React.FC = () => {
   });
 
   if (isLoading) return <Loader />;
+
   if (videos == undefined || isError) return <h1>error happened</h1>;
 
   return (
@@ -53,21 +54,24 @@ const ReceivedVideos: React.FC = () => {
       </h1>
       {/* Video Titles Column */}
       <div className="flex flex-col w-full items-start gap-3 p-6 bg-gray-800 rounded-lg shadow-md">
-        {videos.map((video, id) => (
-          <motion.button
-            key={id}
-            className={`video-title w-full text-left px-6 py-4 rounded-lg font-semibold transition-colors ${
-              selectedVideo === video
-                ? "bg-violet-500 text-white"
-                : "bg-gray-700 text-gray-300 hover:bg-violet-600 hover:text-white"
-            }`}
-            onClick={() => setSelectedVideo(video)}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {video.split("/")[5]}
-          </motion.button>
-        ))}
+        {videos.map((video, id) => {
+          const videoname = video.split("/")[0] + ".mp4";
+          return (
+            <motion.button
+              key={id}
+              className={`video-title w-full text-left px-6 py-4 rounded-lg font-semibold transition-colors ${
+                selectedVideo === video
+                  ? "bg-violet-500 text-white"
+                  : "bg-gray-700 text-gray-300 hover:bg-violet-600 hover:text-white"
+              }`}
+              onClick={() => setSelectedVideo(video)}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {videoname}
+            </motion.button>
+          );
+        })}
       </div>
 
       <AnimatePresence>
@@ -86,21 +90,12 @@ const ReceivedVideos: React.FC = () => {
               exit={{ scale: 0.8 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <PlyrPlayer
-                sources={[
-                  {
-                    src: "https://computercenter.s3.ap-south-1.amazonaws.com/videos/temp/ureche_mon.mp4",
-                    size: 360,
-                  },
-                  {
-                    src: "https://computercenter.s3.ap-south-1.amazonaws.com/videos/temp/ureche_mon.mp4",
-                    size: 720,
-                  },
-                ]}
+              <ReactPlyrExample
+                src={`${process.env.NEXT_PUBLIC_BUCKET_URI}${selectedVideo}master.m3u8`}
               />
 
               <div className="p-3 text-white text-center font-semibold">
-                {videos.find((video) => video === selectedVideo)?.split("/")[5]}
+                {videos.find((video) => video === selectedVideo)?.split("/")[0]}
               </div>
               <button
                 className="absolute top-2 right-2 text-white bg-gray-700 hover:bg-red-600 rounded-full px-2 py-0.5"

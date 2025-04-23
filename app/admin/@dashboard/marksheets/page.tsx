@@ -25,10 +25,10 @@ const ExamForm = () => {
   const [loadingType, setLoadingType] = useState<
     "marksheet" | "certificate" | null
   >(null);
-
+  const [loading, setloading] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedEnrollment, setSelectedEnrollment] =
-    useState<MarksWithEnrollment | null>(null);
+    useState<MarksWithEnrollment>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
   const [editable, setEditable] = useState(false);
@@ -112,6 +112,25 @@ const ExamForm = () => {
     startIndex + PAGE_SIZE
   );
 
+  const updateHandler = async () => {
+    setEditable(false);
+    if (!selectedEnrollment) return;
+    setloading(true);
+
+    const sendData = {
+      marks: selectedEnrollment.marks,
+      percentage: selectedEnrollment.percentage,
+      grade: selectedEnrollment.grade,
+      remarks: selectedEnrollment.remarks,
+      id: selectedEnrollment.id,
+    };
+
+    const data = await fetcherWc("/updateMarksheet", "POST", { sendData });
+
+    setloading(false);
+    toast(data.success ? "success" : "failed");
+  };
+
   return (
     <div className="min-w-lg mx-auto mt-10 p-4">
       {/* Header & Search */}
@@ -127,9 +146,10 @@ const ExamForm = () => {
       </div>
 
       {/* Table Headers */}
-      <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
+        <span>Course</span>
         <span>Branch ID</span>
         <span>Approval</span>
         <span>Generate</span>
@@ -142,7 +162,7 @@ const ExamForm = () => {
         currentEnrollments.map((d) => (
           <div
             key={d.id}
-            className="grid md:grid-cols-5 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-gray-500"
+            className="grid md:grid-cols-6 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-gray-500"
           >
             <div
               className="hover:text-violet-800 cursor-pointer"
@@ -154,6 +174,7 @@ const ExamForm = () => {
               {d.enrollment.name}
             </div>
             <div>{d.EnrollmentNo}</div>
+            <div>{d.enrollment.course.CName}</div>
             <span>{d.enrollment.center.code}</span>
             <div className="flex items-center justify-center">
               <Switch
@@ -237,10 +258,7 @@ const ExamForm = () => {
               <div className="flex justify-center mb-4">
                 <Button
                   className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-                  onClick={() => {
-                    // Handle save logic here
-                    setEditable(false);
-                  }}
+                  onClick={updateHandler}
                 >
                   Save Changes
                 </Button>

@@ -97,10 +97,12 @@ const ExamForm = () => {
         />
       </div>
 
-      <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <div className="grid grid-cols-7 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
+        <span>Created</span>
         <span>Branch ID</span>
+        <span>Status</span>
         <span>Approval</span>
         <span>Generate</span>
       </div>
@@ -108,7 +110,7 @@ const ExamForm = () => {
       {currentEnrollments.map((enrollment, index) => (
         <div
           key={enrollment.id}
-          className="grid md:grid-cols-5 items-center text-center text-gray-600 gap-2 font-bold py-3 border-b border-gray-500 hover:bg-blue-100"
+          className="grid md:grid-cols-7 items-center text-center text-gray-600 gap-2 font-bold py-3 border-b border-gray-500 hover:bg-blue-100"
         >
           <div
             className="hover:text-orange-600 cursor-pointer"
@@ -120,7 +122,9 @@ const ExamForm = () => {
             {enrollment.enrollment.name}
           </div>
           <div>{enrollment.EnrollmentNo}</div>
+          <div>{new Date(enrollment.createdAt).toLocaleDateString()}</div>
           <span>{enrollment.enrollment.center.code}</span>
+          <span>{enrollment.enrollment.status.val}</span>
           <div className="flex items-center justify-center gap-2">
             <Switch
               id={`activation-${startIndex + index}`}

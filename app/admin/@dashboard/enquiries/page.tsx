@@ -9,6 +9,7 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface idata {
   data: Notification[];
@@ -42,18 +43,23 @@ interface Notification {
   signatureLink: string;
   createdAt: string;
   verified: boolean;
+  certificateLink?: string;
 }
 
 export default function Notifications() {
   const [selectedNotification, setSelectedNotification] =
     useState<Notification | null>(null);
-  const [loading, setloading] = useState<"verify" | "update" | null>(null);
+  const [loading, setloading] = useState<
+    "verify" | "update" | "generate" | null
+  >(null);
   const [editable, setEditable] = useState(false);
   const [editedData, setEditedData] = useState<Notification>();
-
+  const router = useRouter();
   const { isPending, error, data } = useQuery<idata>({
     queryKey: ["repoData"],
     queryFn: () => fetcherWc("/FetchAllEnquiry", "GET"),
+    retry: false,
+
     staleTime: 1000 * 60 * 5,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -130,6 +136,23 @@ export default function Notifications() {
     }
   };
 
+  const generatehandler = async () => {
+    if (!selectedNotification) return;
+    setloading("generate");
+    const { success } = await fetcherWc("/generate_franchise", "POST", {
+      selectedNotification,
+    });
+    setloading(null);
+    toast(success ? "success" : "failed");
+  };
+  const openhandler = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    notif: Notification
+  ) => {
+    e.stopPropagation();
+    router.push(notif.certificateLink!);
+  };
+
   return (
     <motion.div
       className="min-w-4xl min-h-80vh] mx-auto p-6"
@@ -145,7 +168,7 @@ export default function Notifications() {
           <motion.div
             key={notif.id}
             className="notification flex justify-between items-center p-3 rounded-lg cursor-pointer transition-all bg-gray-200 hover:bg-blue-200"
-            onClick={() => openNotification(notif)}
+            onClick={(e) => openNotification(notif)}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -157,6 +180,11 @@ export default function Notifications() {
                 {new Date(notif.createdAt).toDateString()}
               </p>
             </div>
+            {notif.certificateLink && (
+              <Button onClick={(e) => openhandler(e, notif)}>
+                view Certificate
+              </Button>
+            )}
           </motion.div>
         ))}
       </div>
@@ -263,7 +291,7 @@ export default function Notifications() {
                       )
                     ) : (
                       <span>
-                        {field.key === "dob"
+                        {field.key === "dob" || field.key === "Subscription"
                           ? new Date(selectedNotification?.dob ?? "")
                               .toISOString()
                               .split("T")[0]
@@ -321,10 +349,24 @@ export default function Notifications() {
                 onClick={verifyhandler}
                 disabled={loading === "verify"}
               >
-                Verify{" "}
+                Verify
                 {loading === "verify" && <Loader2 className="animate-spin" />}
               </Button>
             )}
+
+            {selectedNotification.verified &&
+              !selectedNotification.certificateLink && (
+                <Button
+                  className="mt-5 bg-purple-700 hover:bg-purple-800"
+                  onClick={generatehandler}
+                  disabled={loading === "generate"}
+                >
+                  Generate Certificate
+                  {loading === "generate" && (
+                    <Loader2 className="animate-spin" />
+                  )}
+                </Button>
+              )}
           </div>
         </motion.div>
       )}

@@ -35,9 +35,11 @@ interface iDatatype {
   Links?: {};
   filteredVal?: number;
   editedData?: {};
+  selectedNotification?: {};
+  sendData?: {};
 }
 
-const ApiEnd = axios.create({
+export const ApiEnd = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SERVER_ENDPOINT,
 });
 
