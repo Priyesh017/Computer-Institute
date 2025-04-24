@@ -44,16 +44,26 @@ const ReactPlyrExample = ({ src }: Props) => {
             options: [0.5, 0.75, 1, 1.25, 1.5, 2],
           },
           quality: {
-            default: qualityOptions[0],
-            options: qualityOptions,
+            default: 0, // 0 = auto
+            options: [0, ...qualityOptions], // 0 will represent "Auto"
             forced: true,
             onChange: (newQuality: number) => {
-              const level = hls!.levels.findIndex(
-                (l) => l.height === newQuality
-              );
-              if (level !== -1) hls!.currentLevel = level;
+              if (newQuality === 0) {
+                hls!.currentLevel = -1; // -1 = auto
+              } else {
+                const level = hls!.levels.findIndex(
+                  (l) => l.height === newQuality
+                );
+                if (level !== -1) hls!.currentLevel = level;
+              }
             },
           },
+          i18n: {
+            qualityLabel: {
+              0: "Auto",
+            },
+          },
+          clickToPlay: true,
         });
       });
     } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
