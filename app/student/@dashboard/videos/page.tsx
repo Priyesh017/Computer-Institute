@@ -1,11 +1,13 @@
 "use client";
 import dynamic from "next/dynamic";
 
-// Lazy load the client component to avoid SSR crash
-const ReceivedVideos = dynamic(() => import("@/components/VideoComp"), {
-  ssr: false,
-});
+const DynamicComponentWithNoSSR = dynamic(
+  () => import("@/components/VideoComp"),
+  { ssr: false }
+);
 
-export default function Page() {
-  return <ReceivedVideos />;
-}
+const Page = () => {
+  return <DynamicComponentWithNoSSR />;
+};
+
+export default Page;

@@ -13,8 +13,8 @@ export const EnrollmentDetails = ({
 }: {
   enrollment: Enrollmenttype;
   editable?: boolean;
-  deletehandler: () => void;
-  loading: boolean;
+  deletehandler?: () => void;
+  loading?: boolean;
 }) => {
   const [formData, setFormData] = useState(enrollment);
   console.log(formData);

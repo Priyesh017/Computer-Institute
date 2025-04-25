@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useRef } from "react";
 import Plyr from "plyr";
 import "plyr/dist/plyr.css";
