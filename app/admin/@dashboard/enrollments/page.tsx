@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Pagination,
@@ -14,6 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,6 +37,7 @@ const EnrollmentList = () => {
   const queryClient = useQueryClient();
   const [loading, setloading] = useState<number | null>(null);
   const [editable, setEditable] = useState(false);
+  const [loading2, setloading2] = useState<boolean>(false);
 
   interface etype {
     enrollments: Enrollmenttype[];
@@ -89,6 +91,28 @@ const EnrollmentList = () => {
     },
   });
 
+  const deletehandler = useMutation({
+    mutationFn: () =>
+      fetcherWc("/Delete_Enrollment", "DELETE", {
+        id: selectedEnrollment!.id,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
+      toast("Success");
+    },
+    onError: () => toast("Some error happened"),
+    onSettled: () => setloading2(false),
+  });
+
+  const handleDelete = useCallback(() => {
+    if (!selectedEnrollment) {
+      toast("No enrollment selected");
+      return;
+    }
+    setloading2(true);
+    deletehandler.mutate();
+  }, [deletehandler, selectedEnrollment]);
+
   if (isLoading) return <Loader />;
   if (isError) return <p>Error loading data</p>;
 
@@ -112,7 +136,7 @@ const EnrollmentList = () => {
             {filterStatus}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {["All", "Pending", "Pass Out"].map((option) => (
+            {["All", "Pending", "PassOut"].map((option) => (
               <DropdownMenuItem
                 key={option}
                 onClick={() => setFilterStatus(option)}
@@ -124,7 +148,7 @@ const EnrollmentList = () => {
         </DropdownMenu>
         <Input
           type="text"
-          placeholder="Search enrollment..."
+          placeholder="Filter enrollment by branch id..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-1/3 p-2 border border-gray-400 rounded-lg"
@@ -230,6 +254,8 @@ const EnrollmentList = () => {
             <EnrollmentDetails
               enrollment={selectedEnrollment}
               editable={editable}
+              deletehandler={handleDelete}
+              loading={loading2}
             />
             {editable && (
               <div className="flex justify-center mb-4">

@@ -1,14 +1,20 @@
 import { Enrollmenttype } from "@/lib/typs";
 import { motion } from "framer-motion";
-import { Download } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { Button } from "./ui/button";
+import { MdDeleteOutline } from "react-icons/md";
 
 export const EnrollmentDetails = ({
   enrollment,
   editable = false,
+  deletehandler,
+  loading,
 }: {
   enrollment: Enrollmenttype;
   editable?: boolean;
+  deletehandler: () => void;
+  loading: boolean;
 }) => {
   const [formData, setFormData] = useState(enrollment);
   console.log(formData);
@@ -23,8 +29,9 @@ export const EnrollmentDetails = ({
     "idCardLink",
   ];
   const ignore = ["status", "activated"];
+
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl  border-2 border-violet-500">
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
         Enrollment Details
       </h2>
@@ -86,6 +93,10 @@ export const EnrollmentDetails = ({
           );
         })}
       </div>
+      <Button variant={"destructive"} className="mt-2" onClick={deletehandler}>
+        delete <MdDeleteOutline />{" "}
+        {loading && <Loader2 className="animate-spin" />}
+      </Button>
     </div>
   );
 };

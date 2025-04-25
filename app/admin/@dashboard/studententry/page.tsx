@@ -65,6 +65,7 @@ const AddStudent: React.FC = () => {
     ps: "",
     po: "",
     vill: "",
+    createdAt: "",
   });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -225,6 +226,20 @@ const AddStudent: React.FC = () => {
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
           </div>
+
+          <div className="flex flex-col">
+            <Label className="text-sm font-medium mb-1">
+              Enter Admission Date
+            </Label>
+            <input
+              id="createdAt"
+              type="date"
+              value={fd.createdAt}
+              onChange={handleInputChange}
+              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+          </div>
+
           <div className="flex flex-col md:flex-row w-full gap-4">
             {/* Dropzone Section */}
             <div className="w-full md:w-auto">
