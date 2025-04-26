@@ -42,7 +42,7 @@ const StudentProfile: React.FC = () => {
     {
       id: "dob",
       label: "Date of Birth:",
-      value: new Date(student.dob).toLocaleDateString(),
+      value: new Date(student.dob).toLocaleDateString("en-GB"),
     },
     { id: "father", label: "Father:", value: student.father },
     { id: "mother", label: "Mother:", value: student.mother },

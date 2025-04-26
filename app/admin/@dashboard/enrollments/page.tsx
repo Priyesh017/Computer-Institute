@@ -178,7 +178,9 @@ const EnrollmentList = () => {
             {enrollment.name}
           </div>
           <div>{enrollment.EnrollmentNo}</div>
-          <span>{new Date(enrollment.createdAt).toLocaleDateString()}</span>
+          <span>
+            {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
+          </span>
           <span>{enrollment.course.CName}</span>
           <span>{enrollment.centerid}</span>
           <div className="p-2 border rounded-md">{enrollment.status.val}</div>

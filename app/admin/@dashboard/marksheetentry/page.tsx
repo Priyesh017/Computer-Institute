@@ -74,7 +74,7 @@ const Marksheet = () => {
     {
       key: "dob",
       label: "Date of Birth",
-      value: fd && fd.dob ? new Date(fd.dob).toLocaleDateString() : "",
+      value: fd && fd.dob ? new Date(fd.dob).toLocaleDateString("en-GB") : "",
     },
   ];
 

@@ -124,7 +124,9 @@ const ExamForm = () => {
             {enrollment.enrollment.name}
           </div>
           <div>{enrollment.EnrollmentNo}</div>
-          <div>{new Date(enrollment.createdAt).toLocaleDateString()}</div>
+          <div>
+            {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
+          </div>
 
           <span>{enrollment.enrollment.center.code}</span>
           <span>{enrollment.enrollment.course.CName} </span>
