@@ -119,10 +119,11 @@ const ExamForm = () => {
           className="w-1/3 p-2 border border-gray-400 rounded-lg"
         />
       </div>
-      <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
         <span>Admission Date</span>
+        <span>Course Name</span>
         <span>Status</span>
         <span>Action</span>
       </div>
@@ -131,7 +132,7 @@ const ExamForm = () => {
           <div
             key={index}
             className={
-              "click grid grid-cols-5 items-center xs:text-xs text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer hover:bg-blue-100"
+              "click grid grid-cols-6 items-center xs:text-xs text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer hover:bg-blue-100"
             }
           >
             <div
@@ -145,6 +146,7 @@ const ExamForm = () => {
             </div>
             <div>{enrollment.EnrollmentNo}</div>
             <span>{new Date(enrollment.createdAt).toDateString()}</span>
+            <span>{enrollment.course.CName} </span>
             <div className="p-2 border rounded-md">{enrollment.status.val}</div>
             <Button
               className="mx-2 hover:bg-violet-800"
@@ -183,7 +185,7 @@ const ExamForm = () => {
 
       {/* Enrollment Modal */}
       {isModalOpen && selectedEnrollment && (
-        <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
           <div className="relative bg-white rounded-xl w-full max-w-fit h-full overflow-auto">
             <div className="flex justify-between items-center mb-4">
               <div className="w-full p-6">

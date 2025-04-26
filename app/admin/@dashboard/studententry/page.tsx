@@ -247,9 +247,12 @@ const AddStudent: React.FC = () => {
                 htmlFor="image"
                 className="block text-sm font-medium text-gray-700"
               >
-                Applicant Image
+                Applicant Image(use only jpg or jpeg)
               </label>
-              <Dropzone onDrop={(files) => onDrop(files)} accept="image/*" />
+              <Dropzone
+                onDrop={(files) => onDrop(files)}
+                accept="image/jpeg,image/jpg"
+              />
             </div>
 
             {/* Image Preview Section */}

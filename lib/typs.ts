@@ -35,6 +35,9 @@ export interface Enrollmenttype {
     id: number;
     val: string;
   };
+  course: {
+    CName: string;
+  };
   centerid: number;
 }
 

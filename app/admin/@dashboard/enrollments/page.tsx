@@ -24,7 +24,7 @@ import {
 import { EnrollmentDetails } from "@/components/enrollmentdatashow";
 import { Enrollmenttype } from "@/lib/typs";
 import Loader from "@/components/Loader";
-import { Loader2, X, Pen, Eye } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 
 const PAGE_SIZE = 5;
 
@@ -36,7 +36,6 @@ const EnrollmentList = () => {
     useState<Enrollmenttype | null>(null);
   const queryClient = useQueryClient();
   const [loading, setloading] = useState<number | null>(null);
-  const [editable, setEditable] = useState(false);
   const [loading2, setloading2] = useState<boolean>(false);
 
   interface etype {
@@ -154,10 +153,11 @@ const EnrollmentList = () => {
           className="w-1/3 p-2 border border-gray-400 rounded-lg"
         />
       </div>
-      <div className="grid grid-cols-7 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <div className="grid grid-cols-8 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No.</span>
         <span>Admission Date</span>
+        <span>Course Name</span>
         <span>Branch ID</span>
         <span>Status</span>
         <span>Approval</span>
@@ -167,7 +167,7 @@ const EnrollmentList = () => {
       {filteredEnrollment.map((enrollment) => (
         <div
           key={enrollment.id}
-          className="grid md:grid-cols-7 items-center text-center py-3 border-b"
+          className="grid md:grid-cols-8 items-center text-center py-3 border-b"
         >
           <div
             onClick={() => {
@@ -179,6 +179,7 @@ const EnrollmentList = () => {
           </div>
           <div>{enrollment.EnrollmentNo}</div>
           <span>{new Date(enrollment.createdAt).toLocaleDateString()}</span>
+          <span>{enrollment.course.CName}</span>
           <span>{enrollment.centerid}</span>
           <div className="p-2 border rounded-md">{enrollment.status.val}</div>
           <div className="flex items-center justify-center gap-2">
@@ -227,23 +228,6 @@ const EnrollmentList = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="relative bg-white rounded-xl">
             <div className="absolute top-5 right-[0] flex items-center gap-1">
-              {editable ? (
-                <button
-                  onClick={() => setEditable((prev) => !prev)}
-                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-300 rounded-full"
-                  title="Edit"
-                >
-                  <Eye size={20} />
-                </button>
-              ) : (
-                <button
-                  onClick={() => setEditable((prev) => !prev)}
-                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-300 rounded-full"
-                  title="Edit"
-                >
-                  <Pen size={20} />
-                </button>
-              )}
               <button
                 className="p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
                 onClick={() => setSelectedEnrollment(null)}
@@ -253,23 +237,9 @@ const EnrollmentList = () => {
             </div>
             <EnrollmentDetails
               enrollment={selectedEnrollment}
-              editable={editable}
               deletehandler={handleDelete}
               loading={loading2}
             />
-            {editable && (
-              <div className="flex justify-center mb-4">
-                <Button
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-                  onClick={() => {
-                    // Handle save logic here
-                    setEditable(false);
-                  }}
-                >
-                  Save Changes
-                </Button>
-              </div>
-            )}
           </div>
         </div>
       )}
