@@ -55,11 +55,10 @@ export default function Notifications() {
   const [editable, setEditable] = useState(false);
   const [editedData, setEditedData] = useState<Notification>();
   const router = useRouter();
+
   const { isPending, error, data } = useQuery<idata>({
     queryKey: ["repoData"],
     queryFn: () => fetcherWc("/FetchAllEnquiry", "GET"),
-    retry: false,
-
     staleTime: 1000 * 60 * 5,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
