@@ -37,6 +37,8 @@ interface iDatatype {
   editedData?: {};
   selectedNotification?: {};
   sendData?: {};
+  createdAt?: string;
+  dop?: string;
 }
 
 export const ApiEnd = axios.create({

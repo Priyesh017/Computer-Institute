@@ -21,6 +21,7 @@ const Marksheet = () => {
   const [grade, setGrade] = useState<string>("N/A");
   const [EnrollmentNo, setEnrollmentNo] = useState("");
   const [year, setyear] = useState("");
+  const [dop, setdop] = useState("");
   const [fd, setfd] = useState<EnrollmentData>();
   const [selected, setSelected] = useState<"PASS" | "FAIL" | "Select">(
     "Select"
@@ -157,6 +158,7 @@ const Marksheet = () => {
         percentage,
         totalMarks,
         year,
+        dop,
       });
 
       toast(
@@ -242,6 +244,17 @@ const Marksheet = () => {
             onChange={(e) => setyear(e.target.value)}
             value={year}
             placeholder="enter year"
+            className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label className="text-sm font-medium mb-1">Date Of Publishing</label>
+          <input
+            type="text"
+            onChange={(e) => setdop(e.target.value)}
+            value={dop}
+            placeholder="dd/mm/yyyy"
             className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
           />
         </div>

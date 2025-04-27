@@ -207,7 +207,7 @@ const ExamForm = () => {
       {/* Enrollment Modal */}
       {isModalOpen && selectedEnrollment && (
         <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
-          <div className="relative bg-white rounded-xl w-full max-w-fit h-full overflow-auto">
+          <div className="relative bg-white rounded-xl w-full max-w-2xl h-full overflow-auto">
             <div className="flex justify-between items-center mb-4">
               <div className="w-full p-6">
                 <ProgressBar value={selectedEnrollment.status.id} />
