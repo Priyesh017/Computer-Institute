@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2, X } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetcherWc } from "@/helper";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
@@ -52,9 +52,12 @@ export default function Notifications() {
   const [loading, setloading] = useState<
     "verify" | "update" | "generate" | null
   >(null);
+  const [deleteloading, setdeleteloading] = useState<number | null>(null);
+
   const [editable, setEditable] = useState(false);
   const [editedData, setEditedData] = useState<Notification>();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { isPending, error, data } = useQuery<idata>({
     queryKey: ["repoData"],
@@ -63,6 +66,15 @@ export default function Notifications() {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+  });
+
+  const deletehandler = useMutation({
+    mutationFn: ({ id }: { id: number }) => {
+      setdeleteloading(id);
+      return fetcherWc("/deleteEnquiry", "DELETE", { id });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["repoData"] }),
+    onSettled: () => setdeleteloading(null),
   });
 
   if (isPending) {
@@ -179,11 +191,26 @@ export default function Notifications() {
                 {new Date(notif.createdAt).toDateString()}
               </p>
             </div>
-            {notif.certificateLink && (
-              <Button onClick={(e) => openhandler(e, notif)}>
-                view Certificate
+            <div>
+              {notif.certificateLink && (
+                <Button onClick={(e) => openhandler(e, notif)}>
+                  view Certificate
+                </Button>
+              )}
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deletehandler.mutate({ id: notif.id });
+                }}
+                className="ml-2"
+                variant={"destructive"}
+              >
+                Delete
+                {deleteloading === notif.id && (
+                  <Loader2 className="animate-spin" />
+                )}
               </Button>
-            )}
+            </div>
           </motion.div>
         ))}
       </div>

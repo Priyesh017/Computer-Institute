@@ -94,10 +94,16 @@ export const EnrollmentDetails = ({
           );
         })}
       </div>
-      <Button variant={"destructive"} className="mt-2" onClick={deletehandler}>
-        delete <MdDeleteOutline />
-        {loading && <Loader2 className="animate-spin" />}
-      </Button>
+      {enrollment.status.val !== "passout" && (
+        <Button
+          variant={"destructive"}
+          className="mt-2"
+          onClick={deletehandler}
+        >
+          delete <MdDeleteOutline />
+          {loading && <Loader2 className="animate-spin" />}
+        </Button>
+      )}
     </div>
   );
 };
