@@ -167,7 +167,11 @@ const ExamForm = () => {
             </div>
             <div>{enrollment.EnrollmentNo}</div>
             <span>{new Date(enrollment.createdAt).toDateString()}</span>
-            <span>{enrollment.course.CName} </span>
+            <span>
+              {enrollment.course.CName}
+              <br />
+              {`(${enrollment.course.Duration} months)`}
+            </span>
             <div className="p-2 border rounded-md">{enrollment.status.val}</div>
             <Button
               className="mx-2 hover:bg-violet-800"

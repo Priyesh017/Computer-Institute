@@ -129,7 +129,12 @@ const ExamForm = () => {
           </div>
 
           <span>{enrollment.enrollment.center.code}</span>
-          <span>{enrollment.enrollment.course.CName} </span>
+          <span>
+            {enrollment.enrollment.course.CName}
+
+            <br />
+            {`(${enrollment.enrollment.course.Duration} months)`}
+          </span>
           <span>{enrollment.enrollment.status.val}</span>
           <div className="flex items-center justify-center gap-2">
             <Switch

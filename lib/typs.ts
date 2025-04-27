@@ -37,6 +37,7 @@ export interface Enrollmenttype {
   };
   course: {
     CName: string;
+    Duration: number;
   };
   centerid: number;
 }
@@ -49,6 +50,8 @@ export interface Enrollment {
 
   course: {
     price: number;
+    CName: string;
+    Duration: number;
   };
   amount?: {
     TotalPaid: number;
@@ -186,6 +189,7 @@ export type DataItem = {
     };
     course: {
       CName: string;
+      Duration: number;
     };
   };
 };

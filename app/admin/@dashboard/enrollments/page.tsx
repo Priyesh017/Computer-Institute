@@ -181,7 +181,11 @@ const EnrollmentList = () => {
           <span>
             {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
           </span>
-          <span>{enrollment.course.CName}</span>
+          <span>
+            {enrollment.course.CName}
+            <br />
+            {`(${enrollment.course.Duration} months)`}
+          </span>
           <span>{enrollment.centerid}</span>
           <div className="p-2 border rounded-md">{enrollment.status.val}</div>
           <div className="flex items-center justify-center gap-2">
