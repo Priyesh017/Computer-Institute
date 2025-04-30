@@ -39,6 +39,7 @@ interface iDatatype {
   sendData?: {};
   createdAt?: string;
   dop?: string;
+  form?: {};
 }
 
 export const ApiEnd = axios.create({

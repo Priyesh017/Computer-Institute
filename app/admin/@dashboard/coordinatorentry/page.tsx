@@ -65,7 +65,7 @@ export default function EntryForm() {
 
       toast(data.success ? "success" : "failed");
     } catch (error) {
-      toast("code break error");
+      toast("error happened");
       console.log(error);
     } finally {
       setloading(false);

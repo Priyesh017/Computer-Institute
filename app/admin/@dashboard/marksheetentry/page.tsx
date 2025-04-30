@@ -166,11 +166,10 @@ const Marksheet = () => {
       );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      if (error.code === "P2002") {
-        toast("duplicate entry not accepted");
-        return;
+      if (error.response) {
+        const { error: backendError } = error.response.data;
+        toast.error(backendError.code === "P2002" && "duplicate entry");
       }
-      toast("error happend");
     } finally {
       setloading(null);
     }

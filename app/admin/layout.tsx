@@ -2,6 +2,7 @@
 
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+
 import { useAuthStore } from "@/store";
 
 export default function Layout({ dashboard }: { dashboard: React.ReactNode }) {

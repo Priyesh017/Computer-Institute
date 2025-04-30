@@ -8,6 +8,18 @@ interface usertype {
   avatar: "";
 }
 
+export interface Course {
+  id: number;
+  CName: string;
+  Duration: number;
+  price: number;
+}
+
+export interface CourseFramework {
+  value: string;
+  label: string;
+}
+
 interface userAuthState {
   utype: "admin" | "center";
   setUtype: (s: "admin" | "center") => void;
@@ -20,6 +32,8 @@ interface userAuthState {
   setloadingTime: (val: boolean) => void;
   loading: boolean;
   setLoading: (val: boolean) => void;
+  frameworksCourse: CourseFramework[];
+  setframeworksCourse: (frameworks: CourseFramework[]) => void;
 }
 
 export const useAuthStore = create<userAuthState>((set) => ({
@@ -40,4 +54,6 @@ export const useAuthStore = create<userAuthState>((set) => ({
   setLoading(val) {
     set({ loading: val });
   },
+  frameworksCourse: [],
+  setframeworksCourse: (frameworksCourse) => set({ frameworksCourse }),
 }));

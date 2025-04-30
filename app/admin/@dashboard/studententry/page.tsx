@@ -9,7 +9,6 @@ import { Loader2, X } from "lucide-react";
 import anime from "animejs";
 import {
   CategoryValue,
-  frameworksCourse,
   frameworksEdu,
   IdCardType2,
   indianStatesWithDistricts,
@@ -20,6 +19,7 @@ import { ComboboxDemo } from "@/components/combo";
 import { Dropzone } from "@/components/dropzone";
 import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-dropdown-menu";
+import { useAuthStore } from "@/store";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -87,6 +87,7 @@ const AddStudent: React.FC = () => {
     };
     reader.readAsDataURL(acceptedFile);
   };
+  const { frameworksCourse } = useAuthStore();
 
   const handleDeleteImage = () => setImages(null);
 
@@ -161,14 +162,13 @@ const AddStudent: React.FC = () => {
             "name",
             "father",
             "mother",
-
             "mobile",
             "email",
             "address",
+            "vill",
             "pincode",
             "po",
             "ps",
-            "vill",
           ].map((field, id) => (
             <div className="flex flex-col" key={id}>
               <Label className="text-sm font-medium mb-1">{field}</Label>

@@ -6,9 +6,10 @@ import { Plus, Check, Trash2, Edit, Loader2 } from "lucide-react";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import { typefd } from "@/lib/typs";
-import { frameworksCourse } from "@/data";
+
 import { ComboboxDemo } from "@/components/combo";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/store";
 
 export type Subject = {
   name: string;
@@ -27,11 +28,12 @@ const SubjectEntry = () => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const { frameworksCourse } = useAuthStore();
 
   useEffect(() => {
     const selected = frameworksCourse.find((c) => c.value === fd.courseid);
     setCourseName(selected?.label || "");
-  }, [fd.courseid]);
+  }, [fd.courseid, frameworksCourse]);
 
   const resetInput = () =>
     setSubjectInput({ name: "", practical: "", theory: "" });
