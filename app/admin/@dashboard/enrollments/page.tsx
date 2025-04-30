@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Pagination,
@@ -24,7 +24,7 @@ import {
 import { EnrollmentDetails } from "@/components/enrollmentdatashow";
 import { Enrollmenttype } from "@/lib/typs";
 import Loader from "@/components/Loader";
-import { Loader2, X } from "lucide-react";
+import { Loader2, UserPen, X } from "lucide-react";
 
 const PAGE_SIZE = 5;
 
@@ -37,11 +37,17 @@ const EnrollmentList = () => {
   const queryClient = useQueryClient();
   const [loading, setloading] = useState<number | null>(null);
   const [loading2, setloading2] = useState<boolean>(false);
+  const [editable, seteditable] = useState(false);
+
+  const [formData, setFormData] = useState<Enrollmenttype | null>(null);
 
   interface etype {
     enrollments: Enrollmenttype[];
     total: number;
   }
+  useEffect(() => {
+    if (selectedEnrollment) setFormData(selectedEnrollment);
+  }, [selectedEnrollment]);
 
   const { data, isLoading, isError } = useQuery<etype>({
     queryKey: ["enrollments", currentPage],
@@ -64,7 +70,7 @@ const EnrollmentList = () => {
       return fetcherWc(endpoint, "POST", { id: enrollment.id });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
+      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
       toast("Success");
     },
     onError: () => toast("Some error happened"),
@@ -90,6 +96,28 @@ const EnrollmentList = () => {
     },
   });
 
+  const updatehandler = useMutation({
+    mutationFn: () => {
+      setloading2(true);
+      if (formData) {
+        return fetcherWc("/updateEnrollment", "PUT", {
+          id: formData.id,
+          name: formData.name,
+          address: formData.address,
+          father: formData.father,
+          dob: formData.dob,
+        });
+      }
+      throw new Error("No enrollment selected");
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
+      toast("Success");
+    },
+    onError: () => toast("Some error happened"),
+    onSettled: () => setloading2(false),
+  });
   const deletehandler = useMutation({
     mutationFn: () =>
       fetcherWc("/Delete_Enrollment", "DELETE", {
@@ -233,18 +261,30 @@ const EnrollmentList = () => {
       {selectedEnrollment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="relative bg-white rounded-xl">
-            <div className="absolute top-5 right-[0] flex items-center gap-1">
+            <div className="absolute top-5 right-4 flex items-center gap-1">
               <button
                 className="p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
-                onClick={() => setSelectedEnrollment(null)}
+                onClick={() => {
+                  setSelectedEnrollment(null);
+                  seteditable(false);
+                }}
               >
                 <X size={24} />
               </button>
+              <UserPen
+                className="cursor-pointer p-2 hover:bg-gray-300 hover:text-red-600 rounded-full"
+                size={40}
+                onClick={() => seteditable(!editable)}
+              />
             </div>
             <EnrollmentDetails
               enrollment={selectedEnrollment}
               deletehandler={handleDelete}
               loading={loading2}
+              editable={editable}
+              updatehandler={updatehandler.mutate}
+              setFormData={setFormData}
+              formData={formData}
             />
           </div>
         </div>

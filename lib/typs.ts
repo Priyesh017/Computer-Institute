@@ -31,6 +31,8 @@ export interface Enrollmenttype {
   EnrollmentNo: number;
   id: number;
   activated: boolean;
+  address: true;
+  father: string;
   status: {
     id: number;
     val: string;

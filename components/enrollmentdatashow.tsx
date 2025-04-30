@@ -1,7 +1,7 @@
 import { Enrollmenttype } from "@/lib/typs";
 import { motion } from "framer-motion";
 import { Download, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Button } from "./ui/button";
 import { MdDeleteOutline } from "react-icons/md";
 
@@ -10,16 +10,25 @@ export const EnrollmentDetails = ({
   editable = false,
   deletehandler,
   loading,
+  updatehandler,
+  setFormData,
+  formData,
 }: {
   enrollment: Enrollmenttype;
   editable?: boolean;
   deletehandler?: () => void;
   loading?: boolean;
+  updatehandler?: () => void;
+  setFormData?: Dispatch<SetStateAction<Enrollmenttype | null>>;
+  formData?: Enrollmenttype | null;
 }) => {
-  const [formData, setFormData] = useState(enrollment);
+  if (!setFormData) return;
 
   const handleChange = (key: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
+    setFormData((prev) => {
+      if (!prev) return null;
+      return { ...prev, [key]: value || "" };
+    });
   };
   const download = [
     "marksheetLink",
@@ -28,13 +37,16 @@ export const EnrollmentDetails = ({
     "imageLink",
     "idCardLink",
   ];
-  const ignore = ["status", "activated"];
+  const ignore = ["status", "activated", "id", "centerid", "EnrollmentNo"];
+  console.log(formData);
+  if (!formData) return;
 
   return (
-    <div className=" mx-auto p-6 bg-white rounded-xl">
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
         Enrollment Details
       </h2>
+
       <div className="grid grid-cols-2 gap-4 text-gray-700">
         {Object.entries(formData).map(([key, value]) => {
           if (key === "course") return null;
@@ -101,6 +113,12 @@ export const EnrollmentDetails = ({
           onClick={deletehandler}
         >
           delete <MdDeleteOutline />
+          {loading && <Loader2 className="animate-spin" />}
+        </Button>
+      )}
+      {editable && (
+        <Button className="mt-2" onClick={updatehandler}>
+          update
           {loading && <Loader2 className="animate-spin" />}
         </Button>
       )}
