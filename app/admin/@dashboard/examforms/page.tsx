@@ -11,12 +11,11 @@ import {
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataItem } from "@/lib/typs";
-import { EnrollmentDetails } from "@/components/exmformdetails";
 import Loader from "@/components/Loader";
 
 const PAGE_SIZE = 5;
@@ -24,8 +23,6 @@ const PAGE_SIZE = 5;
 const ExamForm = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [selectedexmform, setselectedexmform] = useState<DataItem | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
   const [loading, setloading] = useState<number | null>(null);
 
@@ -114,15 +111,7 @@ const ExamForm = () => {
           key={enrollment.id}
           className="grid md:grid-cols-8 items-center text-center text-gray-600 gap-2 font-bold py-3 border-b border-gray-500 hover:bg-blue-100"
         >
-          <div
-            className="hover:text-orange-600 cursor-pointer"
-            onClick={() => {
-              setselectedexmform(enrollment);
-              setIsModalOpen(true);
-            }}
-          >
-            {enrollment.enrollment.name}
-          </div>
+          <div className="">{enrollment.enrollment.name}</div>
           <div>{enrollment.EnrollmentNo}</div>
           <div>
             {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
@@ -184,21 +173,6 @@ const ExamForm = () => {
       </Pagination>
 
       {/* Fullscreen Modal */}
-      {isModalOpen && selectedexmform && (
-        <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-xl w-full max-w-fit max-h-[90vh] overflow-auto">
-            <div className="absolute top-0 right-0 flex items-center gap-2 p-2">
-              <button
-                className="p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
-                onClick={() => setIsModalOpen(false)}
-              >
-                <X size={24} />
-              </button>
-            </div>
-            <EnrollmentDetails enrollment={selectedexmform} />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

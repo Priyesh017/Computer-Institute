@@ -117,7 +117,7 @@ export const EnrollmentDetails = ({
         </Button>
       )}
       {editable && (
-        <Button className="mt-2" onClick={updatehandler}>
+        <Button className="mt-2 ml-2" onClick={updatehandler}>
           update
           {loading && <Loader2 className="animate-spin" />}
         </Button>

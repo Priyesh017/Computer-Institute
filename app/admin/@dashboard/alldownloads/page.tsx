@@ -16,16 +16,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { fetcherWc } from "@/helper";
 import { X } from "lucide-react";
-import { EnrollmentDetails } from "@/components/enrollmentdatashow";
 import AllDownloads from "@/components/studentdashboard/Downloads";
 import { Enrollmenttype } from "@/lib/typs";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import ProgressBar from "@/components/ProgressBar";
 import { Input } from "@/components/ui/input";
-import { queryClient } from "@/app/context";
-import { toast } from "react-toastify";
+
+import { EnrollmentDetails } from "@/components/exmformdetails";
 
 const PAGE_SIZE = 5;
 
@@ -40,30 +39,11 @@ const ExamForm = () => {
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState("All");
   const [search, setSearch] = useState("");
-  const [loading2, setloading2] = useState<boolean>(false);
 
   const fetchfn = async () => {
     const { enrollments } = await fetcherWc("/AllEnrollments", "GET");
     return enrollments as Enrollmenttype[];
   };
-  const deletehandler = useMutation({
-    mutationFn: () => {
-      setloading2(true);
-
-      return fetcherWc("/Delete_Enrollment", "DELETE", {
-        id: selectedEnrollment!.id,
-      });
-    },
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["enrollments", "branch", currentPage],
-      });
-      toast("Success");
-    },
-    onError: () => toast("Some error happened"),
-    onSettled: () => setloading2(false),
-  });
 
   const {
     data: exmforms,
@@ -223,11 +203,7 @@ const ExamForm = () => {
                 <X size={24} />
               </button>
             </div>
-            <EnrollmentDetails
-              enrollment={selectedEnrollment}
-              deletehandler={deletehandler.mutate}
-              loading={loading2}
-            />
+            <EnrollmentDetails enrollment={selectedEnrollment} />
           </div>
         </div>
       )}

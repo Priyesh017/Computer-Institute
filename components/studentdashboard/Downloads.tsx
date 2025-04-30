@@ -5,6 +5,7 @@ import anime from "animejs";
 import { useEffect } from "react";
 import { Download } from "lucide-react";
 import { Enrollmenttype } from "@/lib/typs";
+import { useAuthStore } from "@/store";
 
 const Downloads = ({ enrollment }: { enrollment: Enrollmenttype }) => {
   useEffect(() => {
@@ -17,12 +18,34 @@ const Downloads = ({ enrollment }: { enrollment: Enrollmenttype }) => {
       delay: anime.stagger(150),
     });
   }, []);
+  const { user } = useAuthStore();
+  const Utype = user!.role;
 
   const downloadItems = [
-    { id: 1, name: "Student ID", file: enrollment.idCardLink },
-    { id: 2, name: "Admit Card", file: enrollment.admitLink },
-    { id: 3, name: "Marksheet", file: enrollment.marksheetLink },
-    { id: 4, name: "Certificate", file: enrollment.certificateLink },
+    {
+      id: 1,
+      name: "Student ID",
+      file: enrollment.idCardLink,
+      access: ["CENTER", "ADMIN"],
+    },
+    {
+      id: 2,
+      name: "Admit Card",
+      file: enrollment.admitLink,
+      access: ["CENTER", "ADMIN"],
+    },
+    {
+      id: 3,
+      name: "Marksheet",
+      file: enrollment.marksheetLink,
+      access: ["ADMIN"],
+    },
+    {
+      id: 4,
+      name: "Certificate",
+      file: enrollment.certificateLink,
+      access: ["ADMIN"],
+    },
   ];
 
   return (
@@ -38,7 +61,8 @@ const Downloads = ({ enrollment }: { enrollment: Enrollmenttype }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-lg">
         {downloadItems.map(
           (item) =>
-            item.file !== "notavl" && (
+            item.file !== "notavl" &&
+            item.access.includes(Utype) && (
               <motion.a
                 key={item.id}
                 href={item.file}
