@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Pagination,
@@ -14,6 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +24,7 @@ import {
 import { EnrollmentDetails } from "@/components/enrollmentdatashow";
 import { Enrollmenttype } from "@/lib/typs";
 import Loader from "@/components/Loader";
-import { Loader2, X, Pen, Eye } from "lucide-react";
+import { Loader2, UserPen, X } from "lucide-react";
 
 const PAGE_SIZE = 5;
 
@@ -33,15 +34,20 @@ const EnrollmentList = () => {
   const [filterStatus, setFilterStatus] = useState("All");
   const [selectedEnrollment, setSelectedEnrollment] =
     useState<Enrollmenttype | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
   const [loading, setloading] = useState<number | null>(null);
-  const [editable, setEditable] = useState(false);
+  const [loading2, setloading2] = useState<boolean>(false);
+  const [editable, seteditable] = useState(false);
+
+  const [formData, setFormData] = useState<Enrollmenttype | null>(null);
 
   interface etype {
     enrollments: Enrollmenttype[];
     total: number;
   }
+  useEffect(() => {
+    if (selectedEnrollment) setFormData(selectedEnrollment);
+  }, [selectedEnrollment]);
 
   const { data, isLoading, isError } = useQuery<etype>({
     queryKey: ["enrollments", currentPage],
@@ -64,7 +70,7 @@ const EnrollmentList = () => {
       return fetcherWc(endpoint, "POST", { id: enrollment.id });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
+      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
       toast("Success");
     },
     onError: () => toast("Some error happened"),
@@ -90,6 +96,50 @@ const EnrollmentList = () => {
     },
   });
 
+  const updatehandler = useMutation({
+    mutationFn: () => {
+      setloading2(true);
+      if (formData) {
+        return fetcherWc("/updateEnrollment", "PUT", {
+          id: formData.id,
+          name: formData.name,
+          address: formData.address,
+          father: formData.father,
+          dob: formData.dob,
+        });
+      }
+      throw new Error("No enrollment selected");
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
+      toast("Success");
+    },
+    onError: () => toast("Some error happened"),
+    onSettled: () => setloading2(false),
+  });
+  const deletehandler = useMutation({
+    mutationFn: () =>
+      fetcherWc("/Delete_Enrollment", "DELETE", {
+        id: selectedEnrollment!.id,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
+      toast("Success");
+    },
+    onError: () => toast("Some error happened"),
+    onSettled: () => setloading2(false),
+  });
+
+  const handleDelete = useCallback(() => {
+    if (!selectedEnrollment) {
+      toast("No enrollment selected");
+      return;
+    }
+    setloading2(true);
+    deletehandler.mutate();
+  }, [deletehandler, selectedEnrollment]);
+
   if (isLoading) return <Loader />;
   if (isError) return <p>Error loading data</p>;
 
@@ -113,7 +163,7 @@ const EnrollmentList = () => {
             {filterStatus}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {["All", "Pending", "Pass Out"].map((option) => (
+            {["All", "Pending", "PassOut"].map((option) => (
               <DropdownMenuItem
                 key={option}
                 onClick={() => setFilterStatus(option)}
@@ -125,35 +175,45 @@ const EnrollmentList = () => {
         </DropdownMenu>
         <Input
           type="text"
-          placeholder="Search enrollment..."
+          placeholder="Filter enrollment by branch id..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-1/3 p-2 border border-gray-400 rounded-lg"
         />
       </div>
-      <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <div className="grid grid-cols-8 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No.</span>
+        <span>Admission Date</span>
+        <span>Course Name</span>
         <span>Branch ID</span>
         <span>Status</span>
         <span>Approval</span>
         <span>Generate</span>
       </div>
+
       {filteredEnrollment.map((enrollment) => (
         <div
           key={enrollment.id}
-          className="grid md:grid-cols-6 items-center text-center py-3 border-b"
+          className="grid md:grid-cols-8 items-center text-center py-3 border-b"
         >
           <div
             onClick={() => {
               setSelectedEnrollment(enrollment);
-              setIsModalOpen(true);
             }}
             className="hover:text-red-600 cursor-pointer"
           >
             {enrollment.name}
           </div>
           <div>{enrollment.EnrollmentNo}</div>
+          <span>
+            {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
+          </span>
+          <span>
+            {enrollment.course.CName}
+            <br />
+            {`(${enrollment.course.Duration} months)`}
+          </span>
           <span>{enrollment.centerid}</span>
           <div className="p-2 border rounded-md">{enrollment.status.val}</div>
           <div className="flex items-center justify-center gap-2">
@@ -198,51 +258,34 @@ const EnrollmentList = () => {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      {isModalOpen && selectedEnrollment && (
+      {selectedEnrollment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="relative bg-white rounded-xl w-full max-w-fit max-h-[90vh] overflow-auto">
-            <div className="absolute top-5 right-0 flex items-center gap-2 p-2">
-              {editable ? (
-                <button
-                  onClick={() => setEditable((prev) => !prev)}
-                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-300 rounded-full"
-                  title="Edit"
-                >
-                  <Eye size={20} />
-                </button>
-              ) : (
-                <button
-                  onClick={() => setEditable((prev) => !prev)}
-                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-300 rounded-full"
-                  title="Edit"
-                >
-                  <Pen size={20} />
-                </button>
-              )}
+          <div className="relative bg-white rounded-xl">
+            <div className="absolute top-5 right-4 flex items-center gap-1">
               <button
                 className="p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => {
+                  setSelectedEnrollment(null);
+                  seteditable(false);
+                }}
               >
                 <X size={24} />
               </button>
+              <UserPen
+                className="cursor-pointer p-2 hover:bg-gray-300 hover:text-red-600 rounded-full"
+                size={40}
+                onClick={() => seteditable(!editable)}
+              />
             </div>
             <EnrollmentDetails
               enrollment={selectedEnrollment}
+              deletehandler={handleDelete}
+              loading={loading2}
               editable={editable}
+              updatehandler={updatehandler.mutate}
+              setFormData={setFormData}
+              formData={formData}
             />
-            {editable && (
-              <div className="flex justify-center mb-4">
-                <Button
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-                  onClick={() => {
-                    // Handle save logic here
-                    setEditable(false);
-                  }}
-                >
-                  Save Changes
-                </Button>
-              </div>
-            )}
           </div>
         </div>
       )}

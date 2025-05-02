@@ -77,6 +77,7 @@ const ExamFee = () => {
       <div className="grid grid-cols-7 text-xs md:text-lg text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
+        <span>Course Name</span>
         <span>Total Fee</span>
         <span>Fees Paid</span>
         <span>Fees Due</span>
@@ -98,6 +99,10 @@ const ExamFee = () => {
               >
                 <div className="hover:text-violet-800">{enrollment.name}</div>
                 <div>{enrollment.EnrollmentNo}</div>
+                <div>
+                  {enrollment.course.CName} <br />
+                  {` (${enrollment.course.Duration} months)`}
+                </div>
                 <span>{enrollment.course.price}</span>
                 <input
                   type="number"

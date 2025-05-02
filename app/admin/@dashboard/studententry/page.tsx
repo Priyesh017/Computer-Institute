@@ -9,7 +9,6 @@ import { Loader2, X } from "lucide-react";
 import anime from "animejs";
 import {
   CategoryValue,
-  frameworksCourse,
   frameworksEdu,
   IdCardType2,
   indianStatesWithDistricts,
@@ -20,6 +19,7 @@ import { ComboboxDemo } from "@/components/combo";
 import { Dropzone } from "@/components/dropzone";
 import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-dropdown-menu";
+import { useAuthStore } from "@/store";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -65,6 +65,7 @@ const AddStudent: React.FC = () => {
     ps: "",
     po: "",
     vill: "",
+    createdAt: "",
   });
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -86,6 +87,7 @@ const AddStudent: React.FC = () => {
     };
     reader.readAsDataURL(acceptedFile);
   };
+  const { frameworksCourse } = useAuthStore();
 
   const handleDeleteImage = () => setImages(null);
 
@@ -160,14 +162,13 @@ const AddStudent: React.FC = () => {
             "name",
             "father",
             "mother",
-
             "mobile",
             "email",
             "address",
+            "vill",
             "pincode",
             "po",
             "ps",
-            "vill",
           ].map((field, id) => (
             <div className="flex flex-col" key={id}>
               <Label className="text-sm font-medium mb-1">{field}</Label>
@@ -225,6 +226,20 @@ const AddStudent: React.FC = () => {
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />
           </div>
+
+          <div className="flex flex-col">
+            <Label className="text-sm font-medium mb-1">
+              Enter Admission Date
+            </Label>
+            <input
+              id="createdAt"
+              type="date"
+              value={fd.createdAt}
+              onChange={handleInputChange}
+              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+            />
+          </div>
+
           <div className="flex flex-col md:flex-row w-full gap-4">
             {/* Dropzone Section */}
             <div className="w-full md:w-auto">
@@ -232,9 +247,12 @@ const AddStudent: React.FC = () => {
                 htmlFor="image"
                 className="block text-sm font-medium text-gray-700"
               >
-                Applicant Image
+                Applicant Image(use only jpg or jpeg)
               </label>
-              <Dropzone onDrop={(files) => onDrop(files)} accept="image/*" />
+              <Dropzone
+                onDrop={(files) => onDrop(files)}
+                accept="image/jpeg,image/jpg"
+              />
             </div>
 
             {/* Image Preview Section */}

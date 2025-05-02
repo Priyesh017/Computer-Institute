@@ -11,12 +11,11 @@ import {
 } from "@/components/ui/pagination";
 import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, X, Pen, Eye } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataItem } from "@/lib/typs";
-import { EnrollmentDetails } from "@/components/exmformdetails";
 import Loader from "@/components/Loader";
 
 const PAGE_SIZE = 5;
@@ -24,12 +23,9 @@ const PAGE_SIZE = 5;
 const ExamForm = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [selectedexmform, setselectedexmform] = useState<DataItem | null>(null);
-  const [editable, setEditable] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const queryClient = useQueryClient();
+  const [loading, setloading] = useState<number | null>(null);
 
-  // Fetching exam forms using React Query
   const {
     data: exmforms = [],
     isLoading,
@@ -61,10 +57,12 @@ const ExamForm = () => {
   // Mutation for generating admit
   const generateAdmit = useMutation({
     mutationFn: async (enrollment: DataItem) => {
+      setloading(enrollment.id);
       return fetcherWc("/generateadmit", "POST", { enrollment });
     },
     onSuccess: (data) => toast(data.success ? "Generated" : "Error"),
     onError: () => toast("Some error happened"),
+    onSettled: () => setloading(null),
   });
 
   if (isLoading) return <Loader />;
@@ -97,10 +95,13 @@ const ExamForm = () => {
         />
       </div>
 
-      <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <div className="grid grid-cols-8 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
+        <span>Created</span>
         <span>Branch ID</span>
+        <span>Course Name</span>
+        <span>Status</span>
         <span>Approval</span>
         <span>Generate</span>
       </div>
@@ -108,19 +109,22 @@ const ExamForm = () => {
       {currentEnrollments.map((enrollment, index) => (
         <div
           key={enrollment.id}
-          className="grid md:grid-cols-5 items-center text-center text-gray-600 gap-2 font-bold py-3 border-b border-gray-500 hover:bg-blue-100"
+          className="grid md:grid-cols-8 items-center text-center text-gray-600 gap-2 font-bold py-3 border-b border-gray-500 hover:bg-blue-100"
         >
-          <div
-            className="hover:text-orange-600 cursor-pointer"
-            onClick={() => {
-              setselectedexmform(enrollment);
-              setIsModalOpen(true);
-            }}
-          >
-            {enrollment.enrollment.name}
-          </div>
+          <div className="">{enrollment.enrollment.name}</div>
           <div>{enrollment.EnrollmentNo}</div>
+          <div>
+            {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
+          </div>
+
           <span>{enrollment.enrollment.center.code}</span>
+          <span>
+            {enrollment.enrollment.course.CName}
+
+            <br />
+            {`(${enrollment.enrollment.course.Duration} months)`}
+          </span>
+          <span>{enrollment.enrollment.status.val}</span>
           <div className="flex items-center justify-center gap-2">
             <Switch
               id={`activation-${startIndex + index}`}
@@ -139,7 +143,9 @@ const ExamForm = () => {
             disabled={!enrollment.verified}
           >
             Generate Admit
-            {generateAdmit.isPending && <Loader2 className="animate-spin" />}
+            {generateAdmit.isPending && loading == enrollment.id && (
+              <Loader2 className="animate-spin" />
+            )}
           </Button>
         </div>
       ))}
@@ -167,54 +173,6 @@ const ExamForm = () => {
       </Pagination>
 
       {/* Fullscreen Modal */}
-      {isModalOpen && selectedexmform && (
-        <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-xl w-full max-w-fit max-h-[90vh] overflow-auto">
-            <div className="absolute top-0 right-0 flex items-center gap-2 p-2">
-              {editable ? (
-                <button
-                  onClick={() => setEditable((prev) => !prev)}
-                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-300 rounded-full"
-                  title="Edit"
-                >
-                  <Eye size={20} />
-                </button>
-              ) : (
-                <button
-                  onClick={() => setEditable((prev) => !prev)}
-                  className="p-2 text-gray-600 hover:text-red-600 hover:bg-gray-300 rounded-full"
-                  title="Edit"
-                >
-                  <Pen size={20} />
-                </button>
-              )}
-              <button
-                className="p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
-                onClick={() => setIsModalOpen(false)}
-              >
-                <X size={24} />
-              </button>
-            </div>
-            <EnrollmentDetails
-              enrollment={selectedexmform}
-              editable={editable}
-            />
-            {editable && (
-              <div className="flex justify-center mb-4">
-                <Button
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-                  onClick={() => {
-                    // Handle save logic here
-                    setEditable(false);
-                  }}
-                >
-                  Save Changes
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

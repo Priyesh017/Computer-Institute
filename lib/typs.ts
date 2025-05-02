@@ -31,9 +31,15 @@ export interface Enrollmenttype {
   EnrollmentNo: number;
   id: number;
   activated: boolean;
+  address: true;
+  father: string;
   status: {
     id: number;
     val: string;
+  };
+  course: {
+    CName: string;
+    Duration: number;
   };
   centerid: number;
 }
@@ -46,6 +52,8 @@ export interface Enrollment {
 
   course: {
     price: number;
+    CName: string;
+    Duration: number;
   };
   amount?: {
     TotalPaid: number;
@@ -172,6 +180,10 @@ export type DataItem = {
       Centername: string;
       code: number;
     };
+    status: {
+      id: number;
+      val: string;
+    };
     father: string;
     IdCardNo: string;
     amount: {
@@ -179,6 +191,7 @@ export type DataItem = {
     };
     course: {
       CName: string;
+      Duration: number;
     };
   };
 };

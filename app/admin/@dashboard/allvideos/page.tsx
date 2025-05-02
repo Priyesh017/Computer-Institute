@@ -1,8 +1,13 @@
-import ReceivedVideos from "@/app/student/@dashboard/videos/page";
-import React from "react";
+"use client";
+import dynamic from "next/dynamic";
+
+const DynamicComponentWithNoSSR = dynamic(
+  () => import("@/components/VideoComp"),
+  { ssr: false }
+);
 
 const Page = () => {
-  return <ReceivedVideos />;
+  return <DynamicComponentWithNoSSR />;
 };
 
 export default Page;

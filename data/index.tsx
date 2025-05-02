@@ -22,6 +22,24 @@ export const navMain = [
       },
     ],
   },
+
+  {
+    title: "Course Management",
+    url: "#",
+    role: "admin",
+    icon: SquareTerminal,
+    isActive: true,
+    items: [
+      {
+        title: "Course Add",
+        url: "/admin/courseentry",
+      },
+      {
+        title: "Course Update",
+        url: "/admin/courseupdate",
+      },
+    ],
+  },
   {
     title: "Student Profile",
     url: "#",
@@ -244,244 +262,6 @@ export const stats = [
   { label: "Projects Done", value: 400 },
   { label: "Active Clients", value: 340 },
   { label: "Get Rewards", value: 95 },
-];
-
-export const frameworksCourse = [
-  {
-    label: "WEBSITE DESIGNING & DEVELOPMENT",
-    value: "19",
-  },
-  {
-    label: "DOAP",
-    value: "16",
-  },
-  {
-    label: "DITA",
-    value: "17",
-  },
-  {
-    label: "ADCA",
-    value: "18",
-  },
-  {
-    label: "ADOAP",
-    value: "20",
-  },
-
-  {
-    label: "COMPUTER HARDWARE & NETWORKING",
-    value: "15",
-  },
-  {
-    label: "DCA",
-    value: "14",
-  },
-  {
-    label: "TYPING",
-    value: "13",
-  },
-  {
-    label: "DTP",
-    value: "12",
-  },
-
-  {
-    label: "CCTV INSTALLATION & MAINTENANCE",
-    value: "11",
-  },
-  {
-    label: "ADVANCE EXCEL",
-    value: "10",
-  },
-  {
-    label: "PYTHON",
-    value: "9",
-  },
-  {
-    label: "KNOWLEDGE ON C/C++ PROGRAMMING",
-    value: "8",
-  },
-  {
-    label: "Knowledge on LINUX",
-    value: "7",
-  },
-  {
-    label: "CITA",
-    value: "6",
-  },
-  {
-    label: "CCA",
-    value: "5",
-  },
-  {
-    label: "BASIC HARDWARE MAINTENANCE",
-    value: "4",
-  },
-  {
-    label: "TALLY",
-    value: "3",
-  },
-
-  {
-    label: "BASIC COMPUTER CONCEPT",
-    value: "2",
-  },
-];
-// course
-export const courses = [
-  {
-    id: 1,
-    category: "Published",
-    title: "Basic Computer Concept",
-    duration: "3 Months",
-    image: "/project.png",
-    price: "1000",
-  },
-  {
-    id: 2,
-    category: "Published",
-    title: "Office Management",
-    duration: "3 Months",
-    image: "/project.png",
-    price: "",
-  },
-  {
-    id: 3,
-    category: "Published",
-    title: "Tally",
-    duration: "3 Months",
-    image: "/project.png",
-    price: "1000",
-  },
-  {
-    id: 4,
-    category: "Published",
-    title: "Basic Hardware Maintenance",
-    duration: "2 Months",
-    image: "/project.png",
-    price: "1500",
-  },
-  {
-    id: 5,
-    category: "Published",
-    title: "CCA",
-    duration: "3 Months",
-    image: "/project.png",
-    price: "1200",
-  },
-  {
-    id: 6,
-    category: "Published",
-    title: "CITA",
-    duration: "3 Months",
-    image: "/project.png",
-    price: "1000",
-  },
-  {
-    id: 7,
-    category: "Published",
-    title: "Knowledge on LINUX",
-    duration: "3 Months",
-    image: "/project.png",
-    price: "1000",
-  },
-  {
-    id: 8,
-    category: "Published",
-    title: "Knowledge on C/C++ Programming",
-    duration: "3 Months",
-    image: "/project.png",
-    price: "1200",
-  },
-  {
-    id: 9,
-    category: "Published",
-    title: "Python Programming",
-    duration: "3 Months",
-    image: "/project.png",
-    price: "1000",
-  },
-  {
-    id: 10,
-    category: "Published",
-    title: "Advance Excel",
-    duration: "3 Months",
-    image: "/project.png",
-    price: "1000",
-  },
-  {
-    id: 11,
-    category: "Published",
-    title: "CCTV Installation & Maintenance",
-    duration: "3 Months",
-    image: "/project.png",
-    price: "1000",
-  },
-  {
-    id: 12,
-    category: "Published",
-    title: "DTP",
-    duration: "4 Months",
-    image: "/project.png",
-    price: "1500",
-  },
-  {
-    id: 13,
-    category: "Published",
-    title: "Typing",
-    description: "5 Classes per Week",
-    duration: "4 Months",
-    image: "/project.png",
-    price: "800/Month",
-  },
-  {
-    id: 14,
-    category: "Published",
-    title: "DCA",
-    duration: "6 Months",
-    image: "/project.png",
-    price: "3000",
-  },
-  {
-    id: 15,
-    category: "Published",
-    title: "DOAP",
-    duration: "6 Months",
-    image: "/project.png",
-    price: "2500",
-  },
-  {
-    id: 16,
-    category: "Published",
-    title: "DITA",
-    duration: "9 Months",
-    image: "/project.png",
-    price: "4000",
-  },
-  {
-    id: 17,
-    category: "Published",
-    title: "ADCA",
-    duration: "12 Months",
-    image: "/project.png",
-    price: "5000",
-  },
-  {
-    id: 18,
-    category: "Published",
-    title: "ADOAP",
-    duration: "12 Months",
-    image: "/project.png",
-    price: "5000",
-  },
-  {
-    id: 19,
-    category: "Published",
-    title: "Website Designing & Development",
-    duration: "20 Months",
-    image: "/project.png",
-    price: "7000",
-  },
 ];
 
 // gallery
@@ -1162,11 +942,6 @@ export const enqinp1 = [
   { label: "Post Office", field: "po" },
   { label: "Police Station", field: "ps" },
   { label: "Pincode", field: "pin" },
-  {
-    label: "Franchise Subscription",
-    field: "franchiseSubscription",
-    type: "date",
-  },
 ];
 
 export const enqinp2 = [

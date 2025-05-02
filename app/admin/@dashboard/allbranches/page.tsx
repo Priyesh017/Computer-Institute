@@ -2,8 +2,6 @@
 
 import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
-import { Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import { fetcherWc } from "@/helper";
 import ConfirmationModal from "@/components/ConfirmationModal";
@@ -38,10 +36,10 @@ export default function BranchesPage() {
     refetchOnReconnect: false,
   });
 
-  const openModal = useCallback((id: number) => {
-    setSelectedBranchId(id);
-    setIsModalOpen(true);
-  }, []);
+  // const openModal = useCallback((id: number) => {
+  //   setSelectedBranchId(id);
+  //   setIsModalOpen(true);
+  // }, []);
 
   const closeModal = useCallback(() => {
     setSelectedBranchId(null);

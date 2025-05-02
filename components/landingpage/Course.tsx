@@ -7,18 +7,35 @@ import anime from "animejs";
 import { Input } from "@/components/ui/input";
 import { ChevronsDown } from "lucide-react";
 import { FaClock } from "react-icons/fa";
-import { courses } from "@/data/index";
+import { useQuery } from "@tanstack/react-query";
+import { fetcher } from "@/helper";
+import Loader from "../Loader";
+import { Course, useAuthStore } from "@/store";
 
-const categories = ["All", "Published"];
 const sortOptions = ["Alphabetically"];
 
 export default function CourseCategories() {
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortedBy, setSortedBy] = useState("Alphabetically");
   const [isDescending, setIsDescending] = useState(false);
-  const [filteredCourses, setFilteredCourses] = useState(courses);
+
   const [showAll, setShowAll] = useState(false);
+  const { setframeworksCourse } = useAuthStore();
+
+  const {
+    data: courses,
+    isError,
+    isLoading,
+  } = useQuery<Course[]>({
+    queryKey: ["AllCourses"],
+    queryFn: () => fetcher("/fetchAllCourse", "GET"),
+    staleTime: 1000 * 60 * 10 * 6,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const [filteredCourses, setFilteredCourses] = useState(courses);
 
   useEffect(() => {
     anime({
@@ -32,29 +49,23 @@ export default function CourseCategories() {
   }, [filteredCourses]);
 
   useEffect(() => {
-    let filtered = courses.filter((course) =>
-      course.title.toLowerCase().includes(search.toLowerCase())
+    const filtered = courses?.filter((course) =>
+      course.CName.toLowerCase().includes(search.toLowerCase())
     );
 
-    if (selectedCategory !== "All") {
-      filtered = filtered.filter(
-        (course) => course.category === selectedCategory
-      );
-    }
-
-    if (sortedBy === "Alphabetically") {
-      filtered.sort((a, b) =>
-        isDescending
-          ? b.title.localeCompare(a.title)
-          : a.title.localeCompare(b.title)
-      );
-    } else if (sortedBy === "Recency") {
-      // Show only courses with the "new" badge
-      // filtered = filtered.filter((course) => course.badge === "new");
-    }
-
     setFilteredCourses(filtered);
-  }, [search, selectedCategory, sortedBy, isDescending]);
+  }, [search, sortedBy, isDescending, courses]);
+
+  useEffect(() => {
+    if (courses) {
+      const data = courses.map((c) => ({
+        label: c.CName,
+        value: c.id.toString(),
+      }));
+      setframeworksCourse(data);
+      setFilteredCourses(courses);
+    }
+  }, [courses, setframeworksCourse]);
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -66,6 +77,9 @@ export default function CourseCategories() {
       scrollToSection("course");
     }
   };
+
+  if (!filteredCourses || isError) return null;
+  if (isLoading) return <Loader />;
 
   return (
     <div className="container mx-auto py-14 xl:pt-24 px-6">
@@ -126,22 +140,6 @@ export default function CourseCategories() {
       {/* Lessons & Duration */}
       <div className="flex flex-col gap-4">
         {/* Category Selection */}
-        <div className="flex justify-center items-center gap-2">
-          {categories.map((cat) => (
-            <motion.button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-                selectedCategory === cat
-                  ? "bg-violet-600 text-white"
-                  : "bg-gray-200"
-              }`}
-              whileTap={{ scale: 0.95 }}
-            >
-              {cat}
-            </motion.button>
-          ))}
-        </div>
 
         {/* Course Cards */}
         <div className="flex gap-6 justify-center flex-wrap">
@@ -154,21 +152,19 @@ export default function CourseCategories() {
                 whileHover={{ scale: 1.05 }}
               >
                 <Image
-                  src={course.image}
-                  alt={course.title}
+                  src="/project.png"
+                  alt={course.CName}
                   width={320}
                   height={160}
                   className="w-full h-40 object-cover"
                 />
                 <div className="p-4">
-                  <p className="text-gray-500">{course.category}</p>
-                  <h3 className="text-lg font-semibold">{course.title}</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {course.description}
-                  </p>
+                  <p className="text-gray-500">Published</p>
+                  <h3 className="text-lg font-semibold">{course.CName}</h3>
+
                   <div className="flex justify-between items-center mt-2 text-sm text-gray-600 dark:text-gray-300">
                     <span className="flex items-center gap-1">
-                      <FaClock className="text-pink-500" /> {course.duration}
+                      <FaClock className="text-pink-500" /> {course.Duration}
                     </span>
                   </div>
                   <div className="mt-2 text-lg font-bold text-violet-600 dark:text-violet-400">

@@ -98,19 +98,18 @@ const ExamForm = () => {
         ...remain,
       });
 
-      if (response.success) {
-        toast("✅ Success!");
-      } else {
-        toast.error(
-          response.error.code == "P2002"
-            ? "❌ duplicate entry!"
-            : "Submission failed!"
-        );
-      }
+      toast(response.success ? "✅ Success!" : "some error happened");
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      toast("code break error");
-      console.log(error);
+      if (error.response) {
+        const { error: backendError } = error.response.data;
+        toast.error(
+          backendError.code === "P2002"
+            ? "duplicate entry"
+            : backendError.code === "P2025" && "complete the payment first"
+        );
+      }
     } finally {
       setLoading(null);
     }

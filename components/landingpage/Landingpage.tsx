@@ -115,7 +115,7 @@ export default function Home() {
                   animate={{ opacity: 1, scale: 1 }}
                   whileHover={{ scale: 1.1 }}
                 >
-                  Enquiry
+                  Franchise
                 </motion.button>
               </motion.div>
             </Link>

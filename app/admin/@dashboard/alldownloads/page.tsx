@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { fetcherWc } from "@/helper";
 import { X } from "lucide-react";
-import { EnrollmentDetails } from "@/components/enrollmentdatashow";
 import AllDownloads from "@/components/studentdashboard/Downloads";
 import { Enrollmenttype } from "@/lib/typs";
 import { useQuery } from "@tanstack/react-query";
@@ -24,6 +23,8 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import ProgressBar from "@/components/ProgressBar";
 import { Input } from "@/components/ui/input";
+
+import { EnrollmentDetails } from "@/components/exmformdetails";
 
 const PAGE_SIZE = 5;
 
@@ -49,7 +50,7 @@ const ExamForm = () => {
     isLoading,
     isError,
   } = useQuery<Enrollmenttype[]>({
-    queryKey: ["enrollments", "alldownloads", currentPage],
+    queryKey: ["enrollments", "branch", currentPage],
     queryFn: async () => {
       // Use fetchfn to fetch the main data
       const enrollments = await fetchfn();
@@ -119,10 +120,11 @@ const ExamForm = () => {
           className="w-1/3 p-2 border border-gray-400 rounded-lg"
         />
       </div>
-      <div className="grid grid-cols-5 text-center gap-2 font-bold py-2 border-b border-gray-500">
+      <div className="grid grid-cols-6 text-center gap-2 font-bold py-2 border-b border-gray-500">
         <span>Name</span>
         <span>Enrollment No</span>
         <span>Admission Date</span>
+        <span>Course Name</span>
         <span>Status</span>
         <span>Action</span>
       </div>
@@ -131,7 +133,7 @@ const ExamForm = () => {
           <div
             key={index}
             className={
-              "click grid grid-cols-5 items-center xs:text-xs text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer hover:bg-blue-100"
+              "click grid grid-cols-6 items-center xs:text-xs text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer hover:bg-blue-100"
             }
           >
             <div
@@ -145,6 +147,11 @@ const ExamForm = () => {
             </div>
             <div>{enrollment.EnrollmentNo}</div>
             <span>{new Date(enrollment.createdAt).toDateString()}</span>
+            <span>
+              {enrollment.course.CName}
+              <br />
+              {`(${enrollment.course.Duration} months)`}
+            </span>
             <div className="p-2 border rounded-md">{enrollment.status.val}</div>
             <Button
               className="mx-2 hover:bg-violet-800"
@@ -183,8 +190,8 @@ const ExamForm = () => {
 
       {/* Enrollment Modal */}
       {isModalOpen && selectedEnrollment && (
-        <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative bg-white rounded-xl w-full max-w-fit h-full overflow-auto">
+        <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
+          <div className="relative bg-white rounded-xl w-full max-w-2xl h-full overflow-auto">
             <div className="flex justify-between items-center mb-4">
               <div className="w-full p-6">
                 <ProgressBar value={selectedEnrollment.status.id} />

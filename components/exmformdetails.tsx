@@ -1,41 +1,26 @@
-import { DataItem } from "@/lib/typs";
-import { useState } from "react";
+import { Enrollmenttype } from "@/lib/typs";
 
 export const EnrollmentDetails = ({
   enrollment,
-  editable = false,
 }: {
-  enrollment: DataItem;
-  editable?: boolean;
+  enrollment: Enrollmenttype;
 }) => {
   const initialData = {
-    id: enrollment.id,
-    EnrollmentNo: enrollment.EnrollmentNo,
-    createdAt: enrollment.createdAt,
-    Name: enrollment.enrollment.name,
-    MobileNo: enrollment.enrollment.mobileNo,
-    "Email Id": enrollment.enrollment.email,
-    address: enrollment.enrollment.address,
-    CenterName: enrollment.enrollment.center.Centername,
-    IdCardNo: enrollment.enrollment.IdCardNo,
-    "Last Payment Reciept No":
-      enrollment.enrollment.amount.lastPaymentRecieptno,
-    "Course Name": enrollment.enrollment.course.CName,
-  };
-
-  const [formData, setFormData] = useState(initialData);
-
-  const handleChange = (key: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
+    id: enrollment?.id,
+    EnrollmentNo: enrollment?.EnrollmentNo,
+    "Addmission date": enrollment?.createdAt,
+    Name: enrollment.name,
+    "Date Of Birth": new Date(enrollment.dob).toLocaleDateString(),
+    Address: enrollment.address,
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl">
+    <div className="w-2xl mx-auto p-6 bg-white rounded-xl">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
         Enrollment Details
       </h2>
       <div className="grid grid-cols-2 gap-4 text-gray-700">
-        {Object.entries(formData).map(([key, value]) => (
+        {Object.entries(initialData).map(([key, value]) => (
           <div key={key} className="p-3 border-b border-gray-300">
             <label
               htmlFor={key}
@@ -43,25 +28,8 @@ export const EnrollmentDetails = ({
             >
               {key}:
             </label>
-            {editable ? (
-              <input
-                id={key}
-                type={key === "createdAt" ? "date" : "text"}
-                className="w-full p-2 border border-gray-300 rounded-md"
-                value={
-                  key === "createdAt"
-                    ? new Date(value).toISOString().substring(0, 10)
-                    : value
-                }
-                onChange={(e) => handleChange(key, e.target.value)}
-              />
-            ) : (
-              <span className="block text-gray-900">
-                {key === "createdAt"
-                  ? new Date(value).toDateString()
-                  : value || "-"}
-              </span>
-            )}
+
+            <span className="block text-gray-900">{value}</span>
           </div>
         ))}
       </div>

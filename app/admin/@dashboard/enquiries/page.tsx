@@ -3,12 +3,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2, X } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetcherWc } from "@/helper";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface idata {
   data: Notification[];
@@ -42,14 +43,21 @@ interface Notification {
   signatureLink: string;
   createdAt: string;
   verified: boolean;
+  certificateLink?: string;
 }
 
 export default function Notifications() {
   const [selectedNotification, setSelectedNotification] =
     useState<Notification | null>(null);
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState<
+    "verify" | "update" | "generate" | null
+  >(null);
+  const [deleteloading, setdeleteloading] = useState<number | null>(null);
+
   const [editable, setEditable] = useState(false);
-  const [editedData, setEditedData] = useState<Notification | null>(null);
+  const [editedData, setEditedData] = useState<Notification>();
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { isPending, error, data } = useQuery<idata>({
     queryKey: ["repoData"],
@@ -58,6 +66,15 @@ export default function Notifications() {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+  });
+
+  const deletehandler = useMutation({
+    mutationFn: ({ id }: { id: number }) => {
+      setdeleteloading(id);
+      return fetcherWc("/deleteEnquiry", "DELETE", { id });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["repoData"] }),
+    onSettled: () => setdeleteloading(null),
   });
 
   if (isPending) {
@@ -76,7 +93,7 @@ export default function Notifications() {
   };
 
   const verifyhandler = async () => {
-    setloading(true);
+    setloading("verify");
     const email = selectedNotification!.email;
     const name = selectedNotification!.name;
 
@@ -93,7 +110,7 @@ export default function Notifications() {
         // Handle completion case
         if (data.step === 2) {
           toast("Process completed, closing connection.");
-          setloading(false);
+          setloading(null);
           setSelectedNotification(null);
           eventSource.close();
         }
@@ -112,10 +129,39 @@ export default function Notifications() {
     };
   };
 
-  const getImagePreview = (file?: File | string) => {
-    if (!file) return "";
-    if (typeof file === "string") return file; // URL
-    return URL.createObjectURL(file); // File object
+  const savehandler = async () => {
+    try {
+      setloading("update");
+      const data = await fetcherWc(
+        `/updateEnquiry/${selectedNotification!.id}`,
+        "POST",
+        { editedData }
+      );
+      toast(data.success ? "success" : "failed");
+      setEditable(false);
+    } catch (error) {
+      console.log(error);
+      toast("code break error");
+    } finally {
+      setloading(null);
+    }
+  };
+
+  const generatehandler = async () => {
+    if (!selectedNotification) return;
+    setloading("generate");
+    const { success } = await fetcherWc("/generate_franchise", "POST", {
+      selectedNotification,
+    });
+    setloading(null);
+    toast(success ? "success" : "failed");
+  };
+  const openhandler = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    notif: Notification
+  ) => {
+    e.stopPropagation();
+    router.push(notif.certificateLink!);
   };
 
   return (
@@ -144,6 +190,26 @@ export default function Notifications() {
               <p className="text-xs text-gray-400">
                 {new Date(notif.createdAt).toDateString()}
               </p>
+            </div>
+            <div>
+              {notif.certificateLink && (
+                <Button onClick={(e) => openhandler(e, notif)}>
+                  view Certificate
+                </Button>
+              )}
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deletehandler.mutate({ id: notif.id });
+                }}
+                className="ml-2"
+                variant={"destructive"}
+              >
+                Delete
+                {deleteloading === notif.id && (
+                  <Loader2 className="animate-spin" />
+                )}
+              </Button>
             </div>
           </motion.div>
         ))}
@@ -200,7 +266,7 @@ export default function Notifications() {
                   { label: "House Room No", key: "houseRoomNo" },
                   {
                     label: "Franchise Subscription",
-                    key: "franchiseSubscription",
+                    key: "Subscription",
                   },
                 ].map((field, index) => (
                   <div key={index} className="p-2">
@@ -251,7 +317,7 @@ export default function Notifications() {
                       )
                     ) : (
                       <span>
-                        {field.key === "dob"
+                        {field.key === "dob" || field.key === "Subscription"
                           ? new Date(selectedNotification?.dob ?? "")
                               .toISOString()
                               .split("T")[0]
@@ -292,12 +358,13 @@ export default function Notifications() {
                 <div className="flex justify-center mb-4">
                   <Button
                     className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-                    onClick={() => {
-                      // Handle save logic here
-                      setEditable(false);
-                    }}
+                    onClick={savehandler}
+                    disabled={loading === "update"}
                   >
-                    Save Changes
+                    Save Changes{" "}
+                    {loading === "update" && (
+                      <Loader2 className="animate-spin" />
+                    )}
                   </Button>
                 </div>
               )}
@@ -306,11 +373,26 @@ export default function Notifications() {
               <Button
                 className="mt-5 bg-purple-700 hover:bg-purple-800"
                 onClick={verifyhandler}
-                disabled={loading}
+                disabled={loading === "verify"}
               >
-                Verify {loading && <Loader2 className="animate-spin" />}
+                Verify
+                {loading === "verify" && <Loader2 className="animate-spin" />}
               </Button>
             )}
+
+            {selectedNotification.verified &&
+              !selectedNotification.certificateLink && (
+                <Button
+                  className="mt-5 bg-purple-700 hover:bg-purple-800"
+                  onClick={generatehandler}
+                  disabled={loading === "generate"}
+                >
+                  Generate Certificate
+                  {loading === "generate" && (
+                    <Loader2 className="animate-spin" />
+                  )}
+                </Button>
+              )}
           </div>
         </motion.div>
       )}
