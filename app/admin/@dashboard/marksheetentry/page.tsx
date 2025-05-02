@@ -265,7 +265,6 @@ const Marksheet = () => {
         <span>Theory Marks</span>
         <span>Practical Marks</span>
         <span>Total</span>
-        {/* <span>Action</span> */}
       </div>
       <div className="space-y-2 mt-2">
         {subjects.map((item, index) => (
@@ -284,16 +283,25 @@ const Marksheet = () => {
                 key={i}
                 name={items.name}
                 type={items.type}
+                min="1"
                 pattern={items.pattern}
                 placeholder={items.placeholder}
-                value={item[items.name as keyof Subject]}
-                onChange={(e) =>
-                  handleChange(
-                    index,
-                    items.name as keyof Subject,
-                    e.target.value
-                  )
-                }
+                value={item[items.name as keyof Subject] || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  // Allow empty string for controlled input
+                  if (
+                    value === "" ||
+                    (Number(value) > 0 && /^\d*$/.test(value))
+                  ) {
+                    handleChange(
+                      index,
+                      items.name as keyof Subject,
+                      e.target.value
+                    );
+                  }
+                }}
                 className="p-2 bg-white border border-gray-400 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-center"
               />
             ))}

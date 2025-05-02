@@ -199,6 +199,18 @@ export const navMain = [
     ],
   },
   {
+    title: "Banner Entry",
+    role: "admin",
+    url: "#",
+    icon: Settings2,
+    items: [
+      {
+        title: "Banner Entry",
+        url: "/admin/bannerentry",
+      },
+    ],
+  },
+  {
     title: "Education",
     role: "center",
     url: "#",
@@ -383,17 +395,10 @@ export const admitFields = [
 ];
 
 export const marks = [
-  // {
-  //   name: "subject",
-  //   type: "text",
-
-  //   placeholder: "Subject",
-  //   pattern: "[A-Za-z ]*",
-  // },
   {
     name: "theoryFullMarks",
     type: "number",
-    pattern: "[0-9]*",
+    pattern: "[1-9][0-9]*",
 
     placeholder: "Theory Full Marks",
   },

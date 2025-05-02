@@ -4,7 +4,20 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import anime from "animejs";
 import Image from "next/image";
+import Autoplay from "embla-carousel-autoplay";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 import Link from "next/link";
+
+const intro = [
+  { imgSrc: "/Banner.jpg" },
+  { imgSrc: "/project.png" },
+  { imgSrc: "/Banner.jpg" },
+  { imgSrc: "/project.png" },
+];
 
 const Banner = () => {
   const bannerRef = useRef<HTMLDivElement>(null);
@@ -26,17 +39,38 @@ const Banner = () => {
   return (
     <motion.div
       ref={bannerRef}
-      className="w-full min-h-screen flex items-center justify-center overflow-hidden"
+      className="w-full min-h-screen relative overflow-hidden"
     >
-      <Image
-        src="/Banner.jpg"
-        alt="Banner Background"
-        layout="fill"
-        objectFit="cover"
-        quality={100}
-        className="absolute w-full h-full z-0"
-      />
-      <div className="relative w-full min-h-screen flex flex-col-reverse md:flex-row items-center justify-between p-2 md:p-12 bg-gradient-to-r from-grad-2/80 via-grad-3/60 to-grad-8/50">
+      {/* Carousel Background */}
+      <Carousel
+        opts={{ loop: true }}
+        plugins={[Autoplay({ delay: 3000 })]}
+        className="absolute inset-0 z-0"
+      >
+        <CarouselContent>
+          {intro.map((item, index) => (
+            <CarouselItem
+              key={index}
+              className="basis-full relative h-screen w-full"
+            >
+              <div className="relative w-full h-full">
+                <Image
+                  src={item.imgSrc}
+                  alt={`Slide ${index + 1}`}
+                  className="absolute w-full h-full z-0"
+                  layout="fill"
+                  objectFit="cover"
+                  quality={100}
+                  priority={index === 0}
+                />
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+
+      {/* Foreground Content */}
+      <div className="relative z-10 w-full min-h-screen flex flex-col-reverse md:flex-row items-center justify-between p-2 md:p-12 bg-gradient-to-r from-grad-2/80 via-grad-3/60 to-grad-8/50">
         <div className="space-y-5 p-4 md:mt-20">
           <motion.div
             initial={{ x: -50, opacity: 0 }}
@@ -56,7 +90,7 @@ const Banner = () => {
             <div className="text-gray-900 text-md md:text-base md:w-2/3">
               <p className="text-md text-gray-900 font-bold">
                 Unlock Your Potential! 🚀
-              </p>{" "}
+              </p>
               Master in-demand digital skills with expert training at Mission
               National Youth Computer Center and step into a future of endless
               opportunities!
