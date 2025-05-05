@@ -39,7 +39,11 @@ export default function EntryForm() {
       if (!image) return;
 
       const { url } = await fetcherWc(
-        `/generate-presigned-url?fileName=${image.file.name}&fileType=${image.file.type}&category=coordinator`,
+        `/generate-presigned-url?fileName=${encodeURIComponent(
+          image.file.name
+        )}&fileType=${encodeURIComponent(
+          image.file.type
+        )}&category=coordinator`,
         "GET"
       );
 
