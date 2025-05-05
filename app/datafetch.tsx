@@ -11,7 +11,7 @@ const Datafetch = ({ children }: { children: ReactNode }) => {
 
   const {
     data: courses,
-    isError,
+
     isLoading,
   } = useQuery<Course[]>({
     queryKey: ["AllCourses"],
