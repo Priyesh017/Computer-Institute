@@ -1,4 +1,3 @@
-import Banner from "@/components/landingpage/Banner";
 import About from "@/components/landingpage/About";
 import Gallery from "@/components/landingpage/Gallery";
 import Course from "@/components/landingpage/Course";
@@ -246,12 +245,11 @@ export const navMain = [
 ];
 
 export const menuItems = [
-  { name: "Home", pos: <Banner /> },
   { name: "About", pos: <About /> },
   { name: "Gallery", pos: <Gallery /> },
   { name: "Course", pos: <Course /> },
   { name: "Reviews", pos: <Testimonials /> },
-  { name: "Center", pos: <Center /> },
+  { name: "Contact Us", pos: <Center /> },
 ];
 
 export const contactIcons = [

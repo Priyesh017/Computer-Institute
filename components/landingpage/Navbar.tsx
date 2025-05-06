@@ -1,31 +1,15 @@
 "use client";
-import { motion } from "framer-motion";
-import { useState, useEffect, useCallback } from "react";
+
+import { useEffect, useState } from "react";
 import { FaTimes, FaBars } from "react-icons/fa";
 import { menuItems } from "@/data";
 import Link from "next/link";
 import { useAuthStore } from "@/store";
-import Image from "next/image";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(true); // Track navbar visibility
-  const [lastScrollY, setLastScrollY] = useState(0); // Track last scroll position
+  const [isScrolled, setIsScrolled] = useState(false);
   const { user } = useAuthStore();
-
-  // Handle scrolling: show/hide navbar
-  const handleScroll = useCallback(() => {
-    if (typeof window !== "undefined") {
-      if (window.scrollY > lastScrollY) {
-        // If scroll down, hide navbar
-        setShowNavbar(false);
-      } else {
-        // If scroll up, show navbar
-        setShowNavbar(true);
-      }
-      setLastScrollY(window.scrollY); // Update last scroll position
-    }
-  }, [lastScrollY]);
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -37,85 +21,71 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      window.addEventListener("scroll", handleScroll); // Add scroll listener
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
 
-      return () => {
-        window.removeEventListener("scroll", handleScroll); // Clean up listener on unmount
-      };
-    }
-  }, [lastScrollY, handleScroll]);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinkStyle =
+    "block cursor-pointer border-b-2 border-white/0 hover:text-yellow-400 hover:border-yellow-500 transition-all";
 
   return (
     <nav
-      className={`fixed w-full top-0 text-gray-800 font-bold backdrop-blur-md z-40 flex justify-between items-center px-4 py-2 xl:text-lg shadow-lg transition-transform duration-300 ease-in-out ${
-        showNavbar ? "translate-y-0" : "-translate-y-full"
-      }`}
+      className={`${
+        isScrolled ? "fixed top-0 shadow-lg" : "relative"
+      } w-full bg-purple-900 text-white font-bold z-40 transition-all duration-300 ease-in-out px-4 py-2`}
     >
-      <div className="flex justify-center items-center md:ml-10 gap-2">
-        <Image
-          src="/logo.jpg"
-          alt="Student"
-          width={50}
-          height={50}
-          className="rounded-full shadow-lg"
-        />
-        <h1 className="text-3xl font-bold">MNYCTC</h1>
-      </div>
-      <div className="md:hidden fixed top-5 right-5 flex justify-center z-50 ">
+      {/* Toggle Button (Mobile) */}
+      <div className="md:hidden fixed top-3 right-5 z-50">
         <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className={`text-2xl ${
-            isMenuOpen ? "text-red-600" : "text-gray-800"
-          }`}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+          aria-label="Toggle Menu"
+          className={`text-2xl ${isMenuOpen ? "text-red-600" : "text-white"}`}
         >
           {isMenuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
 
       {/* Desktop Menu */}
-      <ul className={`md:flex space-x-6 hidden`}>
-        <motion.li
-          className="fade-in cursor-pointer border-b-2 border-white/0 hover:text-purple-600 hover:border-purple-600 transition-all"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          onClick={scrollToTop}
-        >
+      <ul className="hidden md:flex justify-center items-center space-x-10 text-lg">
+        <li className={navLinkStyle} onClick={scrollToTop}>
           Home
-        </motion.li>
+        </li>
+
         {menuItems
           .filter((item) => item.name !== "Home")
           .map((item, index) => (
-            <motion.li
+            <li
               key={index}
-              className="fade-in cursor-pointer border-b-2 border-white/0 hover:text-purple-600 hover:border-purple-600 transition-all"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
+              className={navLinkStyle}
               onClick={() => scrollToSection(item.name.toLowerCase())}
             >
               {item.name}
-            </motion.li>
+            </li>
           ))}
+
+        {[
+          { label: "Search Enrollment", href: "/certificate" },
+          { label: "Franchise", href: "/enquiry" },
+          {
+            label: user ? "Dashboard" : "Login",
+            href: user ? (user.role ? "/admin" : "/student") : "/chooseuser",
+          },
+        ].map((link, index) => (
+          <li key={index}>
+            <Link href={link.href} className={navLinkStyle}>
+              {link.label}
+            </Link>
+          </li>
+        ))}
       </ul>
-      <Link
-        href={user && user.role ? "/admin" : user ? "/student" : "/chooseuser"}
-      >
-        <motion.button
-          className="hidden md:block px-6 py-2 mr-4 ml-24 bg-white text-indigo-800 font-bold rounded-lg shadow-lg transition-all transform hover:scale-105"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          whileHover={{ scale: 1.1 }}
-          transition={{ duration: 0.3 }}
-        >
-          {user ? "Dashboard" : "Login"}
-        </motion.button>
-      </Link>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <ul className="md:hidden fixed top-16 right-0 w-fit bg-white/50 backdrop-blur-lg rounded-lg p-4 mt-4 mx-2 space-y-4 text-center z-40">
+        <ul className="md:hidden fixed top-0 right-0 w-60 bg-white/70 backdrop-blur-lg rounded-lg p-4 mt-4 mx-2 space-y-4 text-center z-40">
           {menuItems.map((item, index) => (
             <li
               key={index}
@@ -128,7 +98,7 @@ export default function Navbar() {
           <li>
             <Link
               href={user ? (user.role ? "/admin" : "/student") : "/chooseuser"}
-              className="px-6 py-2 bg-white text-indigo-800 font-bold rounded-xl shadow-lg transition-all transform hover:scale-105"
+              className="inline-block px-6 py-2 bg-white text-indigo-800 font-bold rounded-xl shadow-lg transition-transform hover:scale-105"
             >
               {user ? "Dashboard" : "Login"}
             </Link>

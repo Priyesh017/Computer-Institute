@@ -76,7 +76,7 @@ export default function NoticeBoard() {
           <span className="w-fit bg-blue-100 text-blue-500 p-2 rounded-full">
             📌
           </span>
-          <span className="md:text-3xl text-2xl">Announcement</span>
+          <span className="md:text-3xl text-2xl text-black">Announcement</span>
         </div>
         {notices.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 text-gray-700 rounded-lg p-6">

@@ -93,7 +93,7 @@ export default function CourseCategories() {
       </motion.h2>
 
       {/* Filters */}
-      <div className="md:my-1 my-4">
+      <div className="mt-1 mb-4">
         <div className="flex justify-between items-center my-1 gap-2">
           {/* Search Bar */}
           <Input
