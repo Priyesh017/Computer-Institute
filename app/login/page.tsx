@@ -9,6 +9,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import Modal from "@/components/Modal";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
+import OtpModal from "@/components/otp_enter";
 
 export default function LoginPage() {
   const { utype, user, login } = useAuthStore();
@@ -22,6 +23,7 @@ export default function LoginPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [loader, setLoader] = useState(false);
   const [loading, setloading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -42,6 +44,7 @@ export default function LoginPage() {
       });
 
       setLoader(false);
+
       if (data.message === "Login successful") {
         if (data.user.role.toLowerCase() !== utype) {
           toast(`u r not authorised`);
@@ -50,8 +53,8 @@ export default function LoginPage() {
         login(data.user);
         toast("Login Successfully");
         router.push("/admin");
-      } else {
-        toast(data.error);
+      } else if (data.message === "enabled") {
+        setOpen(true);
       }
     } catch (error) {
       console.log(error);
@@ -187,6 +190,7 @@ export default function LoginPage() {
 
       {/* Right Side: Background Image */}
       <div className="hidden md:flex flex-grow bg-cover bg-center bg-[url('/designlogin.jpg')]"></div>
+      <OtpModal open={open} setOpen={setOpen} email={fd.email} />
     </div>
   );
 }
