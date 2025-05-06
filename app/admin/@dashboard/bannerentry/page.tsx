@@ -4,8 +4,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Loader2, X } from "lucide-react";
-import { fetcherWc } from "@/helper";
 import { DropzoneMul } from "@/components/dropzonemultiple";
+import { fetcherWc } from "@/helper";
+import { toast } from "react-toastify";
 
 export default function BannerInsertion() {
   const [images, setImages] = useState<{ src: string; file: File }[]>([]);
@@ -31,35 +32,37 @@ export default function BannerInsertion() {
     setLoading(true);
     setError("");
 
-    // try {
-    //   for (const image of images) {
-    //     const { url }: { url: string } = await fetcherWc(
-    //       `/generate-presigned-url?fileName=${encodeURIComponent(
-    //         image.file.name
-    //       )}&fileType=${encodeURIComponent(image.file.type)}`,
-    //       "GET"
-    //     );
+    try {
+      for (const image of images) {
+        const { url }: { url: string } = await fetcherWc(
+          `/generate-presigned-url?fileName=${encodeURIComponent(
+            image.file.name
+          )}&fileType=${encodeURIComponent(
+            image.file.type
+          )}&category=bannerpic`,
+          "GET"
+        );
 
-    //     if (!url) throw new Error("Failed to generate pre-signed URL");
+        if (!url) throw new Error("Failed to generate pre-signed URL");
 
-    //     const uploadResponse = await fetch(url, {
-    //       method: "PUT",
-    //       body: image.file,
-    //       headers: {
-    //         "Content-Type": image.file.type,
-    //       },
-    //     });
+        const uploadResponse = await fetch(url, {
+          method: "PUT",
+          body: image.file,
+          headers: {
+            "Content-Type": image.file.type,
+          },
+        });
 
-    //     if (!uploadResponse.ok) throw new Error("Upload failed");
-    //   }
-
-    //   setImages([]);
-    // } catch (err) {
-    //   console.error(err);
-    //   setError("Something went wrong during upload.");
-    // } finally {
-    //   setLoading(false);
-    // }
+        if (!uploadResponse.ok) throw new Error("Upload failed");
+      }
+      toast.success("successful");
+      setImages([]);
+    } catch (err) {
+      console.error(err);
+      setError("Something went wrong during upload.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

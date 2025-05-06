@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import { Plus, Check, Trash2, Edit, Loader2 } from "lucide-react";
@@ -19,7 +19,7 @@ export type Subject = {
 
 const SubjectEntry = () => {
   const [fd, setfd] = useState<typefd>({ courseid: "" });
-  const [courseName, setCourseName] = useState("");
+
   const [subjectInput, setSubjectInput] = useState<Subject>({
     name: "",
     practical: "",
@@ -29,11 +29,6 @@ const SubjectEntry = () => {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const { frameworksCourse } = useAuthStore();
-
-  useEffect(() => {
-    const selected = frameworksCourse.find((c) => c.value === fd.courseid);
-    setCourseName(selected?.label || "");
-  }, [fd.courseid, frameworksCourse]);
 
   const resetInput = () =>
     setSubjectInput({ name: "", practical: "", theory: "" });
@@ -72,7 +67,6 @@ const SubjectEntry = () => {
     setSubjects(updated);
     if (updated.length === 0) {
       setfd({ courseid: "" });
-      setCourseName("");
     }
   };
 
@@ -91,9 +85,13 @@ const SubjectEntry = () => {
 
     try {
       setLoading(true);
+      const cid = frameworksCourse.find(
+        (f) => f.label === fd.courseid
+      )?.courseId;
+
       const data = await fetcherWc("/subjectAdd", "POST", {
         c: subjects,
-        cid: fd.courseid,
+        cid,
       });
 
       if (data.success) toast("Subjects added successfully!");
@@ -165,9 +163,6 @@ const SubjectEntry = () => {
 
       {subjects.length > 0 && (
         <div className="w-full mt-6 p-6 bg-white rounded-md border border-gray-300 shadow-md">
-          <h3 className="text-lg font-semibold text-indigo-700 mb-4">
-            {courseName}
-          </h3>
           <ul>
             {subjects.map((subject, idx) => (
               <motion.li

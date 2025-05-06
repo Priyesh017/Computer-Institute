@@ -50,7 +50,9 @@ const VideoUpload = () => {
     try {
       setloading(true);
       const { url } = await fetcherWc(
-        `/generate-presigned-url?fileName=${videoFile.name}&fileType=${videoFile.type}&category=temp`,
+        `/generate-presigned-url?fileName=${encodeURIComponent(
+          videoFile.name
+        )}&fileType=${encodeURIComponent(videoFile.type)}&category=temp`,
         "GET"
       );
       if (!url) {

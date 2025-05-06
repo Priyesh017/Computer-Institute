@@ -3,54 +3,34 @@ import { useState } from "react";
 import { Loader2, Pencil } from "lucide-react";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Loader from "@/components/Loader";
-import { Button } from "@/components/ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-interface Course {
-  id: number;
-  CName: string;
-  Duration: number;
-  price: number;
-}
+import { Button } from "@/components/ui/button";
+import { Course } from "@/store";
 
 export default function CourseList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCourse, setCurrentCourse] = useState<Course | null>(null);
   const queryClient = useQueryClient();
 
+  const courses = queryClient.getQueryData(["AllCourses"]) as Course[];
+
   const openEditModal = (course: Course) => {
     setCurrentCourse(course);
     setIsModalOpen(true);
   };
 
-  const {
-    data: courses,
-    isLoading,
-    isError,
-  } = useQuery<Course[]>({
-    queryKey: ["Courses"],
-    queryFn: () => fetcherWc("/fetchAllCourse", "GET"),
-    staleTime: 1000 * 60 * 10,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
   const updateHandler = useMutation({
     mutationFn: () =>
       fetcherWc("/updateCourse", "PUT", currentCourse as Course),
     onSuccess: () => {
       toast.success("successfully updated");
       setIsModalOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["Courses"] });
+      queryClient.invalidateQueries({ queryKey: ["AllCourses"] });
     },
   });
 
-  if (isLoading) {
-    <Loader />;
-  }
   if (!courses) return;
-  if (isError) return <h1>error happened...</h1>;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!currentCourse) return;

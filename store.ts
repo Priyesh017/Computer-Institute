@@ -18,6 +18,7 @@ export interface Course {
 export interface CourseFramework {
   value: string;
   label: string;
+  courseId: string;
 }
 
 interface userAuthState {

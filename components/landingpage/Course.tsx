@@ -7,10 +7,8 @@ import anime from "animejs";
 import { Input } from "@/components/ui/input";
 import { ChevronsDown } from "lucide-react";
 import { FaClock } from "react-icons/fa";
-import { useQuery } from "@tanstack/react-query";
-import { fetcher } from "@/helper";
-import Loader from "../Loader";
-import { Course, useAuthStore } from "@/store";
+import { useQueryClient } from "@tanstack/react-query";
+import { Course } from "@/store";
 
 const sortOptions = ["Alphabetically"];
 
@@ -20,20 +18,9 @@ export default function CourseCategories() {
   const [isDescending, setIsDescending] = useState(false);
 
   const [showAll, setShowAll] = useState(false);
-  const { setframeworksCourse } = useAuthStore();
+  const queryClient = useQueryClient();
 
-  const {
-    data: courses,
-    isError,
-    isLoading,
-  } = useQuery<Course[]>({
-    queryKey: ["AllCourses"],
-    queryFn: () => fetcher("/fetchAllCourse", "GET"),
-    staleTime: 1000 * 60 * 10 * 6,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
+  const courses = queryClient.getQueryData(["AllCourses"]) as Course[];
 
   const [filteredCourses, setFilteredCourses] = useState(courses);
 
@@ -56,17 +43,6 @@ export default function CourseCategories() {
     setFilteredCourses(filtered);
   }, [search, sortedBy, isDescending, courses]);
 
-  useEffect(() => {
-    if (courses) {
-      const data = courses.map((c) => ({
-        label: c.CName,
-        value: c.id.toString(),
-      }));
-      setframeworksCourse(data);
-      setFilteredCourses(courses);
-    }
-  }, [courses, setframeworksCourse]);
-
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
@@ -77,9 +53,6 @@ export default function CourseCategories() {
       scrollToSection("course");
     }
   };
-
-  if (!filteredCourses || isError) return null;
-  if (isLoading) return <Loader />;
 
   return (
     <div className="container mx-auto py-14 xl:pt-24 px-6">

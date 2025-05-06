@@ -146,7 +146,9 @@ const FranchiseForm = () => {
     try {
       const uploadPromises = images.map(async (image) => {
         const { url } = await fetcher(
-          `/generate-presigned-url?fileName=${image.file.name}&fileType=${image.file.type}&category=enquiry`,
+          `/generate-presigned-url?fileName=${encodeURIComponent(
+            image.file.name
+          )}&fileType=${encodeURIComponent(image.file.type)}&category=enquiry`,
           "GET"
         );
         if (!url) throw new Error("Failed to generate URL");

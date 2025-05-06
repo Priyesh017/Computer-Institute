@@ -42,7 +42,9 @@ export default function UploadNotes() {
     }
     setloading(true);
     const { url } = await fetcherWc(
-      `/generate-presigned-url?fileName=${pdf.file.name}&fileType=${pdf.file.type}&category=notes`,
+      `/generate-presigned-url?fileName=${encodeURIComponent(
+        pdf.file.name
+      )}&fileType=${encodeURIComponent(pdf.file.type)}&category=notes`,
       "GET"
     );
     if (!url) {
