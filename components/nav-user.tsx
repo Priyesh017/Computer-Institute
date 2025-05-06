@@ -85,17 +85,28 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
 
-            <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem
                 onClick={() => router.replace("/changepassword")}
+                className="cursor-pointer"
               >
                 <BadgeCheck />
                 Change Password
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => router.replace("admin/enable2fa")}
+                className="cursor-pointer"
+              >
+                <BadgeCheck />
+                Enable 2FA
+              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={logouthandler}>
+            <DropdownMenuItem
+              onClick={logouthandler}
+              className="cursor-pointer"
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>
