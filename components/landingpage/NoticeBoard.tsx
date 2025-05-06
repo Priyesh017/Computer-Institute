@@ -59,13 +59,7 @@ export default function NoticeBoard() {
   if (error) return <div>error happend...</div>;
 
   return (
-    <div className="relative md:w-full md:max-w-6xl md:mx-auto mx-2 md:py-6 md:px-10 p-4 bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 backdrop-blur-lg">
-      <div className="flex justify-between items-center md:mb-4 mb-2">
-        <h2 className="md:text-2xl text-xl font-bold text-gray-800">
-          Notice to All
-        </h2>
-        <Image src="/Logo.png" alt="Logo" width={40} height={40} />
-      </div>
+    <div className="relative w-full">
       <motion.div
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
@@ -124,7 +118,7 @@ export default function NoticeBoard() {
         )}
       </motion.div>
       <button
-        className={`mt-5 px-5 py-3 font-bold rounded-md transition duration-300 shadow-lg w-full ${
+        className={`px-5 py-3 font-bold transition duration-300 shadow-lg w-full ${
           notices.length === 0
             ? "bg-gray-400 text-gray-200 cursor-not-allowed"
             : "bg-blue-600 text-white hover:bg-blue-500"

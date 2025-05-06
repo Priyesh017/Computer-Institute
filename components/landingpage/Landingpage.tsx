@@ -88,7 +88,7 @@ export default function Home() {
     <div className="bg-white text-white">
       <section className="overflow-hidden">
         {/* Header Strip */}
-        <div className="flex items-center justify-between px-4 py-2 bg-purple-900 text-white text-sm">
+        <div className="flex md:flex-row flex-col items-center justify-between gap-2 px-4 py-2 bg-purple-900 text-white text-sm">
           {/* Contact Info */}
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-2">
@@ -141,69 +141,52 @@ export default function Home() {
         </div>
 
         {/* Top Banner */}
-        <div className="my-2.5 flex justify-center items-center">
-          <span className="absolute top-10 bg-yellow-500 px-4 py-1 my-1 font-semibold text-black rounded-md text-sm">
-            COMPUTE TRAINING CENTER
-          </span>
-
-          <div className="flex flex-cols justify-center items-center gap-6 text-center">
-            <Image
-              src="/Logo.png"
-              alt="Student"
-              width={150}
-              height={150}
-              className="rounded-full"
-            />
-            <div>
-              <h1 className="text-2xl md:text-4xl font-bold text-purple-900">
-                Mission National Youth Computer Training Centre
-              </h1>
-
-              <div className="text-gray-900 text-md md:text-base">
-                Master in-demand digital skills with expert training at Mission
-                National Youth Computer Center and step into a future of endless
-                opportunities!
-              </div>
-            </div>
+        <div className="relative hidden my-3 px-4 md:flex justify-center items-center gap-6 text-center">
+          <Image
+            src="/Logo.png"
+            alt="Student"
+            width={100}
+            height={100}
+            className="w-full md:w-[130px] md:h-[130px] rounded-full"
+          />
+          <div className="text-center">
+            <h1 className="text-2xl md:text-4xl font-bold text-purple-900">
+              Mission National Youth Computer Training Centre
+            </h1>
+            <p className="mt-2 text-center text-gray-900 text-sm md:text-base">
+              Master in-demand digital skills with expert training at Mission
+              National Youth Computer Center and step into a future of endless
+              opportunities!
+            </p>
           </div>
-
-          <span className="absolute top-40 text-lg font-semibold text-red-600">
-            Now open for free registration
-          </span>
         </div>
 
         {/* Navbar */}
         <Navbar />
 
         {/* Carousel */}
-        <div className="relative w-full h-screen" ref={bannerRef}>
-          <Carousel
-            opts={{ loop: true }}
-            plugins={[Autoplay({ delay: 3000 })]}
-            className="absolute inset-0 z-0"
-          >
-            <CarouselContent>
-              {intro.map((item, index) => (
-                <CarouselItem
-                  key={index}
-                  className="basis-full relative h-screen w-full"
-                >
-                  <div className="relative w-full h-full">
-                    <Image
-                      src={item.imgSrc}
-                      alt={`Slide ${index + 1}`}
-                      className="absolute w-full h-full z-0"
-                      layout="fill"
-                      objectFit="cover"
-                      quality={100}
-                      priority={index === 0}
-                    />
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
-        </div>
+        <Carousel
+          ref={bannerRef}
+          opts={{ loop: true }}
+          plugins={[Autoplay({ delay: 3000 })]}
+          className="relative w-full z-0"
+        >
+          <CarouselContent>
+            {intro.map((item, index) => (
+              <CarouselItem key={index} className="w-full">
+                <Image
+                  src={item.imgSrc}
+                  alt={`Slide ${index + 1}`}
+                  width={1920}
+                  height={1080}
+                  className="w-full h-[250px] md:h-[700px] object-cover"
+                  quality={100}
+                  priority={index === 0}
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </section>
 
       <Notice />
@@ -253,29 +236,6 @@ export default function Home() {
                 </motion.button>
               </motion.div>
             )}
-
-            {/* Enquiry Button */}
-            {/* <Link href="/enquiry">
-              <motion.div
-                className="text-center font-bold p-2"
-                initial={{ y: 0 }}
-                animate={{ y: [0, -5, 0] }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 1.5,
-                  ease: "easeInOut",
-                }}
-              >
-                <motion.button
-                  className="bg-red-600 text-white text-sm md:text-lg font-bold p-4 rounded-full shadow-lg hover:bg-red-500 transition-all"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  whileHover={{ scale: 1.1 }}
-                >
-                  Franchise
-                </motion.button>
-              </motion.div>
-            </Link> */}
           </div>
         </div>
       </div>
