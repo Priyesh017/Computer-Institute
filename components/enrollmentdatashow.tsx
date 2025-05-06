@@ -38,7 +38,7 @@ export const EnrollmentDetails = ({
     "idCardLink",
   ];
   const ignore = ["status", "activated", "id", "centerid", "EnrollmentNo"];
-  console.log(formData);
+
   if (!formData) return;
 
   return (

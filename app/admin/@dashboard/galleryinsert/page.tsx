@@ -58,7 +58,11 @@ export default function GalleryInsertion() {
     try {
       for (const image of images) {
         const { url } = await fetcherWc(
-          `/generate-presigned-url?fileName=${image.file.name}&fileType=${image.file.type}&category=${image.category}`,
+          `/generate-presigned-url?fileName=${encodeURIComponent(
+            image.file.name
+          )}&fileType=${encodeURIComponent(image.file.type)}&category=${
+            image.category
+          }`,
           "GET"
         );
 

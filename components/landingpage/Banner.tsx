@@ -11,17 +11,24 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Link from "next/link";
-
-const intro = [
-  { imgSrc: "/Banner.jpg" },
-  { imgSrc: "/project.png" },
-  { imgSrc: "/Banner.jpg" },
-  { imgSrc: "/project.png" },
-];
+import { fetcher } from "@/helper";
+import { useQuery } from "@tanstack/react-query";
+import Loader from "../Loader";
 
 const Banner = () => {
   const bannerRef = useRef<HTMLDivElement>(null);
 
+  const { data: AllPics, isLoading } = useQuery<string[]>({
+    queryFn: () =>
+      fetcher("/fetch_aws_res", "POST", { Prefix: "images/bannerpic" }).then(
+        (data) => data.data
+      ),
+    queryKey: ["BannerPic"],
+    staleTime: 1000 * 60 * 10 * 10,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
@@ -36,6 +43,8 @@ const Banner = () => {
     });
   }, []);
 
+  if (isLoading || !AllPics) return <Loader />;
+
   return (
     <motion.div
       ref={bannerRef}
@@ -48,14 +57,14 @@ const Banner = () => {
         className="absolute inset-0 z-0"
       >
         <CarouselContent>
-          {intro.map((item, index) => (
+          {AllPics.map((item, index) => (
             <CarouselItem
               key={index}
               className="basis-full relative h-screen w-full"
             >
               <div className="relative w-full h-full">
                 <Image
-                  src={item.imgSrc}
+                  src={item}
                   alt={`Slide ${index + 1}`}
                   className="absolute w-full h-full z-0"
                   layout="fill"

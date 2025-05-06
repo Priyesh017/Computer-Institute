@@ -40,6 +40,7 @@ const formSchema = z.object({
 });
 
 const AddStudent: React.FC = () => {
+  const { frameworksCourse } = useAuthStore();
   const [loader, setLoader] = useState(false);
   const [images, setImages] = useState<{ src: string; file: File } | null>(
     null
@@ -87,13 +88,15 @@ const AddStudent: React.FC = () => {
     };
     reader.readAsDataURL(acceptedFile);
   };
-  const { frameworksCourse } = useAuthStore();
 
   const handleDeleteImage = () => setImages(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const result = formSchema.safeParse(fd);
+    const courseid = frameworksCourse.find(
+      (f) => f.value === fd.courseid
+    )?.courseId;
 
     if (result.error) {
       result.error.errors.forEach((err) => {
@@ -107,7 +110,9 @@ const AddStudent: React.FC = () => {
       if (!images) return;
 
       const { url } = await fetcherWc(
-        `/generate-presigned-url?fileName=${images.file.name}&fileType=${images.file.type}&category=face`,
+        `/generate-presigned-url?fileName=${encodeURIComponent(
+          images.file.name
+        )}&fileType=${encodeURIComponent(images.file.type)}&category=face`,
         "GET"
       );
       if (!url) {
@@ -125,6 +130,7 @@ const AddStudent: React.FC = () => {
       const imageUrl = url.split("?")[0];
       const data = await fetcherWc("/createEnrollment", "POST", {
         ...fd,
+        courseid,
         imageUrl,
       });
       toast(data.success && "successfully saved");
