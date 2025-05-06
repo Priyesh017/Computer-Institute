@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
-import Image from "next/image";
+
 import Loader from "../Loader";
 import { fetcher } from "@/helper";
 import { useQuery } from "@tanstack/react-query";

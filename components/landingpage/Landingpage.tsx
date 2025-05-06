@@ -9,7 +9,6 @@ const Navbar = dynamic(() => import("@/components/landingpage/Navbar"), {
   ssr: false,
 });
 import Loader from "../Loader";
-import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import Autoplay from "embla-carousel-autoplay";
