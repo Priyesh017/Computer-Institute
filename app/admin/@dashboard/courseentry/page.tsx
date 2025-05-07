@@ -1,6 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { fetcherWc } from "@/helper";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -16,6 +18,7 @@ export default function CourseEntryForm() {
     duration: "",
     price: "",
   });
+  const [loading, setloading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,6 +27,7 @@ export default function CourseEntryForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setloading(true);
     try {
       if (!form.courseName || !form.duration || !form.price) {
         alert("Please fill in all fields.");
@@ -37,6 +41,8 @@ export default function CourseEntryForm() {
     } catch (error) {
       console.log(error);
       toast.error("some error happened");
+    } finally {
+      setloading(false);
     }
   };
 
@@ -100,12 +106,13 @@ export default function CourseEntryForm() {
           />
         </div>
 
-        <button
+        <Button
           type="submit"
+          disabled={loading}
           className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-xl transition duration-200"
         >
-          Create Course
-        </button>
+          Create Course {loading && <Loader2 className="animate-spin" />}
+        </Button>
       </form>
     </div>
   );

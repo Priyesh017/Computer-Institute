@@ -32,7 +32,7 @@ const ExamForm = () => {
     isError,
   } = useQuery<DataItem[]>({
     queryKey: ["exmforms"],
-    queryFn: () => fetcherWc("/exmformsfetch", "GET").then((data) => data.data),
+    queryFn: () => fetcherWc("/exmformsfetch", "GET"),
     staleTime: 1000 * 60 * 5,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -71,7 +71,7 @@ const ExamForm = () => {
   // Filter and paginate data
   const filteredEnrollment = exmforms.filter(
     (e) =>
-      e.enrollment.center.code
+      e.enrollment.centerid
         .toString()
         .toLowerCase()
         .includes(search.toLowerCase()) // replace the EnrollmentNo with the Branch ID
@@ -117,7 +117,7 @@ const ExamForm = () => {
             {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
           </div>
 
-          <span>{enrollment.enrollment.center.code}</span>
+          <span>{enrollment.enrollment.centerid}</span>
           <span>
             {enrollment.enrollment.course.CName}
 

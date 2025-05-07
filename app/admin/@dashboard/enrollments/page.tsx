@@ -69,7 +69,9 @@ const EnrollmentList = () => {
       const endpoint = enrollment.activated
         ? "/deActivateEnrollment"
         : "/ActivateEnrollment";
-      return fetcherWc(endpoint, "POST", { id: enrollment.id });
+      return fetcherWc(endpoint, "POST", {
+        EnrollmentNo: enrollment.EnrollmentNo,
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
@@ -89,6 +91,7 @@ const EnrollmentList = () => {
       toast(
         data.success ? "ID generated successfully" : "ID generation failed"
       );
+      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
       setloading(null);
     },
 
@@ -103,7 +106,7 @@ const EnrollmentList = () => {
       setloading2(true);
       if (formData) {
         return fetcherWc("/updateEnrollment", "PUT", {
-          id: formData.id,
+          id: formData.EnrollmentNo,
           name: formData.name,
           address: formData.address,
           father: formData.father,
@@ -129,7 +132,7 @@ const EnrollmentList = () => {
   const deletehandler = useMutation({
     mutationFn: () =>
       fetcherWc("/Delete_Enrollment", "DELETE", {
-        id: selectedEnrollment!.id,
+        id: selectedEnrollment!.EnrollmentNo,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
@@ -202,7 +205,7 @@ const EnrollmentList = () => {
 
       {filteredEnrollment.map((enrollment) => (
         <div
-          key={enrollment.id}
+          key={enrollment.EnrollmentNo}
           className="grid md:grid-cols-8 items-center text-center py-3 border-b"
         >
           <div
@@ -253,10 +256,12 @@ const EnrollmentList = () => {
           <PaginationItem>
             <PaginationPrevious
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              className="cursor-pointer"
             />
           </PaginationItem>
           <PaginationItem>
             <PaginationNext
+              className="cursor-pointer"
               onClick={() =>
                 setCurrentPage((prev) =>
                   prev * PAGE_SIZE < data!.total ? prev + 1 : prev

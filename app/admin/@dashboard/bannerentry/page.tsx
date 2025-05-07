@@ -18,7 +18,15 @@ export default function BannerInsertion() {
     acceptedFiles.forEach((file) => {
       const reader = new FileReader();
       reader.onload = () => {
-        setImages((prev) => [...prev, { src: reader.result as string, file }]);
+        const src = reader.result as string;
+
+        const img = new Image();
+        img.onload = () => {
+          const aspectRatio = img.naturalWidth / img.naturalHeight;
+          console.log(img.naturalWidth, img.naturalHeight);
+        };
+        img.src = src;
+        setImages((prev) => [...prev, { src, file }]);
       };
       reader.readAsDataURL(file);
     });
