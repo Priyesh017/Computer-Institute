@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
-import Image from "next/image";
+
 import Loader from "../Loader";
 import { fetcher } from "@/helper";
 import { useQuery } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ export default function NoticeBoard() {
   } = useQuery<inotice[]>({
     queryKey: ["noticeData"],
     queryFn: () => fetcher("/noticefetch", "GET"),
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 5 * 100,
     refetchOnMount: false,
   });
 

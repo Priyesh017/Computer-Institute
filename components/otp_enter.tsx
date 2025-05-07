@@ -37,24 +37,27 @@ export default function OtpModal({
   const { utype, login } = useAuthStore();
   const router = useRouter();
 
-  const handleSubmit = useCallback(async (code: string) => {
-    try {
-      const data = await fetcherWc("/otpInput", "POST", { otp: code, email });
+  const handleSubmit = useCallback(
+    async (code: string) => {
+      try {
+        const data = await fetcherWc("/otpInput", "POST", { otp: code, email });
 
-      if (data.message === "Login successful") {
-        if (data.user.role.toLowerCase() !== utype) {
-          toast(`u r not authorised`);
-          return;
-        }
-        login(data.user);
-        toast("Login Successfully");
-        router.push("/admin");
-      } else toast.error("error happened");
-    } catch (error) {
-      toast.error("error block happened");
-      console.log(error);
-    }
-  }, []);
+        if (data.message === "Login successful") {
+          if (data.user.role.toLowerCase() !== utype) {
+            toast(`u r not authorised`);
+            return;
+          }
+          login(data.user);
+          toast("Login Successfully");
+          router.push("/admin");
+        } else toast.error("error happened");
+      } catch (error) {
+        toast.error("error block happened");
+        console.log(error);
+      }
+    },
+    [email, login, router, utype]
+  );
 
   useEffect(() => {
     if (otp.length === 6) {

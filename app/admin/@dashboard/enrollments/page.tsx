@@ -45,6 +45,8 @@ const EnrollmentList = () => {
     enrollments: Enrollmenttype[];
     total: number;
   }
+
+  const iv = [["enrollments", currentPage], ["exmforms"], ["marksheets"]];
   useEffect(() => {
     if (selectedEnrollment) setFormData(selectedEnrollment);
   }, [selectedEnrollment]);
@@ -112,7 +114,13 @@ const EnrollmentList = () => {
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
+      iv.forEach((data) => {
+        queryClient.invalidateQueries({
+          queryKey: data,
+        });
+        queryClient.refetchQueries({ queryKey: data });
+      });
+
       toast("Success");
     },
     onError: () => toast("Some error happened"),

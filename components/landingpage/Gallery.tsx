@@ -7,32 +7,29 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { images } from "@/data/index";
 import { fetcher } from "@/helper";
+import { useQuery } from "@tanstack/react-query";
+import Loader from "../Loader";
 
 const GalleryWall = () => {
   const gridRef = useRef<HTMLDivElement>(null);
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [folder, setFolder] = useState<string | null>(null);
-  const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState<number | null>(
     null
   );
 
-  useEffect(() => {
-    if (!folder) return;
-    const fetchGalleryImages = async () => {
-      try {
-        const { data } = await fetcher("/fetch_aws_res", "POST", {
-          Prefix: `images/${folder}`,
-        });
+  const { data: galleryImages, isLoading } = useQuery<string[]>({
+    queryKey: ["galleryImg"],
+    queryFn: () =>
+      fetcher("/fetch_aws_res", "POST", {
+        Prefix: `images/${folder}`,
+      }),
 
-        setGalleryImages(data as string[]);
-      } catch (error) {
-        console.error("Error fetching gallery images:", error);
-      }
-    };
-
-    fetchGalleryImages();
-  }, [folder]);
+    staleTime: 1000 * 60 * 10,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
   useEffect(() => {
     if (!gridRef.current) return;
@@ -47,6 +44,7 @@ const GalleryWall = () => {
     });
   }, []);
 
+  if (isLoading || !galleryImages) return <Loader />;
   const handleNextImage = () => {
     if (currentImageIndex !== null && galleryImages.length > 0) {
       const nextIndex = (currentImageIndex + 1) % galleryImages.length;

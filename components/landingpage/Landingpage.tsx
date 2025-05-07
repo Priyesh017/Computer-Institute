@@ -9,7 +9,6 @@ const Navbar = dynamic(() => import("@/components/landingpage/Navbar"), {
   ssr: false,
 });
 import Loader from "../Loader";
-import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import Autoplay from "embla-carousel-autoplay";
@@ -28,18 +27,25 @@ import {
   FaYoutube,
   FaLinkedinIn,
 } from "react-icons/fa";
-
-const intro = [
-  { imgSrc: "/Banner.jpg" },
-  { imgSrc: "/project.png" },
-  { imgSrc: "/Banner.jpg" },
-  { imgSrc: "/project.png" },
-];
+import { useQuery } from "@tanstack/react-query";
+import { fetcher } from "@/helper";
 
 export default function Home() {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [loading, setLoading] = useState(true);
   const bannerRef = useRef<HTMLDivElement>(null);
+
+  const { data: intro, isLoading } = useQuery<string[]>({
+    queryFn: () =>
+      fetcher("/fetch_aws_res", "POST", { Prefix: "images/bannerpic" }).then(
+        (data) => data.data
+      ),
+    queryKey: ["bannerpic"],
+    staleTime: 1000 * 60 * 10,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
   useEffect(() => {
     anime({
@@ -80,7 +86,10 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  if (loading) return <Loader />;
+
+  if (loading || isLoading) return <Loader />;
+  if (!intro) return <div>some error happened...</div>;
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -175,7 +184,7 @@ export default function Home() {
             {intro.map((item, index) => (
               <CarouselItem key={index} className="w-full">
                 <Image
-                  src={item.imgSrc}
+                  src={item}
                   alt={`Slide ${index + 1}`}
                   width={2160}
                   height={1920}
