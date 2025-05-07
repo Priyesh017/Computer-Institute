@@ -7,8 +7,6 @@ import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { ApiResponse, EnrollmentData } from "@/lib/typs";
 import { Loader2 } from "lucide-react";
-import { ComboboxDemo } from "@/components/combo";
-import { semValue } from "@/data";
 
 const ExamForm = () => {
   const [fd, setfd] = useState<EnrollmentData>();

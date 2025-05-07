@@ -6,7 +6,7 @@ export const EnrollmentDetails = ({
   enrollment: Enrollmenttype;
 }) => {
   const initialData = {
-    id: enrollment?.id,
+    id: enrollment?.EnrollmentNo,
     EnrollmentNo: enrollment?.EnrollmentNo,
     "Addmission date": enrollment?.createdAt,
     Name: enrollment.name,

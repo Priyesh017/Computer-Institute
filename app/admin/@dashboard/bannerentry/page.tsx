@@ -23,7 +23,7 @@ export default function BannerInsertion() {
         const img = new Image();
         img.onload = () => {
           const aspectRatio = img.naturalWidth / img.naturalHeight;
-          console.log(img.naturalWidth, img.naturalHeight);
+          console.log(aspectRatio);
         };
         img.src = src;
         setImages((prev) => [...prev, { src, file }]);
