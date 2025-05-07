@@ -88,7 +88,7 @@ export default function Home() {
     <div className="bg-white text-white">
       <section className="overflow-hidden">
         {/* Header Strip */}
-        <div className="flex md:flex-row flex-col items-center justify-between gap-2 px-4 py-2 bg-purple-900 text-white text-sm">
+        <div className="flex md:flex-row flex-col items-center justify-between gap-2 px-4 py-1 bg-purple-900 text-white text-sm">
           {/* Contact Info */}
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-2">
@@ -141,13 +141,13 @@ export default function Home() {
         </div>
 
         {/* Top Banner */}
-        <div className="relative hidden my-3 px-4 md:flex justify-center items-center gap-6 text-center">
+        <div className="relative hidden my-2 px-4 md:flex justify-center items-center gap-6 text-center">
           <Image
             src="/Logo.png"
             alt="Student"
             width={100}
             height={100}
-            className="w-full md:w-[130px] md:h-[130px] rounded-full"
+            className="w-full md:w-[100px] rounded-full"
           />
           <div className="text-center">
             <h1 className="text-2xl md:text-4xl font-bold text-purple-900">
@@ -177,9 +177,9 @@ export default function Home() {
                 <Image
                   src={item.imgSrc}
                   alt={`Slide ${index + 1}`}
-                  width={1920}
-                  height={1080}
-                  className="w-full h-[250px] md:h-[700px] object-cover"
+                  width={2160}
+                  height={1920}
+                  className="w-full h-[250px] md:h-[650px] object-fill"
                   quality={100}
                   priority={index === 0}
                 />

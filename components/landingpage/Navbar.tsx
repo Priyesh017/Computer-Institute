@@ -30,13 +30,13 @@ export default function Navbar() {
   }, []);
 
   const navLinkStyle =
-    "block cursor-pointer text-xl py-2 border-b-2 border-white/0 hover:text-yellow-400 hover:border-yellow-500 transition-all";
+    "block cursor-pointer py-1 border-b-2 border-white/0 hover:text-yellow-400 hover:border-yellow-500 transition-all";
 
   return (
     <nav
       className={`${
         isScrolled ? "fixed top-0 shadow-lg" : "relative"
-      } w-full bg-purple-900 text-white font-semibold z-40 transition-all duration-300 ease-in-out px-4 pt-1`}
+      } w-full bg-purple-900 text-white font-semibold z-40 transition-all duration-300 ease-in-out px-4 pt-1 pb-1 md:pb-0 `}
     >
       {/* Toggle Button (Mobile Only) */}
       <button
