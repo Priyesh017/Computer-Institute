@@ -60,7 +60,10 @@ const ExamForm = () => {
       setloading(enrollment.id);
       return fetcherWc("/generateadmit", "POST", { enrollment });
     },
-    onSuccess: (data) => toast(data.success ? "Generated" : "Error"),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
+      toast(data.success ? "Generated" : "Error");
+    },
     onError: () => toast("Some error happened"),
     onSettled: () => setloading(null),
   });

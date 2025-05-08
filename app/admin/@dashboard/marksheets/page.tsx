@@ -92,6 +92,7 @@ const ExamForm = () => {
     onSuccess: () => {
       toast.success("Generated successfully");
       setLoadingType(null);
+      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
     },
     onError: () => {
       toast.error("Generation failed");
