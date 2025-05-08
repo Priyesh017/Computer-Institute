@@ -86,7 +86,7 @@ export default function LoginPage() {
       <div className="flex flex-col justify-center items-center w-full max-w-md px-8 py-12 bg-white shadow-lg md:rounded-lg">
         <Button
           className="absolute top-8 left-8 text-md font-bold bg-purple-600 hover:bg-purple-700"
-          onClick={() => router.push("/chooseuser")}
+          onClick={() => router.push("/")}
         >
           <FaArrowLeft />
         </Button>

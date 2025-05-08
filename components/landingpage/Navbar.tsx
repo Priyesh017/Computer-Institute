@@ -4,12 +4,31 @@ import { useEffect, useState } from "react";
 import { FaTimes, FaBars } from "react-icons/fa";
 import { menuItems } from "@/data";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store";
+
+const navLinks = (user: any) => [
+  { label: "Search Enrollment", href: "/certificate" },
+  { label: "Franchise", href: "/enquiry" },
+  {
+    label: user ? "Dashboard" : "Login",
+    href: user ? (user.role ? "/admin" : "/student") : "/login",
+    isLogin: !user,
+  },
+];
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { user } = useAuthStore();
+  const [hoveredLogin, setHoveredLogin] = useState(false);
+  const { user, setUtype } = useAuthStore();
+
+  const router = useRouter();
+
+  const onclickHandler = (e: "admin" | "center") => {
+    setUtype(e);
+    router.push("/login");
+  };
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -30,7 +49,7 @@ export default function Navbar() {
   }, []);
 
   const navLinkStyle =
-    "block cursor-pointer py-1 border-b-2 border-white/0 hover:text-yellow-400 hover:border-yellow-500 transition-all";
+    "block cursor-pointer border-b-2 border-white/0 hover:text-yellow-400 hover:border-yellow-500 transition-all";
 
   return (
     <nav
@@ -62,7 +81,9 @@ export default function Navbar() {
       >
         {/* Home */}
         <li
-          className={`${navLinkStyle} ${isMenuOpen ? "" : "md:inline-block"}`}
+          className={`${navLinkStyle} py-1 ${
+            isMenuOpen ? "" : "md:inline-block"
+          }`}
           onClick={() => {
             scrollToTop();
             setIsMenuOpen(false);
@@ -77,7 +98,7 @@ export default function Navbar() {
           .map((item, index) => (
             <li
               key={index}
-              className={navLinkStyle}
+              className={`${navLinkStyle} py-1`}
               onClick={() => {
                 scrollToSection(item.name.toLowerCase());
                 setIsMenuOpen(false);
@@ -88,24 +109,60 @@ export default function Navbar() {
           ))}
 
         {/* Auth & Other Links */}
-        {[
-          { label: "Search Enrollment", href: "/certificate" },
-          { label: "Franchise", href: "/enquiry" },
-          {
-            label: user ? "Dashboard" : "Login",
-            href: user ? (user.role ? "/admin" : "/student") : "/chooseuser",
-          },
-        ].map((link, index) => (
-          <li key={index}>
-            <Link
-              href={link.href}
-              onClick={() => setIsMenuOpen(false)}
-              className={`${navLinkStyle} ${
-                isMenuOpen ? "" : "md:inline-block"
-              }`}
-            >
-              {link.label}
-            </Link>
+        {navLinks(user).map((link, index) => (
+          <li
+            key={index}
+            className={`${navLinkStyle} py-1 relative`}
+            onMouseEnter={() => link.isLogin && setHoveredLogin(true)}
+            onMouseLeave={() => link.isLogin && setHoveredLogin(false)}
+          >
+            {!link.isLogin ? (
+              <Link
+                href={link.href}
+                onClick={() => setIsMenuOpen(false)}
+                className={`transition hover:opacity-80 ${
+                  isMenuOpen ? "block" : "md:inline-block"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <>
+                <button
+                  className={`${navLinkStyle} transition hover:opacity-80 ${
+                    isMenuOpen ? "block" : "md:inline-block"
+                  }`}
+                >
+                  {link.label}
+                </button>
+
+                {hoveredLogin && (
+                  <ul className="absolute left-1/2 -translate-x-1/2 top-full w-52 bg-purple-900 text-white shadow-lg z-50 text-center">
+                    {[
+                      { label: "Central Admin Login" },
+                      { label: "Branch Admin Login" },
+                      { label: "Student Login" },
+                    ].map((loginLink, i) => (
+                      <li key={i}>
+                        <button
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            loginLink.label === "Student Login"
+                              ? router.push("/studentlogin")
+                              : loginLink.label === "Central Admin Login"
+                              ? onclickHandler("admin")
+                              : onclickHandler("center");
+                          }}
+                          className={`${navLinkStyle} w-fit mx-auto py-1`}
+                        >
+                          {loginLink.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
           </li>
         ))}
       </ul>
