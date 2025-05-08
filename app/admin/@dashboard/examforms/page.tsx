@@ -103,7 +103,7 @@ const ExamForm = () => {
         <span>Course Name</span>
         <span>Status</span>
         <span>Approval</span>
-        <span>Generate</span>
+        <span>Generate Admit</span>
       </div>
 
       {currentEnrollments.map((enrollment, index) => (
@@ -134,7 +134,7 @@ const ExamForm = () => {
             />
           </div>
           <Button
-            className={`mx-4 ${
+            className={`${
               enrollment.verified
                 ? "bg-purple-600 hover:bg-purple-700"
                 : "bg-gray-400 cursor-not-allowed"
@@ -142,7 +142,7 @@ const ExamForm = () => {
             onClick={() => generateAdmit.mutate(enrollment)}
             disabled={!enrollment.verified}
           >
-            Generate Admit
+            Generate
             {generateAdmit.isPending && loading == enrollment.id && (
               <Loader2 className="animate-spin" />
             )}

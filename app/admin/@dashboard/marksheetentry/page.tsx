@@ -231,7 +231,7 @@ const Marksheet = () => {
         {details.map((item, index) => (
           <div key={index} className="flex flex-col">
             <label className="text-sm font-medium mb-1">{item.label}</label>
-            <div className="p-2 h-fit md:h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none">
+            <div className="p-2 min-h-10 h-fit rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none">
               {item.value}
             </div>
           </div>

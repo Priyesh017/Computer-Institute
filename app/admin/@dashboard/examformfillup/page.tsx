@@ -151,7 +151,7 @@ const ExamForm = () => {
               </label>
               <div
                 id={key}
-                className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
+                className="p-2 min-h-10 h-fit rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 border border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
               >
                 {value}
               </div>

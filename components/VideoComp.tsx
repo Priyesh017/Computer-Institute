@@ -7,6 +7,7 @@ import { fetcher } from "@/helper";
 import Loader from "@/components/Loader";
 import { useQuery } from "@tanstack/react-query";
 import ReactPlyrExample from "./vdotemp";
+import { X } from "lucide-react";
 
 const ReceivedVideos: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -84,7 +85,7 @@ const ReceivedVideos: React.FC = () => {
             onClick={() => setSelectedVideo(null)}
           >
             <motion.div
-              className="relative bg-gray-900 rounded-lg shadow-lg w-full max-w-lg mx-4"
+              className="relative bg-gray-900 rounded-lg shadow-lg w-full max-w-lg mx-4 overflow-hidden"
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.8 }}
@@ -98,10 +99,10 @@ const ReceivedVideos: React.FC = () => {
                 {videos.find((video) => video === selectedVideo)?.split("/")[0]}
               </div>
               <button
-                className="absolute top-2 right-2 text-white bg-gray-700 hover:bg-red-600 rounded-full px-2 py-0.5"
+                className="absolute top-2 right-2 text-white bg-gray-700 hover:bg-red-600 rounded-full p-1"
                 onClick={() => setSelectedVideo(null)}
               >
-                ✕
+                <X size={20} />
               </button>
             </motion.div>
           </motion.div>
