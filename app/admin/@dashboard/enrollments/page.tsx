@@ -36,7 +36,7 @@ const EnrollmentList = () => {
     useState<Enrollmenttype | null>(null);
   const queryClient = useQueryClient();
   const [loading, setloading] = useState<number | null>(null);
-  const [loading2, setloading2] = useState<boolean>(false);
+  const [loading2, setloading2] = useState<"update" | "delete" | null>(null);
   const [editable, seteditable] = useState(false);
 
   const [formData, setFormData] = useState<Enrollmenttype | null>(null);
@@ -103,10 +103,10 @@ const EnrollmentList = () => {
 
   const updatehandler = useMutation({
     mutationFn: () => {
-      setloading2(true);
+      setloading2("update");
       if (formData) {
         return fetcherWc("/updateEnrollment", "PUT", {
-          id: formData.EnrollmentNo,
+          EnrollmentNo: formData.EnrollmentNo,
           name: formData.name,
           address: formData.address,
           father: formData.father,
@@ -127,7 +127,7 @@ const EnrollmentList = () => {
       toast("Success");
     },
     onError: () => toast("Some error happened"),
-    onSettled: () => setloading2(false),
+    onSettled: () => setloading2(null),
   });
   const deletehandler = useMutation({
     mutationFn: () =>
@@ -139,7 +139,7 @@ const EnrollmentList = () => {
       toast("Success");
     },
     onError: () => toast("Some error happened"),
-    onSettled: () => setloading2(false),
+    onSettled: () => setloading2(null),
   });
 
   const handleDelete = useCallback(() => {
@@ -147,7 +147,7 @@ const EnrollmentList = () => {
       toast("No enrollment selected");
       return;
     }
-    setloading2(true);
+    setloading2("delete");
     deletehandler.mutate();
   }, [deletehandler, selectedEnrollment]);
 

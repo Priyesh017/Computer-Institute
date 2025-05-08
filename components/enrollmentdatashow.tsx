@@ -17,7 +17,7 @@ export const EnrollmentDetails = ({
   enrollment: Enrollmenttype;
   editable?: boolean;
   deletehandler?: () => void;
-  loading?: boolean;
+  loading?: "update" | "delete" | null;
   updatehandler?: () => void;
   setFormData?: Dispatch<SetStateAction<Enrollmenttype | null>>;
   formData?: Enrollmenttype | null;
@@ -111,15 +111,20 @@ export const EnrollmentDetails = ({
           variant={"destructive"}
           className="mt-2"
           onClick={deletehandler}
+          disabled={loading === "delete"}
         >
           delete <MdDeleteOutline />
-          {loading && <Loader2 className="animate-spin" />}
+          {loading === "delete" && <Loader2 className="animate-spin" />}
         </Button>
       )}
       {editable && (
-        <Button className="mt-2 ml-2" onClick={updatehandler}>
+        <Button
+          className="mt-2 ml-2"
+          onClick={updatehandler}
+          disabled={loading === "update"}
+        >
           update
-          {loading && <Loader2 className="animate-spin" />}
+          {loading === "update" && <Loader2 className="animate-spin" />}
         </Button>
       )}
     </div>
