@@ -62,9 +62,7 @@ const socialLinks = [
   },
 ];
 
-const Navbar = dynamic(() => import("@/components/landingpage/Navbar"), {
-  ssr: false,
-});
+const Navbar = dynamic(() => import("@/components/landingpage/Navbar"), {});
 
 export default function Home() {
   const [showScrollButton, setShowScrollButton] = useState(false);
