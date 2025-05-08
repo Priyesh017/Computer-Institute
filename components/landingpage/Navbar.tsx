@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore, usertype } from "@/store";
 
-const navLinks = (user: usertype) => [
+const navLinks = (user: usertype | null) => [
   //fixme
   { label: "Search Enrollment", href: "/certificate" },
   { label: "Franchise", href: "/enquiry" },
@@ -30,6 +30,14 @@ export default function Navbar() {
     setUtype(e);
     router.push("/login");
   };
+  const handleNav = (loginLink: { label: string }) => {
+    setIsMenuOpen(false);
+    if (loginLink.label === "Student Login") {
+      router.push("/studentlogin");
+    } else if (loginLink.label === "Central Admin Login") {
+      onclickHandler("admin");
+    } else onclickHandler("center");
+  };
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -39,14 +47,7 @@ export default function Navbar() {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  const rightPath = (loginLink: { label: string }) => {
-    setIsMenuOpen(false);
-    if (loginLink.label === "Student Login") {
-      router.push("/studentlogin");
-    } else if (loginLink.label === "Central Admin Login") {
-      onclickHandler("admin");
-    } else onclickHandler("center");
-  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 120);
@@ -58,7 +59,7 @@ export default function Navbar() {
 
   const navLinkStyle =
     "block cursor-pointer border-b-2 border-white/0 hover:text-yellow-400 hover:border-yellow-500 transition-all";
-  if (!user) return;
+
   return (
     <nav
       className={`${
@@ -153,7 +154,7 @@ export default function Navbar() {
                     ].map((loginLink, i) => (
                       <li key={i}>
                         <button
-                          onClick={() => rightPath(loginLink)}
+                          onClick={() => handleNav(loginLink)}
                           className={`${navLinkStyle} w-fit mx-auto py-1`}
                         >
                           {loginLink.label}

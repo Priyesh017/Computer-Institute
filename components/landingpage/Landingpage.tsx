@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+
 import Image from "next/image";
 import anime from "animejs";
 import { useQuery } from "@tanstack/react-query";
