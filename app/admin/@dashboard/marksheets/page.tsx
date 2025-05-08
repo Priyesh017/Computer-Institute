@@ -159,49 +159,58 @@ const ExamForm = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        currentEnrollments.map((d) => (
-          <div
-            key={d.id}
-            className="grid md:grid-cols-6 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-gray-500"
-          >
-            <div
-              className="hover:text-violet-800 cursor-pointer"
-              onClick={() => {
-                setSelectedEnrollment(d);
-                setIsModalOpen(true);
-              }}
-            >
-              {d.enrollment.name}
-            </div>
-            <div>{d.EnrollmentNo}</div>
-            <div>
-              {d.enrollment.course.CName}
+        currentEnrollments.map((d) => {
+          const remc = 6 - Math.abs(d.enrollment.center.code).toString().length;
+          const paddedNumberc = d.enrollment.center.code
+            .toString()
+            .padStart(remc, "0");
 
-              <br />
-              {`(${d.enrollment.course.Duration} months)`}
-            </div>
-            <span>{d.enrollment.center.code}</span>
-            <div className="flex items-center justify-center">
-              <Switch
-                checked={d.verified}
-                onCheckedChange={() => toggleMutation.mutate(d)}
-                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
-              />
-            </div>
-            <Button
-              className={`mx-4 ${
-                d.verified ? "bg-purple-600" : "bg-gray-400 cursor-not-allowed"
-              }`}
-              disabled={!d.verified}
-              onClick={() => {
-                setSelectedEnrollment(d);
-                setIsGenerateModalOpen(true);
-              }}
+          return (
+            <div
+              key={d.id}
+              className="grid md:grid-cols-6 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-gray-500"
             >
-              Generate
-            </Button>
-          </div>
-        ))
+              <div
+                className="hover:text-violet-800 cursor-pointer"
+                onClick={() => {
+                  setSelectedEnrollment(d);
+                  setIsModalOpen(true);
+                }}
+              >
+                {d.enrollment.name}
+              </div>
+              <div>{d.EnrollmentNo}</div>
+              <div>
+                {d.enrollment.course.CName}
+
+                <br />
+                {`(${d.enrollment.course.Duration} months)`}
+              </div>
+              <span>{`YCTC${paddedNumberc}`}</span>
+              <div className="flex items-center justify-center">
+                <Switch
+                  checked={d.verified}
+                  onCheckedChange={() => toggleMutation.mutate(d)}
+                  className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+                />
+              </div>
+              <Button
+                className={`mx-4 ${
+                  d.verified
+                    ? "bg-purple-600"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
+                disabled={!d.verified}
+                onClick={() => {
+                  setSelectedEnrollment(d);
+                  setIsGenerateModalOpen(true);
+                }}
+              >
+                Generate
+              </Button>
+            </div>
+          );
+        })
       )}
 
       {/* Pagination */}

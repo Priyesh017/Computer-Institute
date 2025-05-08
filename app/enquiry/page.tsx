@@ -92,7 +92,18 @@ const FranchiseForm = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (field === "mobileNo") {
+      if (/^\d*$/.test(value) && value.length <= 10) {
+        setFormData((prevFd) => ({ ...prevFd, [field]: value }));
+      }
+      return;
+    }
+    if (field === "email") {
+      setFormData((prevFd) => ({ ...prevFd, [field]: value }));
+      return;
+    }
+
+    setFormData((prev) => ({ ...prev, [field]: value.toUpperCase() }));
   };
 
   const handleDeleteImage = (category: "profile" | "signature") => {
