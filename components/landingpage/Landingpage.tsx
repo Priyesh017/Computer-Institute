@@ -173,7 +173,7 @@ export default function Home() {
         {/* Carousel */}
         <Carousel
           ref={bannerRef}
-          opts={{ loop: true }}
+          opts={{ loop: true, duration: 100 }}
           plugins={[Autoplay({ delay: 3000 }), Fade()]}
           className="relative w-full z-0"
         >
