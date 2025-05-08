@@ -29,7 +29,6 @@ export interface Enrollmenttype {
   name: string;
   createdAt: string; // or Date
   EnrollmentNo: number;
-  id: number;
   activated: boolean;
   address: true;
   father: string;
@@ -48,7 +47,6 @@ export interface Enrollment {
   name: string;
   EnrollmentNo: number;
   activated: boolean;
-  id: number;
 
   course: {
     price: number;
@@ -81,7 +79,6 @@ export interface PreviewModalProps {
   result: string;
 }
 export type EnrollmentData = {
-  id: number;
   EnrollmentNo: number;
   IdCardNo: string;
   idCardLink: string;
@@ -164,11 +161,6 @@ export type DataItem = {
   createdAt: string;
   ExamCenterCode: string;
   ATI_CODE: string;
-  practExmdate: string;
-  theoryExamdate: string;
-  practExmtime: string;
-  theoryExmtime: string;
-  sem: string;
   enrollment: {
     name: string;
     mobileNo: string;
@@ -176,15 +168,12 @@ export type DataItem = {
     EnrollmentNo: number;
     imageLink: string;
     address: string;
-    center: {
-      Centername: string;
-      code: number;
-    };
     status: {
       id: number;
       val: string;
     };
     father: string;
+    centerid: number;
     IdCardNo: string;
     amount: {
       lastPaymentRecieptno: string;

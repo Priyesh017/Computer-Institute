@@ -7,8 +7,6 @@ import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import { ApiResponse, EnrollmentData } from "@/lib/typs";
 import { Loader2 } from "lucide-react";
-import { ComboboxDemo } from "@/components/combo";
-import { semValue } from "@/data";
 
 const ExamForm = () => {
   const [fd, setfd] = useState<EnrollmentData>();
@@ -20,11 +18,6 @@ const ExamForm = () => {
     ATI_CODE: "",
     ExamCenterCode: "",
     lastpaymentR: "",
-    SemNo: "",
-    ted: "",
-    ped: "",
-    tet: "",
-    pet: "",
   });
 
   const handleChange2 = (
@@ -194,70 +187,6 @@ const ExamForm = () => {
               type="text"
               name="lastpaymentR"
               value={remain.lastpaymentR}
-              onChange={handleChange2}
-              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-sm font-medium mb-1">Semester No</label>
-
-            <ComboboxDemo
-              frameworks={semValue}
-              heading={`Select Sem`}
-              value={remain.SemNo}
-              setValue={setremain}
-              data="SemNo"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-sm font-medium mb-1">Theory Exam Date</label>
-            <input
-              type="text"
-              name="ted"
-              value={remain.ted}
-              onChange={handleChange2}
-              placeholder="dd/mm/yy"
-              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-sm font-medium mb-1">
-              Practical Exam Date
-            </label>
-            <input
-              type="text"
-              name="ped"
-              value={remain.ped}
-              placeholder="dd/mm/yy"
-              onChange={handleChange2}
-              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-sm font-medium mb-1">Theory Exam Time</label>
-            <input
-              type="text"
-              name="tet"
-              value={remain.tet}
-              placeholder="hh:mm"
-              onChange={handleChange2}
-              className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-sm font-medium mb-1">
-              Practical Exam Time
-            </label>
-            <input
-              type="text"
-              name="pet"
-              value={remain.pet}
-              placeholder="hh:mm"
               onChange={handleChange2}
               className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
             />

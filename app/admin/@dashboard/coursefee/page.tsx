@@ -23,7 +23,7 @@ const ExamFee = () => {
   const queryClient = useQueryClient();
 
   const { data: enrollments = [], isLoading } = useQuery<Enrollment[]>({
-    queryKey: ["enrollments"],
+    queryKey: ["examfee"],
     queryFn: async () => {
       const { data } = await fetcherWc("/amountFetch", "POST");
       return data || [];
@@ -57,7 +57,7 @@ const ExamFee = () => {
     onSuccess: (_, { id }) => {
       toast.success("Payment updated successfully.");
       setFeesPaid((prev) => ({ ...prev, [id]: 0 }));
-      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
+      queryClient.invalidateQueries({ queryKey: ["examfee"] });
     },
     onError: () => {
       toast.error("Failed to update payment.");
@@ -94,7 +94,7 @@ const ExamFee = () => {
 
             return (
               <div
-                key={enrollment.id}
+                key={enrollment.EnrollmentNo}
                 className="grid md:grid-cols-7 items-center text-gray-600 text-center gap-2 font-bold py-3 border-b border-l border-r border-gray-500 cursor-pointer hover:bg-blue-100"
               >
                 <div className="hover:text-violet-800">{enrollment.name}</div>
@@ -106,12 +106,12 @@ const ExamFee = () => {
                 <span>{enrollment.course.price}</span>
                 <input
                   type="number"
-                  value={feesPaid[enrollment.id] || ""}
+                  value={feesPaid[enrollment.EnrollmentNo] || ""}
                   onChange={(e) => {
                     const value = parseInt(e.target.value) || 0;
                     setFeesPaid((prev) => ({
                       ...prev,
-                      [enrollment.id]: value,
+                      [enrollment.EnrollmentNo]: value,
                     }));
                   }}
                   className="p-2 rounded-md text-center bg-gray-100 text-gray-900 border-gray-300 focus:ring-2 focus:ring-violet-500 focus:outline-none"
@@ -124,7 +124,7 @@ const ExamFee = () => {
                   onClick={() =>
                     mutation.mutate({
                       EnrollmentNo: enrollment.EnrollmentNo,
-                      id: enrollment.id,
+                      id: enrollment.EnrollmentNo,
                       remainingAmount,
                     })
                   }
