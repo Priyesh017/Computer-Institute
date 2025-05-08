@@ -1,7 +1,7 @@
 // store/sidebarStore.ts
 import { create } from "zustand";
 
-interface usertype {
+export interface usertype {
   name: string;
   email: string;
   role: "CENTER" | "ADMIN";

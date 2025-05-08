@@ -5,9 +5,10 @@ import { FaTimes, FaBars } from "react-icons/fa";
 import { menuItems } from "@/data";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store";
+import { useAuthStore, usertype } from "@/store";
 
-const navLinks = (user: any) => [
+const navLinks = (user: usertype | null) => [
+  //fixme
   { label: "Search Enrollment", href: "/certificate" },
   { label: "Franchise", href: "/enquiry" },
   {
@@ -28,6 +29,14 @@ export default function Navbar() {
   const onclickHandler = (e: "admin" | "center") => {
     setUtype(e);
     router.push("/login");
+  };
+  const handleNav = (loginLink: { label: string }) => {
+    setIsMenuOpen(false);
+    if (loginLink.label === "Student Login") {
+      router.push("/studentlogin");
+    } else if (loginLink.label === "Central Admin Login") {
+      onclickHandler("admin");
+    } else onclickHandler("center");
   };
 
   const scrollToSection = (id: string) => {
@@ -145,14 +154,7 @@ export default function Navbar() {
                     ].map((loginLink, i) => (
                       <li key={i}>
                         <button
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            loginLink.label === "Student Login"
-                              ? router.push("/studentlogin")
-                              : loginLink.label === "Central Admin Login"
-                              ? onclickHandler("admin")
-                              : onclickHandler("center");
-                          }}
+                          onClick={() => handleNav(loginLink)}
                           className={`${navLinkStyle} w-fit mx-auto py-1`}
                         >
                           {loginLink.label}

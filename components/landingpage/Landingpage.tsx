@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import dynamic from "next/dynamic";
+
 import Image from "next/image";
 import anime from "animejs";
 import { useQuery } from "@tanstack/react-query";
@@ -27,6 +27,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { motion } from "framer-motion";
+import Navbar from "./Navbar";
 
 // Social links and icons combined
 const socialLinks = [
@@ -61,10 +62,6 @@ const socialLinks = [
     hoverColor: "hover:text-blue-400",
   },
 ];
-
-const Navbar = dynamic(() => import("@/components/landingpage/Navbar"), {
-  ssr: false,
-});
 
 export default function Home() {
   const [showScrollButton, setShowScrollButton] = useState(false);
