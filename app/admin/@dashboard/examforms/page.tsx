@@ -62,6 +62,7 @@ const ExamForm = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
+      queryClient.refetchQueries({ queryKey: ["enrollments", currentPage] });
       toast(data.success ? "Generated" : "Error");
     },
     onError: () => toast("Some error happened"),
