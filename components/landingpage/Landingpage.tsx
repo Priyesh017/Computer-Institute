@@ -6,6 +6,7 @@ import Image from "next/image";
 import anime from "animejs";
 import { useQuery } from "@tanstack/react-query";
 import Autoplay from "embla-carousel-autoplay";
+import Fade from "embla-carousel-fade";
 import {
   FaArrowUp,
   FaEnvelope,
@@ -176,7 +177,7 @@ export default function Home() {
         <Carousel
           ref={bannerRef}
           opts={{ loop: true }}
-          plugins={[Autoplay({ delay: 3000 })]}
+          plugins={[Autoplay({ delay: 3000 }), Fade()]}
           className="relative w-full z-0"
         >
           <CarouselContent>
