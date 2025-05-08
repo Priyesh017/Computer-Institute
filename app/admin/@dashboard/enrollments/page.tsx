@@ -132,7 +132,7 @@ const EnrollmentList = () => {
   const deletehandler = useMutation({
     mutationFn: () =>
       fetcherWc("/Delete_Enrollment", "DELETE", {
-        id: selectedEnrollment!.EnrollmentNo,
+        EnrollmentNo: selectedEnrollment!.EnrollmentNo,
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
