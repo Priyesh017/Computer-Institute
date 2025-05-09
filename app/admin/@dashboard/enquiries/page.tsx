@@ -129,7 +129,8 @@ export default function Notifications() {
         { editedData }
       );
       toast(data.success ? "success" : "failed");
-      data.success && queryClient.invalidateQueries({ queryKey: ["repoData"] });
+      if (data.success)
+        queryClient.invalidateQueries({ queryKey: ["repoData"] });
 
       setEditable(false);
     } catch (error) {
@@ -148,7 +149,7 @@ export default function Notifications() {
     });
     setloading(null);
     toast(success ? "success" : "failed");
-    success && queryClient.invalidateQueries({ queryKey: ["repoData"] });
+    if (success) queryClient.invalidateQueries({ queryKey: ["repoData"] });
   };
   const openhandler = (
     e: React.MouseEvent<HTMLButtonElement>,
