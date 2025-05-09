@@ -9,7 +9,6 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 interface idata {
   data: Notification[];
@@ -56,7 +55,7 @@ export default function Notifications() {
 
   const [editable, setEditable] = useState(false);
   const [editedData, setEditedData] = useState<Notification>();
-  const router = useRouter();
+
   const queryClient = useQueryClient();
 
   const { isPending, error, data } = useQuery<idata>({
@@ -76,15 +75,6 @@ export default function Notifications() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["repoData"] }),
     onSettled: () => setdeleteloading(null),
   });
-
-  if (isPending) {
-    <Loader />;
-    return;
-  }
-
-  if (error) return;
-
-  const notifications = data.data;
 
   const openNotification = (notif: Notification) => {
     setSelectedNotification(notif);
@@ -113,6 +103,7 @@ export default function Notifications() {
           setloading(null);
           setSelectedNotification(null);
           eventSource.close();
+          queryClient.invalidateQueries({ queryKey: ["repoData"] });
         }
       } catch (error) {
         console.error("Error parsing SSE data:", error);
@@ -138,6 +129,8 @@ export default function Notifications() {
         { editedData }
       );
       toast(data.success ? "success" : "failed");
+      data.success && queryClient.invalidateQueries({ queryKey: ["repoData"] });
+
       setEditable(false);
     } catch (error) {
       console.log(error);
@@ -155,14 +148,25 @@ export default function Notifications() {
     });
     setloading(null);
     toast(success ? "success" : "failed");
+    success && queryClient.invalidateQueries({ queryKey: ["repoData"] });
   };
   const openhandler = (
     e: React.MouseEvent<HTMLButtonElement>,
     notif: Notification
   ) => {
     e.stopPropagation();
-    router.push(notif.certificateLink!);
+
+    window.open(notif.certificateLink, "_blank");
   };
+
+  if (isPending) {
+    <Loader />;
+    return;
+  }
+
+  if (error) return;
+
+  const notifications = data.data;
 
   return (
     <motion.div
