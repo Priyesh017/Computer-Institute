@@ -67,7 +67,7 @@ export default function BannerInsertion() {
       toast.success("successful");
       setImages([]);
     } catch (err) {
-      console.error(err);
+      console.log(err);
       setError("Something went wrong during upload.");
     } finally {
       setLoading(false);

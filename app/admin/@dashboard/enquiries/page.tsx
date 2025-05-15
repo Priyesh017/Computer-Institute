@@ -99,19 +99,18 @@ export default function Notifications() {
 
         // Handle completion case
         if (data.step === 2) {
-          toast("Process completed, closing connection.");
           setloading(null);
           setSelectedNotification(null);
           eventSource.close();
           queryClient.invalidateQueries({ queryKey: ["repoData"] });
         }
       } catch (error) {
-        console.error("Error parsing SSE data:", error);
+        console.log("Error parsing SSE data:", error);
       }
     };
 
     eventSource.onerror = (error) => {
-      console.error("SSE error:", error);
+      console.log("SSE error:", error);
       eventSource.close();
     };
 

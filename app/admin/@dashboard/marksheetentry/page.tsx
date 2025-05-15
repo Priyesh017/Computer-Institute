@@ -293,7 +293,7 @@ const Marksheet = () => {
                   // Allow empty string for controlled input
                   if (
                     value === "" ||
-                    (Number(value) > 0 && /^\d*$/.test(value))
+                    (Number(value) >= 0 && /^\d*$/.test(value))
                   ) {
                     handleChange(
                       index,

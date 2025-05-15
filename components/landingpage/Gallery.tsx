@@ -28,7 +28,7 @@ const GalleryWall = () => {
 
         setGalleryImages(data as string[]);
       } catch (error) {
-        console.error("Error fetching gallery images:", error);
+        console.log("Error fetching gallery images:", error);
       }
     };
 
