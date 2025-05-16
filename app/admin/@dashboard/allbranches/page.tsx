@@ -9,7 +9,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Loader from "@/components/Loader";
 
 type Branch = {
-  id: string;
+  code: string;
   Centername: string;
   admin: {
     name: string;
@@ -80,7 +80,7 @@ export default function BranchesPage() {
       <div className="space-y-4">
         {branches.map((branch, index) => (
           <motion.div
-            key={branch.id}
+            key={branch.code}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
@@ -96,7 +96,7 @@ export default function BranchesPage() {
                   {branch.Centername}
                 </p>
                 <p className="text-sm text-zinc-600">
-                  <span className="font-medium">Branch ID:</span> {branch.id}
+                  <span className="font-medium">Branch ID:</span> {branch.code}
                 </p>
               </div>
             </div>
