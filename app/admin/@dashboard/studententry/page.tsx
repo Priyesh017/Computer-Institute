@@ -71,7 +71,17 @@ const AddStudent: React.FC = () => {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setfd((prevFd) => ({ ...prevFd, [id]: value }));
+    if (id === "mobile") {
+      if (/^\d*$/.test(value) && value.length <= 10) {
+        setfd((prevFd) => ({ ...prevFd, [id]: value }));
+      }
+      return;
+    }
+    if (id === "email") {
+      setfd((prevFd) => ({ ...prevFd, [id]: value }));
+      return;
+    }
+    setfd((prevFd) => ({ ...prevFd, [id]: value.toUpperCase() }));
   };
 
   const onDrop = (acceptedFile: File) => {

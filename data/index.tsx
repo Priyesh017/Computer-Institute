@@ -171,6 +171,10 @@ export const navMain = [
         title: "Subject Entry",
         url: "/admin/subjectentry",
       },
+      {
+        title: "All Subjects",
+        url: "/admin/allsubjects",
+      },
     ],
   },
   {

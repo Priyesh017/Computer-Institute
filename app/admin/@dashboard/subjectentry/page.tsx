@@ -96,7 +96,7 @@ const SubjectEntry = () => {
 
       if (data.success) toast("Subjects added successfully!");
     } catch (error) {
-      console.error(error);
+      console.log(error);
     } finally {
       setLoading(false);
     }

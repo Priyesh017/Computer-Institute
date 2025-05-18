@@ -203,54 +203,61 @@ const EnrollmentList = () => {
         <span>Generate</span>
       </div>
 
-      {filteredEnrollment.map((enrollment) => (
-        <div
-          key={enrollment.EnrollmentNo}
-          className="grid md:grid-cols-8 items-center text-center py-3 border-b"
-        >
+      {filteredEnrollment.map((enrollment) => {
+        const remc = 6 - Math.abs(enrollment.centerid).toString().length;
+        const paddedNumberc = enrollment.centerid
+          .toString()
+          .padStart(remc, "0");
+
+        return (
           <div
-            onClick={() => {
-              setSelectedEnrollment(enrollment);
-            }}
-            className="hover:text-red-600 cursor-pointer"
+            key={enrollment.EnrollmentNo}
+            className="grid md:grid-cols-8 items-center text-center py-3 border-b"
           >
-            {enrollment.name}
+            <div
+              onClick={() => {
+                setSelectedEnrollment(enrollment);
+              }}
+              className="hover:text-red-600 cursor-pointer"
+            >
+              {enrollment.name}
+            </div>
+            <div>{enrollment.EnrollmentNo}</div>
+            <span>
+              {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
+            </span>
+            <span>
+              {enrollment.course.CName}
+              <br />
+              {`(${enrollment.course.Duration} months)`}
+            </span>
+            <span>{`YCTC${paddedNumberc}`}</span>
+            <div className="p-2 border rounded-md">{enrollment.status.val}</div>
+            <div className="flex items-center justify-center gap-2">
+              <Switch
+                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+                checked={enrollment.activated}
+                onCheckedChange={() => toggleActivation.mutate(enrollment)}
+              />
+            </div>
+            <Button
+              className={`mx-4 ${
+                enrollment.activated
+                  ? "bg-purple-600 hover:bg-purple-700"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+              onClick={() => generateHandler.mutate(enrollment.EnrollmentNo)}
+              disabled={!enrollment.activated}
+            >
+              Generate ID
+              {generateHandler.isPending &&
+                loading === enrollment.EnrollmentNo && (
+                  <Loader2 className="animate-spin" />
+                )}
+            </Button>
           </div>
-          <div>{enrollment.EnrollmentNo}</div>
-          <span>
-            {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
-          </span>
-          <span>
-            {enrollment.course.CName}
-            <br />
-            {`(${enrollment.course.Duration} months)`}
-          </span>
-          <span>{enrollment.centerid}</span>
-          <div className="p-2 border rounded-md">{enrollment.status.val}</div>
-          <div className="flex items-center justify-center gap-2">
-            <Switch
-              className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
-              checked={enrollment.activated}
-              onCheckedChange={() => toggleActivation.mutate(enrollment)}
-            />
-          </div>
-          <Button
-            className={`mx-4 ${
-              enrollment.activated
-                ? "bg-purple-600 hover:bg-purple-700"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
-            onClick={() => generateHandler.mutate(enrollment.EnrollmentNo)}
-            disabled={!enrollment.activated}
-          >
-            Generate ID
-            {generateHandler.isPending &&
-              loading === enrollment.EnrollmentNo && (
-                <Loader2 className="animate-spin" />
-              )}
-          </Button>
-        </div>
-      ))}
+        );
+      })}
       <Pagination className="mt-4">
         <PaginationContent>
           <PaginationItem>

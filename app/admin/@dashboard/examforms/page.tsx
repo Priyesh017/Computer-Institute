@@ -60,7 +60,11 @@ const ExamForm = () => {
       setloading(enrollment.id);
       return fetcherWc("/generateadmit", "POST", { enrollment });
     },
-    onSuccess: (data) => toast(data.success ? "Generated" : "Error"),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
+      queryClient.refetchQueries({ queryKey: ["enrollments", currentPage] });
+      toast(data.success ? "Generated" : "Error");
+    },
     onError: () => toast("Some error happened"),
     onSettled: () => setloading(null),
   });
@@ -106,49 +110,58 @@ const ExamForm = () => {
         <span>Generate Admit</span>
       </div>
 
-      {currentEnrollments.map((enrollment, index) => (
-        <div
-          key={enrollment.id}
-          className="grid md:grid-cols-8 items-center text-center text-gray-600 gap-2 font-bold py-3 border-b border-gray-500 hover:bg-blue-100"
-        >
-          <div className="">{enrollment.enrollment.name}</div>
-          <div>{enrollment.EnrollmentNo}</div>
-          <div>
-            {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
-          </div>
+      {currentEnrollments.map((enrollment, index) => {
+        const remc =
+          6 - Math.abs(enrollment.enrollment.centerid).toString().length;
+        const paddedNumberc = enrollment.enrollment.centerid
+          .toString()
+          .padStart(remc, "0");
 
-          <span>{enrollment.enrollment.centerid}</span>
-          <span>
-            {enrollment.enrollment.course.CName}
-
-            <br />
-            {`(${enrollment.enrollment.course.Duration} months)`}
-          </span>
-          <span>{enrollment.enrollment.status.val}</span>
-          <div className="flex items-center justify-center gap-2">
-            <Switch
-              id={`activation-${startIndex + index}`}
-              checked={enrollment.verified}
-              onCheckedChange={() => toggleActivation.mutate(enrollment)}
-              className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
-            />
-          </div>
-          <Button
-            className={`${
-              enrollment.verified
-                ? "bg-purple-600 hover:bg-purple-700"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
-            onClick={() => generateAdmit.mutate(enrollment)}
-            disabled={!enrollment.verified}
+        return (
+          <div
+            key={enrollment.id}
+            className="grid md:grid-cols-8 items-center text-center text-gray-600 gap-2 font-bold py-3 border-b border-gray-500 hover:bg-blue-100"
           >
-            Generate
-            {generateAdmit.isPending && loading == enrollment.id && (
-              <Loader2 className="animate-spin" />
-            )}
-          </Button>
-        </div>
-      ))}
+            <div className="">{enrollment.enrollment.name}</div>
+            <div>{enrollment.EnrollmentNo}</div>
+            <div>
+              {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
+            </div>
+
+            <span>{`YCTC${paddedNumberc}`}</span>
+            <span>
+              {enrollment.enrollment.course.CName}
+
+              <br />
+              {`(${enrollment.enrollment.course.Duration} months)`}
+            </span>
+            <span>{enrollment.enrollment.status.val}</span>
+            <div className="flex items-center justify-center gap-2">
+              <Switch
+                id={`activation-${startIndex + index}`}
+                checked={enrollment.verified}
+                onCheckedChange={() => toggleActivation.mutate(enrollment)}
+                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+              />
+            </div>
+            <Button
+              className={`mx-4 ${
+                enrollment.verified
+                  ? "bg-purple-600 hover:bg-purple-700"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+              onClick={() => generateAdmit.mutate(enrollment)}
+              disabled={!enrollment.verified}
+            >
+              Generate Admit
+              {generateAdmit.isPending && loading == enrollment.id && (
+                <Loader2 className="animate-spin" />
+              )}
+            </Button>
+          </div>
+        );
+      })}
+
 
       {/* Pagination */}
       <Pagination className="mt-4">

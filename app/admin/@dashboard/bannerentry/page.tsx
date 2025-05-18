@@ -23,10 +23,11 @@ export default function BannerInsertion() {
         const img = new Image();
         img.onload = () => {
           const aspectRatio = img.naturalWidth / img.naturalHeight;
-          console.log(aspectRatio);
+          if (aspectRatio >= 1.8 && aspectRatio <= 2.2) {
+            setImages((prev) => [...prev, { src, file }]);
+          } else toast.error("aspect ratio didn't matched");
         };
         img.src = src;
-        setImages((prev) => [...prev, { src, file }]);
       };
       reader.readAsDataURL(file);
     });
@@ -66,7 +67,7 @@ export default function BannerInsertion() {
       toast.success("successful");
       setImages([]);
     } catch (err) {
-      console.error(err);
+      console.log(err);
       setError("Something went wrong during upload.");
     } finally {
       setLoading(false);

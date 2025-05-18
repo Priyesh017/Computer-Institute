@@ -44,7 +44,7 @@ const socialLinks = [
   },
   {
     icon: FaWhatsapp,
-    url: "https://wa.me/918001063536",
+    url: "https://wa.me/918670468683",
     hoverColor: "hover:text-green-400",
   },
   {
@@ -126,10 +126,10 @@ export default function Home() {
         <div className="flex md:flex-row flex-col items-center justify-between gap-2 px-4 py-1 bg-purple-900 text-white text-sm">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-2">
-              <FaEnvelope className="text-yellow-500" /> info@nyctc.co.in
+              <FaEnvelope className="text-yellow-500" /> info@yctc.in
             </span>
             <span className="flex items-center gap-2">
-              <FaPhoneAlt className="text-yellow-500" /> +91 8001063536
+              <FaPhoneAlt className="text-yellow-500" /> +91 8670468683
             </span>
           </div>
           <div className="flex items-center gap-4 text-lg">

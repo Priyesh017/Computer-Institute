@@ -32,7 +32,7 @@ export default function LoginPage() {
     }
   }, [user, router]); // Runs only when `user` changes
 
-  const Role = utype === "center" ? "Branch Admin" : "Control Admin";
+  const Role = utype === "center" ? "Branch Admin" : "Central Admin";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
