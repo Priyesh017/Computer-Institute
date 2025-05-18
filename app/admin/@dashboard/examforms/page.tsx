@@ -107,7 +107,7 @@ const ExamForm = () => {
         <span>Course Name</span>
         <span>Status</span>
         <span>Approval</span>
-        <span>Generate</span>
+        <span>Generate Admit</span>
       </div>
 
       {currentEnrollments.map((enrollment, index) => {
@@ -161,6 +161,7 @@ const ExamForm = () => {
           </div>
         );
       })}
+
 
       {/* Pagination */}
       <Pagination className="mt-4">

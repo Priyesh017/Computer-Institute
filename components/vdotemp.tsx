@@ -78,12 +78,7 @@ const ReactPlyrExample = ({ src }: Props) => {
     };
   }, [src]);
 
-  return (
-    <video
-      ref={videoRef}
-      className=" w-full rounded-lg border-2 border-red-500"
-    />
-  );
+  return <video ref={videoRef} className=" w-full" />;
 };
 
 export default ReactPlyrExample;
