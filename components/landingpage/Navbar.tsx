@@ -6,9 +6,10 @@ import { menuItems } from "@/data";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore, usertype } from "@/store";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "../ui/button";
 
 const navLinks = (user: usertype | null) => [
-  //fixme
   { label: "Search Enrollment", href: "/certificate" },
   { label: "Franchise", href: "/enquiry" },
   {
@@ -30,13 +31,16 @@ export default function Navbar() {
     setUtype(e);
     router.push("/login");
   };
+
   const handleNav = (loginLink: { label: string }) => {
     setIsMenuOpen(false);
     if (loginLink.label === "Student Login") {
       router.push("/studentlogin");
     } else if (loginLink.label === "Central Admin Login") {
       onclickHandler("admin");
-    } else onclickHandler("center");
+    } else {
+      onclickHandler("center");
+    }
   };
 
   const scrollToSection = (id: string) => {
@@ -46,13 +50,13 @@ export default function Navbar() {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+    setIsMenuOpen(false);
   };
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 120);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -64,10 +68,10 @@ export default function Navbar() {
     <nav
       className={`${
         isScrolled ? "fixed top-0 shadow-lg" : "relative"
-      } w-full bg-purple-900 text-white font-semibold z-40 transition-all duration-300 ease-in-out px-4 pt-1 pb-1 md:pb-0 `}
+      } w-full bg-purple-900 text-white font-semibold z-40 transition-all duration-300 ease-in-out px-4 pt-1 pb-1 md:pb-0`}
     >
       {/* Toggle Button (Mobile Only) */}
-      <button
+      {/* <button
         onClick={() => setIsMenuOpen((prev) => !prev)}
         aria-label="Toggle Menu"
         className={`md:hidden w-full flex justify-end items-center text-2xl ${
@@ -75,49 +79,140 @@ export default function Navbar() {
         }`}
       >
         {isMenuOpen ? <FaTimes /> : <FaBars />}
-      </button>
+      </button> */}
 
-      {/* Combined Menu */}
-      <ul
-        className={`
-    ${
-      isMenuOpen
-        ? "fixed top-0 right-0 w-60 bg-white/70 backdrop-blur-lg rounded-lg p-4 mt-4 mx-2 space-y-4 text-center z-40 md:hidden"
-        : "hidden"
-    }
-    md:flex md:static md:flex-row md:justify-center md:items-center md:space-x-10 md:space-y-0 md:bg-transparent md:backdrop-blur-0 md:p-0 md:mt-0 text-lg transition-all
-  `}
-      >
-        {/* Home */}
-        <li
-          className={`${navLinkStyle} py-1 ${
-            isMenuOpen ? "" : "md:inline-block"
-          }`}
-          onClick={() => {
-            scrollToTop();
-            setIsMenuOpen(false);
-          }}
-        >
+      {/* ===================== Mobile Nav ===================== */}
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button className="md:hidden">
+            <FaBars />
+          </Button>
+        </SheetTrigger>
+        <SheetContent>
+          <li className={`${navLinkStyle} py-1`} onClick={scrollToTop}>
+            Home
+          </li>
+          {menuItems
+            .filter((item) => item.name !== "Home")
+            .map((item, index) => (
+              <li
+                key={index}
+                className={`${navLinkStyle} py-1`}
+                onClick={() => scrollToSection(item.name.toLowerCase())}
+              >
+                {item.name}
+              </li>
+            ))}
+
+          {navLinks(user).map((link, index) => (
+            <li key={index} className={`${navLinkStyle} py-1`}>
+              {!link.isLogin ? (
+                <Link
+                  href={link.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="transition hover:opacity-80 block"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <>
+                  <button className="transition hover:opacity-80">
+                    {link.label}
+                  </button>
+                  <ul className="space-y-2 mt-2">
+                    {[
+                      "Central Admin Login",
+                      "Branch Admin Login",
+                      "Student Login",
+                    ].map((label, i) => (
+                      <li key={i}>
+                        <button
+                          onClick={() => handleNav({ label })}
+                          className={`${navLinkStyle} block py-1`}
+                        >
+                          {label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </li>
+          ))}
+        </SheetContent>
+      </Sheet>
+      {/* {isMenuOpen && (
+        <ul className="fixed top-0 right-0 w-60 bg-white/70 backdrop-blur-lg rounded-lg p-4 mt-4 mx-2 space-y-4 text-center z-40 md:hidden text-lg">
+          <li className={`${navLinkStyle} py-1`} onClick={scrollToTop}>
+            Home
+          </li>
+          {menuItems
+            .filter((item) => item.name !== "Home")
+            .map((item, index) => (
+              <li
+                key={index}
+                className={`${navLinkStyle} py-1`}
+                onClick={() => scrollToSection(item.name.toLowerCase())}
+              >
+                {item.name}
+              </li>
+            ))}
+
+          {navLinks(user).map((link, index) => (
+            <li key={index} className={`${navLinkStyle} py-1`}>
+              {!link.isLogin ? (
+                <Link
+                  href={link.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="transition hover:opacity-80 block"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <>
+                  <button className="transition hover:opacity-80">
+                    {link.label}
+                  </button>
+                  <ul className="space-y-2 mt-2">
+                    {[
+                      "Central Admin Login",
+                      "Branch Admin Login",
+                      "Student Login",
+                    ].map((label, i) => (
+                      <li key={i}>
+                        <button
+                          onClick={() => handleNav({ label })}
+                          className={`${navLinkStyle} block py-1`}
+                        >
+                          {label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </li>
+          ))}
+        </ul>
+      )} */}
+
+      {/* ===================== Desktop Nav ===================== */}
+      <ul className="hidden md:flex md:flex-row md:justify-center md:items-center md:space-x-10 text-lg">
+        <li className={`${navLinkStyle} py-1`} onClick={scrollToTop}>
           Home
         </li>
-
-        {/* Dynamic Menu Items */}
         {menuItems
           .filter((item) => item.name !== "Home")
           .map((item, index) => (
             <li
               key={index}
               className={`${navLinkStyle} py-1`}
-              onClick={() => {
-                scrollToSection(item.name.toLowerCase());
-                setIsMenuOpen(false);
-              }}
+              onClick={() => scrollToSection(item.name.toLowerCase())}
             >
               {item.name}
             </li>
           ))}
 
-        {/* Auth & Other Links */}
         {navLinks(user).map((link, index) => (
           <li
             key={index}
@@ -126,38 +221,27 @@ export default function Navbar() {
             onMouseLeave={() => link.isLogin && setHoveredLogin(false)}
           >
             {!link.isLogin ? (
-              <Link
-                href={link.href}
-                onClick={() => setIsMenuOpen(false)}
-                className={`transition hover:opacity-80 ${
-                  isMenuOpen ? "block" : "md:inline-block"
-                }`}
-              >
+              <Link href={link.href} className="transition hover:opacity-80">
                 {link.label}
               </Link>
             ) : (
               <>
-                <button
-                  className={`${navLinkStyle} transition hover:opacity-80 ${
-                    isMenuOpen ? "block" : "md:inline-block"
-                  }`}
-                >
+                <button className="transition hover:opacity-80">
                   {link.label}
                 </button>
-
                 {hoveredLogin && (
                   <ul className="absolute left-1/2 -translate-x-1/2 top-full w-52 bg-purple-900 text-white shadow-lg z-50 text-center">
                     {[
-                      { label: "Central Admin Login" },
-                      { label: "Branch Admin Login" },
-                      { label: "Student Login" },
-                    ].map((loginLink, i) => (
+                      "Central Admin Login",
+                      "Branch Admin Login",
+                      "Student Login",
+                    ].map((label, i) => (
                       <li key={i}>
                         <button
-                          onClick={() => handleNav(loginLink)}
+                          onClick={() => handleNav({ label })}
                           className={`${navLinkStyle} w-fit mx-auto py-1`}
                         >
-                          {loginLink.label}
+                          {label}
                         </button>
                       </li>
                     ))}
