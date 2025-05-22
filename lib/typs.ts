@@ -143,7 +143,7 @@ export type MarksWithEnrollment = {
     center: {
       Centername: string;
       address: string;
-      code: string;
+      code: number;
     };
   };
 };

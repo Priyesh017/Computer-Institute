@@ -26,7 +26,7 @@ export function useAuth() {
           login(user);
         }
       } catch (err) {
-        console.error("Login check failed:", err);
+        console.log("Login check failed:", err);
         router.push("/login");
       } finally {
         setLoading(false);

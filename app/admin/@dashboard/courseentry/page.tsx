@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { fetcherWc } from "@/helper";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -19,6 +20,7 @@ export default function CourseEntryForm() {
     price: "",
   });
   const [loading, setloading] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,6 +39,7 @@ export default function CourseEntryForm() {
       if (success) {
         setForm({ courseName: "", duration: "", price: "" });
         toast.success("successfully added");
+        queryClient.invalidateQueries({ queryKey: ["AllCourses"] });
       }
     } catch (error) {
       console.log(error);
