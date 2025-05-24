@@ -153,7 +153,7 @@ const ExamForm = () => {
               onClick={() => generateAdmit.mutate(enrollment)}
               disabled={!enrollment.verified}
             >
-              Generate Admit
+              Generate
               {generateAdmit.isPending && loading == enrollment.id && (
                 <Loader2 className="animate-spin" />
               )}
@@ -161,7 +161,6 @@ const ExamForm = () => {
           </div>
         );
       })}
-
 
       {/* Pagination */}
       <Pagination className="mt-4">
