@@ -250,10 +250,9 @@ const Marksheet = () => {
         <div className="flex flex-col">
           <label className="text-sm font-medium mb-1">Date Of Publishing</label>
           <input
-            type="text"
+            type="date"
             onChange={(e) => setdop(e.target.value)}
             value={dop}
-            placeholder="dd/mm/yyyy"
             className="p-2 h-10 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-violet-500 focus:outline-none"
           />
         </div>
@@ -287,6 +286,7 @@ const Marksheet = () => {
                 pattern={items.pattern}
                 placeholder={items.placeholder}
                 value={item[items.name as keyof Subject] || ""}
+                onWheel={(e) => e.currentTarget.blur()}
                 onChange={(e) => {
                   const value = e.target.value;
 
