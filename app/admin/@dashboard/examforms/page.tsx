@@ -169,10 +169,12 @@ const ExamForm = () => {
             <PaginationPrevious
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               isActive={currentPage !== 1}
+              className="cursor-pointer"
             />
           </PaginationItem>
           <PaginationItem>
             <PaginationNext
+              className="cursor-pointer"
               onClick={() =>
                 setCurrentPage((prev) =>
                   startIndex + PAGE_SIZE < exmforms.length ? prev + 1 : prev

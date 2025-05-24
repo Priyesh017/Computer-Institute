@@ -220,6 +220,7 @@ const ExamForm = () => {
             <PaginationPrevious
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               isActive={currentPage !== 1}
+              className="cursor-pointer"
             />
           </PaginationItem>
           <PaginationItem>
@@ -229,6 +230,7 @@ const ExamForm = () => {
                   startIndex + PAGE_SIZE < enrollments.length ? prev + 1 : prev
                 )
               }
+              className="cursor-pointer"
               isActive={startIndex + PAGE_SIZE < enrollments.length}
             />
           </PaginationItem>
