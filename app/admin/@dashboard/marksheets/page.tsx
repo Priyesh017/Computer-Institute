@@ -1,14 +1,12 @@
 "use client";
 import { Loader2, X, Pen, Eye } from "lucide-react";
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
-} from "@/components/ui/pagination";
+  useMutation,
+  useQueryClient,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
+
 import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "react-toastify";
@@ -18,10 +16,7 @@ import StudentReportCard from "@/components/StudentReportCard";
 import { MarksWithEnrollment } from "@/lib/typs";
 import Loader from "@/components/Loader";
 
-const PAGE_SIZE = 5;
-
-const ExamForm = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+const Marksheet = () => {
   const [loadingType, setLoadingType] = useState<
     "marksheet" | "certificate" | null
   >(null);
@@ -34,20 +29,44 @@ const ExamForm = () => {
   const [editable, setEditable] = useState(false);
   const queryClient = useQueryClient();
 
-  // Fetch enrollments using React Query
-  const { data: enrollments = [], isLoading } = useQuery<MarksWithEnrollment[]>(
-    {
-      queryKey: ["marksheets"],
-      queryFn: async () => {
-        const res = await fetcherWc("/marksheetfetch", "GET");
-        return res.data || [];
-      },
-      staleTime: 1000 * 60 * 5, // Cache for 5 minutes
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    }
-  );
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+  } = useInfiniteQuery<{
+    enrollments: MarksWithEnrollment[];
+    nextCursor: number;
+  }>({
+    queryKey: ["marksheets"],
+    queryFn: ({ pageParam }) =>
+      fetcherWc(`/marksheetfetch?cursor=${pageParam ?? ""}&limit=5`, "GET"),
+    getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
+    initialPageParam: null,
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+
+  const loaderRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) fetchNextPage();
+    });
+
+    const node = loaderRef.current;
+    if (node) observer.observe(node);
+
+    return () => {
+      if (node) observer.unobserve(node);
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   // Approve/Disapprove mutation
   const toggleMutation = useMutation({
@@ -92,27 +111,12 @@ const ExamForm = () => {
     onSuccess: () => {
       toast.success("Generated successfully");
       setLoadingType(null);
-      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
-      queryClient.refetchQueries({ queryKey: ["enrollments", currentPage] });
     },
     onError: () => {
       toast.error("Generation failed");
       setLoadingType(null);
     },
   });
-
-  const filteredEnrollment = enrollments.filter((enrollment) =>
-    enrollment.enrollment.center.code
-      .toString()
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
-
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const currentEnrollments = filteredEnrollment.slice(
-    startIndex,
-    startIndex + PAGE_SIZE
-  );
 
   const updateHandler = async () => {
     setEditable(false);
@@ -130,6 +134,8 @@ const ExamForm = () => {
 
     toast(data.success ? "success" : "failed");
   };
+  if (isLoading) return <Loader />;
+  if (isError) return <p>Error loading data</p>;
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4">
@@ -156,10 +162,8 @@ const ExamForm = () => {
       </div>
 
       {/* Table Data */}
-      {isLoading ? (
-        <Loader />
-      ) : (
-        currentEnrollments.map((d) => {
+      {data?.pages.map((page) =>
+        page.enrollments.map((d) => {
           const remc = 6 - Math.abs(d.enrollment.center.code).toString().length;
           const paddedNumberc = d.enrollment.center.code
             .toString()
@@ -212,30 +216,6 @@ const ExamForm = () => {
           );
         })
       )}
-
-      {/* Pagination */}
-      <Pagination className="mt-4">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              isActive={currentPage !== 1}
-              className="cursor-pointer"
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              onClick={() =>
-                setCurrentPage((prev) =>
-                  startIndex + PAGE_SIZE < enrollments.length ? prev + 1 : prev
-                )
-              }
-              className="cursor-pointer"
-              isActive={startIndex + PAGE_SIZE < enrollments.length}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
 
       {/* Fullscreen Modal */}
       {isModalOpen && selectedEnrollment && (
@@ -328,8 +308,16 @@ const ExamForm = () => {
           </div>
         </div>
       )}
+
+      <div
+        ref={loaderRef}
+        className="text-center text-sm p-4 text-gray-500 w-full flex justify-center"
+      >
+        {isFetchingNextPage && <Loader2 className="animate-spin" />}
+        {!hasNextPage && "Nothing to show"}
+      </div>
     </div>
   );
 };
 
-export default ExamForm;
+export default Marksheet;

@@ -1,14 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
-} from "@/components/ui/pagination";
+  useMutation,
+  useQueryClient,
+  useInfiniteQuery,
+  InfiniteData,
+} from "@tanstack/react-query";
+
 import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "react-toastify";
@@ -25,11 +24,14 @@ import { EnrollmentDetails } from "@/components/enrollmentdatashow";
 import { Enrollmenttype } from "@/lib/typs";
 import Loader from "@/components/Loader";
 import { Loader2, UserPen, X } from "lucide-react";
+import { motion } from "framer-motion";
 
-const PAGE_SIZE = 5;
+export interface etype {
+  enrollments: Enrollmenttype[];
+  nextCursor: number;
+}
 
 const EnrollmentList = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("All");
   const [selectedEnrollment, setSelectedEnrollment] =
@@ -41,28 +43,46 @@ const EnrollmentList = () => {
 
   const [formData, setFormData] = useState<Enrollmenttype | null>(null);
 
-  interface etype {
-    enrollments: Enrollmenttype[];
-    total: number;
-  }
+  const loaderRef = useRef<HTMLDivElement>(null);
 
-  const iv = [["enrollments", currentPage], ["exmforms"], ["marksheets"]];
+  const iv = [["enrollments"], ["exmforms"], ["marksheets"]];
   useEffect(() => {
     if (selectedEnrollment) setFormData(selectedEnrollment);
   }, [selectedEnrollment]);
 
-  const { data, isLoading, isError } = useQuery<etype>({
-    queryKey: ["enrollments", currentPage],
-    queryFn: () =>
-      fetcherWc(
-        `/AllEnrollments?page=${currentPage}&limit=${PAGE_SIZE}`,
-        "GET"
-      ),
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+  } = useInfiniteQuery<etype>({
+    queryKey: ["enrollments"],
+    queryFn: ({ pageParam }) =>
+      fetcherWc(`/AllEnrollments?cursor=${pageParam ?? ""}&limit=5`, "GET"),
+    getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
+    initialPageParam: null,
     staleTime: 1000 * 60 * 5,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
+
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) fetchNextPage();
+    });
+
+    const node = loaderRef.current;
+    if (node) observer.observe(node);
+
+    return () => {
+      if (node) observer.unobserve(node);
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const toggleActivation = useMutation({
     mutationFn: async (enrollment: Enrollmenttype) => {
@@ -73,8 +93,25 @@ const EnrollmentList = () => {
         EnrollmentNo: enrollment.EnrollmentNo,
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
+    onSuccess: (_, enrollment) => {
+      queryClient.setQueryData(
+        ["enrollments"],
+        (oldData: InfiniteData<etype>) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              enrollments: page.enrollments.map((item) =>
+                item.EnrollmentNo === enrollment.EnrollmentNo
+                  ? { ...item, activated: !item.activated }
+                  : item
+              ),
+            })),
+          };
+        }
+      );
       toast("Success");
     },
     onError: () => toast("Some error happened"),
@@ -91,7 +128,6 @@ const EnrollmentList = () => {
       toast(
         data.success ? "ID generated successfully" : "ID generation failed"
       );
-      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
       setloading(null);
     },
 
@@ -135,7 +171,7 @@ const EnrollmentList = () => {
         EnrollmentNo: selectedEnrollment!.EnrollmentNo,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
+      queryClient.invalidateQueries({ queryKey: ["enrollments"] });
       toast("Success");
     },
     onError: () => toast("Some error happened"),
@@ -151,19 +187,20 @@ const EnrollmentList = () => {
     deletehandler.mutate();
   }, [deletehandler, selectedEnrollment]);
 
-  if (isLoading) return <Loader />;
+  if (isLoading || !data) return <Loader />;
   if (isError) return <p>Error loading data</p>;
 
-  const filteredEnrollment = data!.enrollments.filter((enrollment) => {
-    return (
-      enrollment.centerid
-        .toString()
-        .toLowerCase()
-        .includes(search.toLowerCase()) &&
-      (filterStatus === "All" ||
-        enrollment.status.val.toLowerCase() === filterStatus.toLowerCase())
-    );
-  });
+  const filteredEnrollment = data.pages.flatMap((page) =>
+    page.enrollments.filter(
+      (enrollment) =>
+        enrollment.centerid
+          .toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()) &&
+        (filterStatus === "All" ||
+          enrollment.status.val.toLowerCase() === filterStatus.toLowerCase())
+    )
+  );
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4">
@@ -174,7 +211,15 @@ const EnrollmentList = () => {
             {filterStatus}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {["All", "Pending", "PassOut"].map((option) => (
+            {[
+              "All",
+              "Pending",
+              "Enrollment Done",
+              "Enrollment Verified",
+              "Exam Form Verified",
+              "Marksheet Verified",
+              "PassOut",
+            ].map((option) => (
               <DropdownMenuItem
                 key={option}
                 onClick={() => setFilterStatus(option)}
@@ -258,29 +303,15 @@ const EnrollmentList = () => {
           </div>
         );
       })}
-      <Pagination className="mt-4">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              className="cursor-pointer"
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              className="cursor-pointer"
-              onClick={() =>
-                setCurrentPage((prev) =>
-                  prev * PAGE_SIZE < data!.total ? prev + 1 : prev
-                )
-              }
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+
       {selectedEnrollment && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="relative bg-white rounded-xl">
+        <motion.div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <motion.div
+            className="relative bg-white rounded-xl"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
             <div className="absolute top-5 right-4 flex items-center gap-1">
               <button
                 className="p-2 hover:text-red-600 hover:bg-gray-300 rounded-full"
@@ -306,9 +337,17 @@ const EnrollmentList = () => {
               setFormData={setFormData}
               formData={formData}
             />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
+
+      <div
+        ref={loaderRef}
+        className="text-center text-sm p-4 text-gray-500 w-full flex justify-center"
+      >
+        {isFetchingNextPage && <Loader2 className="animate-spin" />}
+        {!hasNextPage && "Nothing to show"}
+      </div>
     </div>
   );
 };

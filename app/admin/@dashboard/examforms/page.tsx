@@ -1,14 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
-} from "@/components/ui/pagination";
+  useMutation,
+  useQueryClient,
+  useInfiniteQuery,
+} from "@tanstack/react-query";
+
 import { fetcherWc } from "@/helper";
 import { Switch } from "@/components/ui/switch";
 import { Loader2 } from "lucide-react";
@@ -18,26 +16,46 @@ import { Input } from "@/components/ui/input";
 import { DataItem } from "@/lib/typs";
 import Loader from "@/components/Loader";
 
-const PAGE_SIZE = 5;
-
 const ExamForm = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
   const queryClient = useQueryClient();
   const [loading, setloading] = useState<number | null>(null);
 
   const {
-    data: exmforms = [],
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     isLoading,
     isError,
-  } = useQuery<DataItem[]>({
-    queryKey: ["exmforms"],
-    queryFn: () => fetcherWc("/exmformsfetch", "GET"),
+  } = useInfiniteQuery<{ enrollments: DataItem[]; nextCursor: number }>({
+    queryKey: ["examforms"],
+    queryFn: ({ pageParam }) =>
+      fetcherWc(`/exmformsfetch?cursor=${pageParam ?? ""}&limit=5`, "GET"),
+    getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
+    initialPageParam: null,
     staleTime: 1000 * 60 * 5,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
+
+  const loaderRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) fetchNextPage();
+    });
+
+    const node = loaderRef.current;
+    if (node) observer.observe(node);
+
+    return () => {
+      if (node) observer.unobserve(node);
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   // Mutation for approving/disapproving
   const toggleActivation = useMutation({
@@ -60,10 +78,8 @@ const ExamForm = () => {
       setloading(enrollment.id);
       return fetcherWc("/generateadmit", "POST", { enrollment });
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["enrollments", currentPage] });
-      queryClient.refetchQueries({ queryKey: ["enrollments", currentPage] });
-      toast(data.success ? "Generated" : "Error");
+    onSuccess: () => {
+      toast("Generated");
     },
     onError: () => toast("Some error happened"),
     onSettled: () => setloading(null),
@@ -71,20 +87,6 @@ const ExamForm = () => {
 
   if (isLoading) return <Loader />;
   if (isError) return <p>Error loading data</p>;
-
-  // Filter and paginate data
-  const filteredEnrollment = exmforms.filter(
-    (e) =>
-      e.enrollment.centerid
-        .toString()
-        .toLowerCase()
-        .includes(search.toLowerCase()) // replace the EnrollmentNo with the Branch ID
-  );
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const currentEnrollments = filteredEnrollment.slice(
-    startIndex,
-    startIndex + PAGE_SIZE
-  );
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4">
@@ -109,84 +111,67 @@ const ExamForm = () => {
         <span>Approval</span>
         <span>Generate Admit</span>
       </div>
+      {data?.pages.map((page) =>
+        page.enrollments.map((enrollment, index) => {
+          const remc =
+            6 - Math.abs(enrollment.enrollment.centerid).toString().length;
+          const paddedNumberc = enrollment.enrollment.centerid
+            .toString()
+            .padStart(remc, "0");
 
-      {currentEnrollments.map((enrollment, index) => {
-        const remc =
-          6 - Math.abs(enrollment.enrollment.centerid).toString().length;
-        const paddedNumberc = enrollment.enrollment.centerid
-          .toString()
-          .padStart(remc, "0");
-
-        return (
-          <div
-            key={enrollment.id}
-            className="grid md:grid-cols-8 items-center text-center text-gray-600 gap-2 font-bold py-3 border-b border-gray-500 hover:bg-blue-100"
-          >
-            <div className="">{enrollment.enrollment.name}</div>
-            <div>{enrollment.EnrollmentNo}</div>
-            <div>
-              {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
-            </div>
-
-            <span>{`YCTC${paddedNumberc}`}</span>
-            <span>
-              {enrollment.enrollment.course.CName}
-
-              <br />
-              {`(${enrollment.enrollment.course.Duration} months)`}
-            </span>
-            <span>{enrollment.enrollment.status.val}</span>
-            <div className="flex items-center justify-center gap-2">
-              <Switch
-                id={`activation-${startIndex + index}`}
-                checked={enrollment.verified}
-                onCheckedChange={() => toggleActivation.mutate(enrollment)}
-                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
-              />
-            </div>
-            <Button
-              className={`mx-4 ${
-                enrollment.verified
-                  ? "bg-purple-600 hover:bg-purple-700"
-                  : "bg-gray-400 cursor-not-allowed"
-              }`}
-              onClick={() => generateAdmit.mutate(enrollment)}
-              disabled={!enrollment.verified}
+          return (
+            <div
+              key={enrollment.id}
+              className="grid md:grid-cols-8 items-center text-center text-gray-600 gap-2 font-bold py-3 border-b border-gray-500 hover:bg-blue-100"
             >
-              Generate
-              {generateAdmit.isPending && loading == enrollment.id && (
-                <Loader2 className="animate-spin" />
-              )}
-            </Button>
-          </div>
-        );
-      })}
+              <div className="">{enrollment.enrollment.name}</div>
+              <div>{enrollment.EnrollmentNo}</div>
+              <div>
+                {new Date(enrollment.createdAt).toLocaleDateString("en-GB")}
+              </div>
 
-      {/* Pagination */}
-      <Pagination className="mt-4">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              isActive={currentPage !== 1}
-              className="cursor-pointer"
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              className="cursor-pointer"
-              onClick={() =>
-                setCurrentPage((prev) =>
-                  startIndex + PAGE_SIZE < exmforms.length ? prev + 1 : prev
-                )
-              }
-              isActive={startIndex + PAGE_SIZE < exmforms.length}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+              <span>{`YCTC${paddedNumberc}`}</span>
+              <span>
+                {enrollment.enrollment.course.CName}
 
-      {/* Fullscreen Modal */}
+                <br />
+                {`(${enrollment.enrollment.course.Duration} months)`}
+              </span>
+              <span>{enrollment.enrollment.status.val}</span>
+              <div className="flex items-center justify-center gap-2">
+                <Switch
+                  id={`activation-${index}`}
+                  checked={enrollment.verified}
+                  onCheckedChange={() => toggleActivation.mutate(enrollment)}
+                  className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+                />
+              </div>
+              <Button
+                className={`mx-4 ${
+                  enrollment.verified
+                    ? "bg-purple-600 hover:bg-purple-700"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
+                onClick={() => generateAdmit.mutate(enrollment)}
+                disabled={!enrollment.verified}
+              >
+                Generate
+                {generateAdmit.isPending && loading == enrollment.id && (
+                  <Loader2 className="animate-spin" />
+                )}
+              </Button>
+            </div>
+          );
+        })
+      )}
+
+      <div
+        ref={loaderRef}
+        className="text-center text-sm p-4 text-gray-500 w-full flex justify-center"
+      >
+        {isFetchingNextPage && <Loader2 className="animate-spin" />}
+        {!hasNextPage && "Nothing to show"}
+      </div>
     </div>
   );
 };
