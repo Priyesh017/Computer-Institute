@@ -39,12 +39,13 @@ A robust and user-friendly management system designed for efficiently operating 
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/computer-center-management.git
-cd computer-center-management
+git clone https://github.com/Mainak908/Computer-Institute.git
+cd Computer-Institute
 
 # Install backend dependencies
 npm install
-
+# build Prisma Client
+npx prisma generate
 # Setup environment variables
 cp .env.example .env
 # Fill in DB credentials, JWT secrets, etc.
