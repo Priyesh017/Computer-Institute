@@ -5,7 +5,7 @@ A robust and user-friendly management system designed for efficiently operating 
 ![Tech Stack](https://img.shields.io/badge/Backend-Node.js-green?style=flat-square)
 ![Database](https://img.shields.io/badge/Database-PostgreSQL-blue?style=flat-square)
 ![Framework](https://img.shields.io/badge/Web%20Framework-Express.js-yellow?style=flat-square)
-![License](https://img.shields.io/github/license/your-username/computer-center-management)
+![License](https://img.shields.io/github/license/mainak908/computer-center-management)
 
 ---
 
@@ -25,13 +25,13 @@ A robust and user-friendly management system designed for efficiently operating 
 
 | Layer        | Technology           |
 |--------------|----------------------|
-| **Frontend** | React.js / Next.js *(optional)* |
+| **Frontend** |  Next.js  |
 | **Backend**  | Node.js, Express.js  |
-| **Database** | PostgreSQL / MongoDB |
+| **Database** | PostgreSQL ,Redis |
 | **Auth**     | JWT + Bcrypt         |
-| **ORM**      | Prisma / Mongoose    |
-| **UI Kit**   | TailwindCSS / Bootstrap |
-| **Notifications** | Nodemailer        |
+| **ORM**      | Prisma     |
+| **UI Kit**   | TailwindCSS  |
+| **Notifications** | Resend        |
 
 ---
 
