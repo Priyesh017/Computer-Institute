@@ -1,6 +1,7 @@
 # 💻 Computer Center Management System
 
-A robust and user-friendly management system designed for efficiently operating a computer center. This system handles user registrations, session management, system bookings, usage tracking, and more — all from a centralized dashboard.
+A robust and user-friendly management system designed for efficiently operating a computer center.  where branch admin can enrollment students ,fillup admits, exam forms and central admin can verify those details.
+Central admin can generate admits, marksheet, Certificates and upload educational videos which are automatically transcoded for optimized streaming across devices. There is also a student portal where students can view their id, marksheet , certificate and all their profile details.
 
 ![Tech Stack](https://img.shields.io/badge/Backend-Node.js-green?style=flat-square)
 ![Database](https://img.shields.io/badge/Database-PostgreSQL-blue?style=flat-square)
