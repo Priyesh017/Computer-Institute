@@ -6,7 +6,7 @@ Central admin can generate admits, marksheet, Certificates and upload educationa
 ![Tech Stack](https://img.shields.io/badge/Backend-Node.js-green?style=flat-square)
 ![Database](https://img.shields.io/badge/Database-PostgreSQL-blue?style=flat-square)
 ![Framework](https://img.shields.io/badge/Web%20Framework-Express.js-yellow?style=flat-square)
-![License](https://img.shields.io/github/license/Mainak908/Computer-Institute)
+![License](https://img.shields.io/github/license/Mainak908/Computer-Institute_frontend)
 
 ---
 
@@ -40,16 +40,14 @@ Central admin can generate admits, marksheet, Certificates and upload educationa
 
 ```bash
 # Clone the repository
-git clone https://github.com/Mainak908/Computer-Institute.git
+git clone https://github.com/Mainak908/Computer-Institute_frontend.git
 cd Computer-Institute
 
-# Install backend dependencies
+# Install frontend dependencies
 npm install
-# build Prisma Client
-npx prisma generate
+
 # Setup environment variables
 cp .env.example .env
-# Fill in DB credentials, JWT secrets, etc.
 
-# Run the server
+# Run the frontend
 npm run dev
