@@ -64,7 +64,6 @@ const EnrollmentList = () => {
     getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
     initialPageParam: null,
     staleTime: 1000 * 60 * 5,
-    refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
