@@ -63,7 +63,7 @@ const EnrollmentList = () => {
       fetcherWc(`/AllEnrollments?cursor=${pageParam ?? ""}&limit=5`, "GET"),
     getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
     initialPageParam: null,
-    staleTime: 1000 * 60 * 5,
+
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

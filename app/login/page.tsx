@@ -43,8 +43,6 @@ export default function LoginPage() {
         password: fd.password,
       });
 
-      setLoader(false);
-
       if (data.message === "Login successful") {
         if (data.user.role.toLowerCase() !== utype) {
           toast(`u r not authorised`);
@@ -59,6 +57,8 @@ export default function LoginPage() {
     } catch (error) {
       console.log(error);
       toast("some error happened");
+    } finally {
+      setLoader(false);
     }
   }
 
@@ -161,7 +161,7 @@ export default function LoginPage() {
             disabled={loader}
           >
             Login
-            {loading && <Loader2 className="animate-spin" />}
+            {loader && <Loader2 className="animate-spin" />}
           </Button>
         </form>
       </div>
