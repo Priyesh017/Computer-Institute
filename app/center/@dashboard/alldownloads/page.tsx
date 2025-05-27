@@ -19,7 +19,7 @@ import ProgressBar from "@/components/ProgressBar";
 import { Input } from "@/components/ui/input";
 
 import { EnrollmentDetails } from "@/components/exmformdetails";
-import { etype } from "../enrollments/page";
+import { etype } from "@/app/admin/@dashboard/enrollments/page";
 
 const Downloads = () => {
   const [selectedEnrollment, setSelectedEnrollment] =

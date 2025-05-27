@@ -61,6 +61,7 @@ const Downloads = ({ enrollment }: { enrollment: Enrollmenttype }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-lg">
         {downloadItems.map(
           (item) =>
+            item.file &&
             item.file !== "notavl" &&
             item.access.includes(Utype) && (
               <motion.a

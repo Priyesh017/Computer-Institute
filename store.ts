@@ -4,7 +4,7 @@ import { create } from "zustand";
 export interface usertype {
   name: string;
   email: string;
-  role: "CENTER" | "ADMIN";
+  role: "CENTER" | "ADMIN" | "STUDENT";
   avatar: "";
 }
 

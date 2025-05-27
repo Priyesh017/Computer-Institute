@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { fetcher, fetcherWc } from "@/helper";
 import { useAuthStore } from "@/store";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { FaArrowLeft } from "react-icons/fa6";
 import Modal from "@/components/Modal";
@@ -12,7 +12,7 @@ import { Loader2 } from "lucide-react";
 import OtpModal from "@/components/otp_enter";
 
 export default function LoginPage() {
-  const { utype, user, login } = useAuthStore();
+  const { utype, login } = useAuthStore();
   const router = useRouter();
   const [toggle, setToggle] = useState(false);
   const [fd, setfd] = useState({
@@ -24,13 +24,6 @@ export default function LoginPage() {
   const [loader, setLoader] = useState(false);
   const [loading, setloading] = useState(false);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (user) {
-      router.push("/admin");
-      return;
-    }
-  }, [user, router]); // Runs only when `user` changes
 
   const Role = utype === "center" ? "Branch Admin" : "Central Admin";
 
@@ -50,7 +43,7 @@ export default function LoginPage() {
         }
         login(data.user);
         toast("Login Successfully");
-        router.push("/admin");
+        router.push(utype === "admin" ? "/admin" : "/center");
       } else if (data.message === "enabled") {
         setOpen(true);
       }

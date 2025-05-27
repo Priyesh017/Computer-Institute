@@ -4,13 +4,22 @@ import { motion } from "framer-motion";
 import anime from "animejs";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { useAuthStore } from "@/store";
 import { StudentProfileProps } from "@/lib/typs";
+import { useQuery } from "@tanstack/react-query";
+import { fetcherWc } from "@/helper";
+import Loader from "@/components/Loader";
 
 const StudentProfile: React.FC = () => {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const student = useAuthStore().user as unknown as StudentProfileProps;
+  const {
+    data: student,
+    isError,
+    isLoading,
+  } = useQuery<StudentProfileProps>({
+    queryKey: ["StudentData"],
+    queryFn: () => fetcherWc("/studentData", "GET"),
+  });
 
   useEffect(() => {
     anime({
@@ -21,8 +30,9 @@ const StudentProfile: React.FC = () => {
       easing: "easeOutExpo",
     });
   }, []);
+  if (isLoading) return <Loader />;
 
-  if (!student) {
+  if (isError || !student) {
     return (
       <p className="relative top-1/2 text-center text-red-500 ">
         Student data is not available.
