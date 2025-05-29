@@ -49,7 +49,7 @@ export default function OtpModal({
           }
           login(data.user);
           toast("Login Successfully");
-          router.push("/admin");
+          router.push(utype === "admin" ? "/admin" : "/center");
         } else toast.error("error happened");
       } catch (error) {
         toast.error("error block happened");

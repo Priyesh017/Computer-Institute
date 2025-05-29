@@ -1,13 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
-} from "@/components/ui/pagination";
+import { useEffect, useRef, useState } from "react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,21 +9,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { fetcherWc } from "@/helper";
-import { X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 import AllDownloads from "@/components/studentdashboard/Downloads";
 import { Enrollmenttype } from "@/lib/typs";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
 import ProgressBar from "@/components/ProgressBar";
 import { Input } from "@/components/ui/input";
 
 import { EnrollmentDetails } from "@/components/exmformdetails";
+import { etype } from "@/app/admin/@dashboard/enrollments/page";
 
-const PAGE_SIZE = 5;
-
-const ExamForm = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+const Downloads = () => {
   const [selectedEnrollment, setSelectedEnrollment] =
     useState<Enrollmenttype | null>(null);
   const [selectedexmform, setselectedexmform] = useState<Enrollmenttype | null>(
@@ -40,58 +32,55 @@ const ExamForm = () => {
   const [filterStatus, setFilterStatus] = useState("All");
   const [search, setSearch] = useState("");
 
-  const fetchfn = async () => {
-    const { enrollments } = await fetcherWc("/AllEnrollments", "GET");
-    return enrollments as Enrollmenttype[];
-  };
-
   const {
-    data: exmforms,
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     isLoading,
     isError,
-  } = useQuery<Enrollmenttype[]>({
-    queryKey: ["enrollments", "branch", currentPage],
-    queryFn: async () => {
-      // Use fetchfn to fetch the main data
-      const enrollments = await fetchfn();
-
-      // Use fetcherWc for additional fetch logic (e.g., pagination)
-      const paginatedData = await fetcherWc(
-        `/AllEnrollments?page=${currentPage}&limit=${PAGE_SIZE}`,
-        "GET"
-      );
-
-      // Ensure a valid return value
-      if (Array.isArray(paginatedData) && paginatedData.length > 0) {
-        return paginatedData;
-      } else if (Array.isArray(enrollments) && enrollments.length > 0) {
-        return enrollments;
-      } else {
-        return []; // Return an empty array if both are undefined or empty
-      }
-    },
-    staleTime: 1000 * 60 * 10,
+  } = useInfiniteQuery<etype>({
+    queryKey: ["Edownloads"],
+    queryFn: ({ pageParam }) =>
+      fetcherWc(`/AllEnrollments?cursor=${pageParam ?? ""}&limit=5`, "GET"),
+    getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
+    initialPageParam: null,
+    staleTime: 1000 * 60 * 5,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
+  const loaderRef = useRef<HTMLDivElement>(null);
 
-  if (isLoading) return <Loader />;
-  if (!Array.isArray(exmforms) || isError)
-    return <h1>Error occurred while fetching data</h1>;
+  useEffect(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
 
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const currentEnrollments = exmforms.slice(startIndex, startIndex + PAGE_SIZE);
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) fetchNextPage();
+    });
 
-  const filteredEnrollment = currentEnrollments.filter((enrollment) => {
-    return (
-      enrollment.EnrollmentNo.toString()
-        .toLowerCase()
-        .includes(search.toLowerCase()) &&
-      (filterStatus === "All" ||
-        enrollment.status.val.toLowerCase() === filterStatus.toLowerCase())
-    );
-  });
+    const node = loaderRef.current;
+    if (node) observer.observe(node);
+
+    return () => {
+      if (node) observer.unobserve(node);
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  if (isLoading || !data) return <Loader />;
+  if (isError) return <h1>Error occurred while fetching data</h1>;
+
+  const filteredEnrollment = data.pages.flatMap((page) =>
+    page.enrollments.filter(
+      (enrollment) =>
+        enrollment.centerid
+          .toString()
+          .toLowerCase()
+          .includes(search.toLowerCase()) &&
+        (filterStatus === "All" ||
+          enrollment.status.val.toLowerCase() === filterStatus.toLowerCase())
+    )
+  );
 
   return (
     <div className="min-w-lg mx-auto mt-10 p-4 bg-white rounded-lg">
@@ -102,7 +91,15 @@ const ExamForm = () => {
             {filterStatus}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {["All", "Pending", "Pass Out"].map((option) => (
+            {[
+              "All",
+              "Pending",
+              "Enrollment Done",
+              "Enrollment Verified",
+              "Exam Form Verified",
+              "Marksheet Verified",
+              "PassOut",
+            ].map((option) => (
               <DropdownMenuItem
                 key={option}
                 onClick={() => setFilterStatus(option)}
@@ -166,28 +163,6 @@ const ExamForm = () => {
         ))}
       </div>
 
-      {/* Pagination */}
-      <Pagination className="mt-4">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              isActive={currentPage !== 1}
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              onClick={() =>
-                setCurrentPage((prev) =>
-                  startIndex + PAGE_SIZE < exmforms.length ? prev + 1 : prev
-                )
-              }
-              isActive={startIndex + PAGE_SIZE < exmforms.length}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-
       {/* Enrollment Modal */}
       {isModalOpen && selectedEnrollment && (
         <div className="fixed inset-0 p-6 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
@@ -222,8 +197,16 @@ const ExamForm = () => {
           </div>
         </div>
       )}
+
+      <div
+        ref={loaderRef}
+        className="text-center text-sm p-4 text-gray-500 w-full flex justify-center"
+      >
+        {isFetchingNextPage && <Loader2 className="animate-spin" />}
+        {!hasNextPage && "Nothing to show"}
+      </div>
     </div>
   );
 };
 
-export default ExamForm;
+export default Downloads;

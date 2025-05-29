@@ -16,12 +16,12 @@ export default function Layout({ dashboard }: { dashboard: React.ReactNode }) {
   useEffect(() => {
     if (!user) {
       router.replace("/login");
-    } else if (user.role !== "ADMIN") {
+    } else if (user.role !== "CENTER") {
       router.replace("/unauthorized");
     }
   }, [user, router]);
 
-  if (!user || user.role !== "ADMIN") return <Loader />;
+  if (!user || user.role !== "CENTER") return <Loader />;
 
   return (
     <SidebarProvider open={isSidebarOpen} onOpenChange={setSidebarOpen}>
