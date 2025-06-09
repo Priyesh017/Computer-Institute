@@ -45,8 +45,7 @@ const Marksheet = () => {
       fetcherWc(`/marksheetfetch?cursor=${pageParam ?? ""}&limit=5`, "GET"),
     getNextPageParam: (lastPage) => lastPage.nextCursor || undefined,
     initialPageParam: null,
-    staleTime: 1000 * 60 * 5,
-    refetchOnMount: false,
+
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
