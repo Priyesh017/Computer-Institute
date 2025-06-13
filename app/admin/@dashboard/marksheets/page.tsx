@@ -34,8 +34,10 @@ const Marksheet = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    isLoading,
     isError,
+
+    isLoading,
+    isRefetching,
   } = useInfiniteQuery<{
     enrollments: MarksWithEnrollment[];
     nextCursor: number;
@@ -133,7 +135,7 @@ const Marksheet = () => {
 
     toast(data.success ? "success" : "failed");
   };
-  if (isLoading) return <Loader />;
+  if (isLoading || isRefetching) return <Loader />;
   if (isError) return <p>Error loading data</p>;
 
   return (
