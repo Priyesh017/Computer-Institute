@@ -37,7 +37,7 @@ export default function Navbar() {
   const { user, setUtype } = useAuthStore();
 
   const router = useRouter();
-
+  console.log(user);
   const onclickHandler = (e: "admin" | "center") => {
     setUtype(e);
     router.push("/login");
