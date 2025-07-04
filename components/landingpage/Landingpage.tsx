@@ -21,7 +21,7 @@ import {
 import { fetcher } from "@/helper";
 import { menuItems } from "@/data";
 import Loader from "../Loader";
-import Notice from "@/components/landingpage/NoticeBoard";
+// import Notice from "@/components/landingpage/NoticeBoard";
 import {
   Carousel,
   CarouselContent,
