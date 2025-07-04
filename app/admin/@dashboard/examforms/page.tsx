@@ -27,6 +27,7 @@ const ExamForm = () => {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
+    isRefetching,
     isError,
   } = useInfiniteQuery<{ enrollments: DataItem[]; nextCursor: number }>({
     queryKey: ["examforms"],
@@ -84,7 +85,7 @@ const ExamForm = () => {
     onSettled: () => setloading(null),
   });
 
-  if (isLoading) return <Loader />;
+  if (isLoading || isRefetching) return <Loader />;
   if (isError) return <p>Error loading data</p>;
 
   return (
@@ -121,7 +122,7 @@ const ExamForm = () => {
           return (
             <div
               key={enrollment.id}
-              className="grid md:grid-cols-8 items-center text-center text-gray-600 gap-2 font-bold py-3 border-b border-gray-500 hover:bg-blue-100"
+              className="grid md:grid-cols-8 items-center text-center text-gray-600 gap-2 font-bold py-3 border-b border-gray-500"
             >
               <div className="">{enrollment.enrollment.name}</div>
               <div>{enrollment.EnrollmentNo}</div>

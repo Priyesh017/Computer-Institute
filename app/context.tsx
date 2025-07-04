@@ -21,10 +21,12 @@ ApiEnd.interceptors.response.use(
 export default function App({ children }: { children: React.ReactNode }) {
   const { loadingTime } = useAuthStore();
 
-  useAuth();
+  const { loading } = useAuth();
+
+  if (loadingTime || loading) return <Loader />;
+
   return (
     <QueryClientProvider client={queryClient}>
-      {loadingTime && <Loader />}
       <Datafetch> {children}</Datafetch>
     </QueryClientProvider>
   );
