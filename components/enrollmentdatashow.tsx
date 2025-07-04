@@ -38,11 +38,11 @@ export const EnrollmentDetails = ({
     "idCardLink",
   ];
   const ignore = ["status", "activated", "id", "centerid", "EnrollmentNo"];
-
+  // admit,cer,img,idcard,marksheet,dob,father,address
   if (!formData) return;
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-xl">
+    <motion.div className="max-w-2xl mx-auto p-6 bg-white rounded-xl">
       <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
         Enrollment Details
       </h2>
@@ -56,7 +56,7 @@ export const EnrollmentDetails = ({
                 <motion.a
                   key={key}
                   href={value}
-                  download
+                  target="_blank"
                   className="download-item flex items-center justify-between p-4 border  rounded-lg shadow-md hover:bg-violet-700/40 transition-colors cursor-pointer"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -127,6 +127,6 @@ export const EnrollmentDetails = ({
           {loading === "update" && <Loader2 className="animate-spin" />}
         </Button>
       )}
-    </div>
+    </motion.div>
   );
 };

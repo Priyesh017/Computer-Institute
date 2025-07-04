@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { FaBars } from "react-icons/fa";
+
 import { menuItems } from "@/data";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthStore, usertype } from "@/store";
+
 import {
   Sheet,
   SheetClose,
@@ -23,7 +26,7 @@ const navLinks = (user: usertype | null) => [
   { label: "Franchise", href: "/enquiry" },
   {
     label: user ? "Dashboard" : "Login",
-    href: user ? (user.role ? "/admin" : "/student") : "/login",
+    href: user ? `/${user.role.toLowerCase()}` : "/login",
     isLogin: !user,
   },
 ];

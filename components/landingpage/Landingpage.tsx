@@ -212,10 +212,30 @@ export default function Home() {
         ))}
 
         <footer className="text-center p-4 bg-gray-800 text-white">
-          <span>Copyright &copy; 2015-2025 | All Rights Reserved - </span>
+          <span>Copyright &copy; 2024-2025 | All Rights Reserved - </span>
           <span className="text-purple-500">
-            PMK National Youth Computer Centre
+            National Youth Computer Training Centre
           </span>
+          <p>
+            Developed and maintained by{" "}
+            <a
+              href="https://jaydeb-tech-solutions.b12sites.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              Jaydeb Tech Solutions
+            </a>
+          </p>
+          <p>
+            Contact:{" "}
+            <a
+              href="mailto:ghosh.mainak0401@gmail.com"
+              className="text-blue-600 hover:underline"
+            >
+              ghosh.mainak0401@gmail.com
+            </a>
+          </p>
         </footer>
 
         {/* Scroll to Top Button */}

@@ -17,7 +17,7 @@ export const navMain = [
     items: [
       {
         title: "Course Fee",
-        url: "/admin/coursefee",
+        url: "/center/coursefee",
       },
     ],
   },
@@ -221,16 +221,16 @@ export const navMain = [
     items: [
       {
         title: "Online admission",
-        url: "/admin/studententry",
+        url: "/center/studententry",
       },
 
       {
         title: "Exam Form",
-        url: "/admin/examformfillup",
+        url: "/center/examformfillup",
       },
       {
         title: "Marksheet",
-        url: "/admin/marksheetentry",
+        url: "/center/marksheetentry",
       },
     ],
   },
@@ -242,7 +242,7 @@ export const navMain = [
     items: [
       {
         title: "All Enrollments",
-        url: "/admin/alldownloads",
+        url: "/center/alldownloads",
       },
     ],
   },

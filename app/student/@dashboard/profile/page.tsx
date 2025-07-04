@@ -4,13 +4,22 @@ import { motion } from "framer-motion";
 import anime from "animejs";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { useAuthStore } from "@/store";
 import { StudentProfileProps } from "@/lib/typs";
+import { useQuery } from "@tanstack/react-query";
+import { fetcherWc } from "@/helper";
+import Loader from "@/components/Loader";
 
 const StudentProfile: React.FC = () => {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const student = useAuthStore().user as unknown as StudentProfileProps;
+  const {
+    data: student,
+    isError,
+    isLoading,
+  } = useQuery<StudentProfileProps>({
+    queryKey: ["StudentData"],
+    queryFn: () => fetcherWc("/studentData", "GET"),
+  });
 
   useEffect(() => {
     anime({
@@ -21,8 +30,9 @@ const StudentProfile: React.FC = () => {
       easing: "easeOutExpo",
     });
   }, []);
+  if (isLoading) return <Loader />;
 
-  if (!student) {
+  if (isError || !student) {
     return (
       <p className="relative top-1/2 text-center text-red-500 ">
         Student data is not available.
@@ -30,13 +40,19 @@ const StudentProfile: React.FC = () => {
     );
   }
 
+  const remc = 6 - Math.abs(student.EnrollmentNo).toString().length;
+  const paddedNumberc = student.EnrollmentNo.toString().padStart(remc, "0");
+
+  const remcode = 6 - Math.abs(student.centerid).toString().length;
+  const paddedCode = student.centerid.toString().padStart(remcode, "0");
+
   const studentDetails = [
     {
       id: "enrollment",
       label: "Enrollment No:",
-      value: student.EnrollmentNo,
+      value: `YCTC${paddedCode}/${paddedNumberc}`,
     },
-    { id: "card", label: "Student Card:", value: student.IdCardNo },
+    { id: "card", label: "Id Card No:", value: student.IdCardNo },
     { id: "phone", label: "Phone:", value: student.mobileNo },
     { id: "email", label: "Email:", value: student.email },
     {
@@ -46,11 +62,17 @@ const StudentProfile: React.FC = () => {
     },
     { id: "father", label: "Father:", value: student.father },
     { id: "mother", label: "Mother:", value: student.mother },
-    { id: "center", label: "Center:", value: student.center },
+    { id: "center", label: "Center:", value: student.center.Centername },
+
     {
-      id: "qualification",
-      label: "Qualification:",
-      value: student.eduqualification,
+      id: "Course",
+      label: "Course:",
+      value: student.course.CName,
+    },
+    {
+      id: "Status",
+      label: "Status:",
+      value: student.status.val,
     },
   ];
 
@@ -78,7 +100,9 @@ const StudentProfile: React.FC = () => {
           <h2 className="text-4xl font-semibold text-gray-900 dark:text-white">
             {student.name}
           </h2>
-          <p className="text-gray-600 dark:text-gray-300">{student.course}</p>
+          <p className="text-gray-600 dark:text-gray-300">
+            {student.course.CName}
+          </p>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4 text-md text-gray-700 dark:text-gray-300">

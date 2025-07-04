@@ -8,8 +8,12 @@ export interface StudentProfileProps {
   dob: string;
   father: string;
   mother: string;
-  center: string;
-  course: string;
+  center: {
+    Centername: string;
+  };
+  course: {
+    CName: string;
+  };
   eduqualification: string;
   EnrollmentType: string;
   idCardLink: string;
@@ -17,6 +21,11 @@ export interface StudentProfileProps {
   certificateLink: string;
   marksheetLink: string;
   createdAt: string;
+  status: {
+    id: number;
+    val: string;
+  };
+  centerid: number;
 }
 
 export interface Enrollmenttype {

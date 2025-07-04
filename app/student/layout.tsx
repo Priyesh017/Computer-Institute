@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -8,19 +8,30 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import { Loader2, LogOut } from "lucide-react";
+import { Loader, Loader2, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/store";
 import { fetcherWc } from "@/helper";
 import { toast } from "react-toastify";
 import { navMain } from "@/data";
 import { NavMain } from "@/components/nav-main";
+import { useRouter } from "next/navigation";
 
 export default function Menu({ dashboard }: { dashboard: React.ReactNode }) {
   const { logout, isSidebarOpen, setSidebarOpen, user } = useAuthStore();
   const [temploading, settemploading] = useState(false);
   const filteredNav = navMain.filter((nav) => nav.role === "student");
-  if (!user) return;
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      router.replace("/login");
+    } else if (user.role !== "STUDENT") {
+      router.replace("/unauthorized");
+    }
+  }, [user, router]);
+
+  if (!user || user.role !== "STUDENT") return <Loader />;
 
   const logouthandler = async () => {
     settemploading(true);
