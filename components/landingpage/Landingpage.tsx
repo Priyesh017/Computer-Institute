@@ -21,7 +21,7 @@ import {
 import { fetcher } from "@/helper";
 import { menuItems } from "@/data";
 import Loader from "../Loader";
-import Notice from "@/components/landingpage/NoticeBoard";
+// import Notice from "@/components/landingpage/NoticeBoard";
 import {
   Carousel,
   CarouselContent,
@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/carousel";
 import { motion } from "framer-motion";
 import Navbar from "./Navbar";
+import NoticeBoard from "./NoticeB";
 
 // Social links and icons combined
 const socialLinks = [
@@ -195,7 +196,8 @@ export default function Home() {
         </Carousel>
       </section>
 
-      <Notice />
+      {/* <Notice /> */}
+      <NoticeBoard />
 
       {/* Main Sections */}
       <div className="min-h-screen text-white relative">
