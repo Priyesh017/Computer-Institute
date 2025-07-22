@@ -46,8 +46,6 @@ export default function LoginPage() {
         router.push(utype === "admin" ? "/admin" : "/center");
       } else if (data.message === "enabled") {
         setOpen(true);
-      } else if (data.message === "Invalid credentials") {
-        toast.warn(data.message);
       }
     } catch (error) {
       console.log(error);

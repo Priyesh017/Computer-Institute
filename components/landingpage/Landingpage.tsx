@@ -222,12 +222,12 @@ export default function Home() {
           <p>
             Developed and maintained by{" "}
             <a
-              href="https://linkedin.com/in/mainak908"
+              href="https://jaydeb-tech-solutions.b12sites.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:underline"
             >
-              Mainak
+              Jaydeb Tech Solutions
             </a>
           </p>
           <p>

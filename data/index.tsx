@@ -73,7 +73,7 @@ export const navMain = [
     items: [
       {
         title: "Videos",
-        url: "/center/allvideos",
+        url: "/admin/allvideos",
       },
     ],
   },
