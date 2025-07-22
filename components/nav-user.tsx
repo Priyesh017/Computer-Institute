@@ -95,7 +95,7 @@ export function NavUser({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                onClick={() => router.replace("admin/enable2fa")}
+                onClick={() => router.push("/admin/enable2fa")}
                 className="cursor-pointer"
               >
                 <BadgeCheck />
