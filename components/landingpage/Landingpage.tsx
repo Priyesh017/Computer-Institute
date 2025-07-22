@@ -30,6 +30,7 @@ import {
 import { motion } from "framer-motion";
 import Navbar from "./Navbar";
 import NoticeBoard from "./NoticeB";
+import Banner from "./Banner";
 
 // Social links and icons combined
 const socialLinks = [
@@ -124,7 +125,7 @@ export default function Home() {
     <div className="bg-white text-white">
       <section className="overflow-hidden border-b border-gray-900">
         {/* Header Strip */}
-        <div className="flex md:flex-row flex-col items-center justify-between gap-2 px-4 py-1 bg-purple-900 text-white text-sm">
+        {/* <div className="flex md:flex-row flex-col items-center justify-between gap-2 px-4 py-1 bg-purple-900 text-white text-sm">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-2">
               <FaEnvelope className="text-yellow-500" /> info@yctc.in
@@ -146,10 +147,10 @@ export default function Home() {
               </a>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Banner */}
-        <div className="relative hidden my-2 px-4 md:flex justify-center items-center gap-6 text-center">
+        {/* <div className="relative hidden my-2 px-4 md:flex justify-center items-center gap-6 text-center">
           <Image
             src="/Logo.png"
             alt="Student"
@@ -167,12 +168,12 @@ export default function Home() {
               opportunities!
             </p>
           </div>
-        </div>
+        </div> */}
 
-        <Navbar />
+        {/* <Navbar /> */}
 
         {/* Carousel */}
-        <Carousel
+        {/* <Carousel
           ref={bannerRef}
           opts={{ loop: true, duration: 100 }}
           plugins={[Autoplay({ delay: 3000 }), Fade()]}
@@ -193,8 +194,10 @@ export default function Home() {
               </CarouselItem>
             ))}
           </CarouselContent>
-        </Carousel>
+        </Carousel> */}
       </section>
+
+      <Banner />
 
       {/* <Notice /> */}
       <NoticeBoard />

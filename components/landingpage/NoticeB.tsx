@@ -155,6 +155,10 @@ export default function NoticeBoard() {
       {/* Right Side - Light Background with Notices */}
       {isPending ? (
         <div className="text-center">Loading...</div>
+      ) : notices.length === 0 ? (
+        <div className="flex justify-center items-center w-full md:w-2/3 text-2xl text-gray-500">
+          Notice not available
+        </div>
       ) : (
         <motion.div
           className="w-full md:w-2/3 bg-gray-50 relative overflow-hidden"
@@ -196,12 +200,14 @@ export default function NoticeBoard() {
                 </motion.div>
                 <h2 className="text-2xl font-bold text-slate-800">
                   Recent Notices
-                  <p className="md:hidden text-xs font-normal text-slate-600 flex items-center gap-2">
-                    <span>📋</span>
-                    <span>{`Last updated: ${formatCreatedDate(
-                      sortedNotices[0]?.createdAt
-                    )}`}</span>
-                  </p>
+                  {notices.length != 0 && (
+                    <p className="md:hidden text-xs font-normal text-slate-600 flex items-center gap-2">
+                      <span>📋</span>
+                      <span>{`Last updated: ${formatCreatedDate(
+                        sortedNotices[0]?.createdAt
+                      )}`}</span>
+                    </p>
+                  )}
                 </h2>
               </div>
               <div className="flex items-center gap-3">
@@ -437,19 +443,21 @@ export default function NoticeBoard() {
           )}
 
           {/* Bottom Info */}
-          <motion.div
-            className="hidden md:block absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded-lg shadow-md border border-gray-200 z-20"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1 }}
-          >
-            <p className="text-xs text-slate-600 flex items-center gap-2">
-              <span>📋</span>
-              <span>{`Last updated: ${formatCreatedDate(
-                sortedNotices[0]?.createdAt
-              )}`}</span>
-            </p>
-          </motion.div>
+          {notices.length != 0 && (
+            <motion.div
+              className="hidden md:block absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded-lg shadow-md border border-gray-200 z-20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+            >
+              <p className="md:hidden text-xs font-normal text-slate-600 flex items-center gap-2">
+                <span>📋</span>
+                <span>{`Last updated: ${formatCreatedDate(
+                  sortedNotices[0]?.createdAt
+                )}`}</span>
+              </p>
+            </motion.div>
+          )}
         </motion.div>
       )}
     </div>
