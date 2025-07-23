@@ -36,22 +36,28 @@ export default function LoginPage() {
         password: fd.password,
       });
 
-      if (data.message === "Login successful") {
-        if (data.user.role.toLowerCase() !== utype) {
-          toast(`u r not authorised`);
+      if (data.success) {
+        if (data.twoFA) {
+          setOpen(true);
           return;
         }
+
+        if (data.user.role.toLowerCase() !== utype) {
+          toast.error(`you are not authorised`);
+          return;
+        }
+
         login(data.user);
-        toast("Login Successfully");
+        toast.success("Login Successfully");
+
         router.push(utype === "admin" ? "/admin" : "/center");
-      } else if (data.message === "enabled") {
-        setOpen(true);
-      } else if (data.message === "Invalid credentials") {
+      } else if (!data.success) {
         toast.warn(data.message);
       }
-    } catch (error) {
-      console.log(error);
-      toast("some error happened");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.log(err);
+      toast.error(err?.response?.data?.message || "Something went wrong");
     } finally {
       setLoader(false);
     }

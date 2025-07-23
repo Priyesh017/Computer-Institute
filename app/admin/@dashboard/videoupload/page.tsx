@@ -159,8 +159,32 @@ const VideoUpload = () => {
           </div>
         </div>
       )}
-      {loading && <Progress value={progress} className="w-[60%]" />}
-      {uploadComplete && Transcode <= 100 && (
+
+      {loading && (
+        <div className="w-full flex flex-col items-center gap-2 mt-6">
+          <p className="text-sm text-gray-600 tracking-wide">
+            Uploading... {progress}%
+          </p>
+
+          <Progress value={progress} className="w-[60%]" />
+        </div>
+      )}
+
+      {uploadComplete && Transcode === 0 && (
+        <div className="relative p-6 mt-8 mx-auto w-full max-w-md bg-white/20 backdrop-blur-md rounded-2xl border border-white/30 shadow-lg text-center">
+          <div className="flex justify-center mb-4">
+            <div className="w-10 h-10 border-4 border-yellow-400 border-dashed rounded-full animate-spin"></div>
+          </div>
+          <h2 className="text-xl font-semibold text-yellow-800">
+            Preparing to Transcode
+          </h2>
+          <p className="text-sm text-yellow-700 mt-1">
+            Your video has been uploaded. Transcoding will begin shortly...
+          </p>
+        </div>
+      )}
+
+      {uploadComplete && Transcode > 0 && Transcode <= 100 && (
         <div className="flex flex-col items-center justify-center w-full space-y-4 mt-10">
           <div className="w-[60%] bg-gray-200 rounded-full h-4 overflow-hidden shadow-inner">
             <div
