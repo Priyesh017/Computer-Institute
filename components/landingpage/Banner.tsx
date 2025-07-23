@@ -107,7 +107,7 @@ export default function Banner() {
             ease: "easeInOut",
             delay: 1,
           }}
-          className="absolute bottom-1/3 left-1/5 w-16 h-16 bg-gradient-to-br from-green-200 to-teal-200 rounded-full opacity-50 blur-sm"
+          className="absolute bottom-1/3 left-1/4 w-16 h-16 bg-gradient-to-br from-green-200 to-teal-200 rounded-full opacity-50 blur-sm"
         />
 
         {/* Animated small circles */}
@@ -121,9 +121,9 @@ export default function Banner() {
             repeat: Number.POSITIVE_INFINITY,
             ease: "linear",
           }}
-          className="absolute bottom-1/4 left-1/4 w-6 h-6 bg-gradient-to-r from-green-300 to-emerald-300 rounded-full opacity-70"
+          className="absolute bottom-60 left-1/2 w-6 h-6 bg-gradient-to-r from-green-300 to-emerald-300 rounded-full opacity-70"
         />
-        <motion.div
+        {/* <motion.div
           animate={{
             scale: [1, 1.5, 1],
             y: [0, -10, 0],
@@ -134,7 +134,47 @@ export default function Banner() {
             ease: "easeInOut",
             delay: 2,
           }}
-          className="absolute top-1/2 left-1/3 w-4 h-4 bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full opacity-80"
+          className="absolute top-1/4 left-[42%] w-4 h-4 bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full opacity-80"
+        /> */}
+
+        <motion.div
+          animate={{
+            y: [0, -15, 0],
+            rotate: [0, 10, 0],
+            scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeInOut",
+          }}
+          className="absolute top-12 right-8 md:top-32 md:right-8 w-8 h-8 md:w-12 md:h-12 bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full opacity-90 shadow-lg"
+        />
+        <motion.div
+          animate={{
+            y: [0, 12, 0],
+            x: [0, -8, 0],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: 3.5,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeInOut",
+            delay: 0.5,
+          }}
+          className="absolute bottom-8 right-4 md:bottom-40 md:right-8 w-6 h-6 md:w-10 md:h-10 bg-gradient-to-r from-green-300 to-emerald-300 rounded-full opacity-90 shadow-lg"
+        />
+        <motion.div
+          animate={{
+            rotate: [0, 360],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "linear",
+          }}
+          className="absolute top-1/3 right-1/4 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-r from-purple-300 to-pink-300 rounded-full opacity-80 shadow-md"
         />
       </div>
 
@@ -146,14 +186,14 @@ export default function Banner() {
         <motion.div
           whileHover={{ rotate: 10 }}
           transition={{ duration: 0.2, ease: "easeInOut" }}
-          className="bg-white p-2.5 rounded-xl shadow-lg"
+          className="mx-1.5"
         >
           <Image
-            src="/logo.jpg"
+            src="/Logo.png"
             alt="Student"
             width={100}
             height={100}
-            className="w-[50px] rounded-full"
+            className="w-[70px]"
           />
         </motion.div>
 
@@ -196,7 +236,7 @@ export default function Banner() {
                       repeat: Number.POSITIVE_INFINITY,
                     }}
                   >
-                    Lets
+                    Let&apos;s
                   </motion.span>
                   <br />
                   <motion.span
@@ -210,11 +250,11 @@ export default function Banner() {
                     }}
                     style={{ backgroundSize: "200% 200%" }}
                   >
-                    E-learning
+                    Learn
                   </motion.span>
                   <br />
-                  <motion.span
-                    className="text-gray-800"
+                  <motion.div
+                    className="text-gray-800 flex items-end"
                     animate={{ opacity: [0.8, 1, 0.8] }}
                     transition={{
                       duration: 3,
@@ -222,8 +262,21 @@ export default function Banner() {
                       delay: 1,
                     }}
                   >
-                    at your home
-                  </motion.span>
+                    Computers
+                    <motion.div
+                      animate={{
+                        scale: [1, 1.5, 1],
+                        y: [0, -10, 0],
+                      }}
+                      transition={{
+                        duration: 5,
+                        repeat: Number.POSITIVE_INFINITY,
+                        ease: "easeInOut",
+                        delay: 2,
+                      }}
+                      className="relative bottom-3 left-1 w-3 h-3 bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full opacity-80"
+                    />
+                  </motion.div>
                 </motion.h1>
 
                 <motion.p
@@ -233,9 +286,9 @@ export default function Banner() {
                   className="text-gray-600 text-base sm:text-lg lg:text-xl leading-relaxed max-w-lg mx-auto lg:mx-0 font-medium"
                   style={{ fontFamily: "'Inter', sans-serif" }}
                 >
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam.
+                  Master computer skills with expert guidance, practical
+                  classes, and real-time support—all from your trusted
+                  neighborhood institute.
                 </motion.p>
               </div>
 

@@ -23,7 +23,7 @@ export default function Header() {
     { name: "About", href: "#about" },
     { name: "Gallery", href: "#gallery" },
     { name: "Course", href: "#course" },
-    { name: "Contact Us", href: "#contact" },
+    { name: "Contact Us", href: "#contact us" },
   ];
 
   const handleRoleSelect = (role: string, link: string) => {
