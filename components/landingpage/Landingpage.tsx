@@ -2,68 +2,59 @@
 
 import { useEffect, useState, useRef } from "react";
 
-import Image from "next/image";
+// import Image from "next/image";
 import anime from "animejs";
 import { useQuery } from "@tanstack/react-query";
-import Autoplay from "embla-carousel-autoplay";
-import Fade from "embla-carousel-fade";
-import {
-  FaArrowUp,
-  FaEnvelope,
-  FaPhoneAlt,
-  FaFacebookF,
-  FaInstagram,
-  FaWhatsapp,
-  FaTwitter,
-  FaYoutube,
-  FaLinkedinIn,
-} from "react-icons/fa";
+// import Autoplay from "embla-carousel-autoplay";
+// import Fade from "embla-carousel-fade";
+import { FaArrowUp } from "react-icons/fa";
 import { fetcher } from "@/helper";
 import { menuItems } from "@/data";
 import Loader from "../Loader";
 // import Notice from "@/components/landingpage/NoticeBoard";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
+// import {
+//   Carousel,
+//   CarouselContent,
+//   CarouselItem,
+// } from "@/components/ui/carousel";
 import { motion } from "framer-motion";
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 import NoticeBoard from "./NoticeB";
+import Banner from "./Banner";
 
 // Social links and icons combined
-const socialLinks = [
-  {
-    icon: FaFacebookF,
-    url: "https://facebook.com/nyctcofficial",
-    hoverColor: "hover:text-blue-500",
-  },
-  {
-    icon: FaInstagram,
-    url: "https://instagram.com/nyctcofficial",
-    hoverColor: "hover:text-pink-500",
-  },
-  {
-    icon: FaWhatsapp,
-    url: "https://wa.me/918670468683",
-    hoverColor: "hover:text-green-400",
-  },
-  {
-    icon: FaTwitter,
-    url: "https://twitter.com/nyctcofficial",
-    hoverColor: "hover:text-sky-400",
-  },
-  {
-    icon: FaYoutube,
-    url: "https://youtube.com/nyctcofficial",
-    hoverColor: "hover:text-red-500",
-  },
-  {
-    icon: FaLinkedinIn,
-    url: "https://linkedin.com/company/nyctc",
-    hoverColor: "hover:text-blue-400",
-  },
-];
+// const socialLinks = [
+//   {
+//     icon: FaFacebookF,
+//     url: "https://facebook.com/nyctcofficial",
+//     hoverColor: "hover:text-blue-500",
+//   },
+//   {
+//     icon: FaInstagram,
+//     url: "https://instagram.com/nyctcofficial",
+//     hoverColor: "hover:text-pink-500",
+//   },
+//   {
+//     icon: FaWhatsapp,
+//     url: "https://wa.me/918670468683",
+//     hoverColor: "hover:text-green-400",
+//   },
+//   {
+//     icon: FaTwitter,
+//     url: "https://twitter.com/nyctcofficial",
+//     hoverColor: "hover:text-sky-400",
+//   },
+//   {
+//     icon: FaYoutube,
+//     url: "https://youtube.com/nyctcofficial",
+//     hoverColor: "hover:text-red-500",
+//   },
+//   {
+//     icon: FaLinkedinIn,
+//     url: "https://linkedin.com/company/nyctc",
+//     hoverColor: "hover:text-blue-400",
+//   },
+// ];
 
 export default function Home() {
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -124,7 +115,7 @@ export default function Home() {
     <div className="bg-white text-white">
       <section className="overflow-hidden border-b border-gray-900">
         {/* Header Strip */}
-        <div className="flex md:flex-row flex-col items-center justify-between gap-2 px-4 py-1 bg-purple-900 text-white text-sm">
+        {/* <div className="flex md:flex-row flex-col items-center justify-between gap-2 px-4 py-1 bg-purple-900 text-white text-sm">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-2">
               <FaEnvelope className="text-yellow-500" /> info@yctc.in
@@ -146,10 +137,10 @@ export default function Home() {
               </a>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Banner */}
-        <div className="relative hidden my-2 px-4 md:flex justify-center items-center gap-6 text-center">
+        {/* <div className="relative hidden my-2 px-4 md:flex justify-center items-center gap-6 text-center">
           <Image
             src="/Logo.png"
             alt="Student"
@@ -167,12 +158,12 @@ export default function Home() {
               opportunities!
             </p>
           </div>
-        </div>
+        </div> */}
 
-        <Navbar />
+        {/* <Navbar /> */}
 
         {/* Carousel */}
-        <Carousel
+        {/* <Carousel
           ref={bannerRef}
           opts={{ loop: true, duration: 100 }}
           plugins={[Autoplay({ delay: 3000 }), Fade()]}
@@ -193,8 +184,10 @@ export default function Home() {
               </CarouselItem>
             ))}
           </CarouselContent>
-        </Carousel>
+        </Carousel> */}
       </section>
+
+      <Banner />
 
       {/* <Notice /> */}
       <NoticeBoard />
