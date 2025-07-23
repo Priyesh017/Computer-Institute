@@ -236,7 +236,7 @@ export default function Banner() {
                       repeat: Number.POSITIVE_INFINITY,
                     }}
                   >
-                    Let&apos;s
+                    Learn
                   </motion.span>
                   <br />
                   <motion.span
@@ -250,11 +250,11 @@ export default function Banner() {
                     }}
                     style={{ backgroundSize: "200% 200%" }}
                   >
-                    Learn
+                    Grow
                   </motion.span>
                   <br />
                   <motion.div
-                    className="text-gray-800 flex items-end"
+                    className="text-gray-800 flex justify-center md:justify-start items-end"
                     animate={{ opacity: [0.8, 1, 0.8] }}
                     transition={{
                       duration: 3,
@@ -262,7 +262,7 @@ export default function Banner() {
                       delay: 1,
                     }}
                   >
-                    Computers
+                    Succeed
                     <motion.div
                       animate={{
                         scale: [1, 1.5, 1],
@@ -274,7 +274,7 @@ export default function Banner() {
                         ease: "easeInOut",
                         delay: 2,
                       }}
-                      className="relative bottom-3 left-1 w-3 h-3 bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full opacity-80"
+                      className="relative bottom-0 md:bottom-3 left-1 w-3 h-3 bg-gradient-to-r from-yellow-300 to-orange-300 rounded-full opacity-80"
                     />
                   </motion.div>
                 </motion.h1>
@@ -304,7 +304,7 @@ export default function Banner() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 sm:px-10 py-3 md:py-5 border-2 border-transparent rounded-full text-base sm:text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
+                    <Button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 sm:px-10 py-3 md:py-5 border-2 border-transparent  rounded-full text-base sm:text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden group">
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent"
                         initial={{ x: "-100%" }}
@@ -336,7 +336,7 @@ export default function Banner() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 1.1 }}
-                className="flex space-x-4 sm:space-x-5 pt-6 md:pt-2 justify-center lg:justify-start"
+                className="flex flex-wrap gap-5 pt-4 px-4 md:pt-2 md:px-0 justify-center md:justify-start"
               >
                 {socialLinks.map((social, index) => (
                   <motion.a

@@ -65,31 +65,30 @@ export default function Header() {
 
               {/* Login Dropdown */}
               <div className="relative">
-                {user ? (
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => router.push(`/${user.role.toLowerCase()}`)}
-                    whileHover={{
-                      scale: 1.1,
-                      color: "#fbbf24",
-                    }}
-                    className="text-white font-bold flex items-center gap-1 hover:text-yellow-300"
-                  >
-                    Dashboard
-                  </motion.button>
-                ) : (
-                  <motion.button
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setDropdownOpen((prev) => !prev)}
-                    whileHover={{
-                      scale: 1.1,
-                      color: "#fbbf24",
-                    }}
-                    className="text-white font-bold flex items-center gap-1 hover:text-yellow-300"
-                  >
-                    Login <ChevronDown className="w-4 h-4" />
-                  </motion.button>
-                )}
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    if (user) {
+                      router.push(`/${user.role.toLowerCase()}`);
+                    } else {
+                      setDropdownOpen((prev) => !prev);
+                    }
+                  }}
+                  whileHover={{
+                    scale: 1.1,
+                    color: "#fbbf24",
+                  }}
+                  className="text-white font-bold flex items-center gap-1"
+                >
+                  {user ? (
+                    "Dashboard"
+                  ) : (
+                    <>
+                      Login
+                      <ChevronDown className="w-4 h-4 inline-block ml-1" />
+                    </>
+                  )}
+                </motion.button>
 
                 <AnimatePresence>
                   {isDropdownOpen && (

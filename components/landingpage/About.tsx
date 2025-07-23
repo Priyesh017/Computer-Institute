@@ -9,9 +9,6 @@ import { stats } from "@/data/index";
 const AboutInfo = () => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true });
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
 
   useEffect(() => {
     if (isInView && ref.current) {
@@ -38,8 +35,8 @@ const AboutInfo = () => {
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <div className="flex flex-col-reverse md:flex-row items-center">
-          <div className="flex-1 justify-items-center">
+        <div className="flex flex-col-reverse md:flex-row justify-center items-center">
+          <div className="flex flex-col justify-center items-center w-1/2">
             <h2 className="relative top-[-40] text-5xl py-2 font-bold">
               About Us
             </h2>
@@ -66,13 +63,13 @@ const AboutInfo = () => {
                 Join us and build your future today!
               </p>
             </div>
-            <motion.button
+            <motion.a
+              href="#contact us"
               whileHover={{ scale: 1.1 }}
               className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-lg font-medium shadow-lg"
-              onClick={() => scrollToSection("center")}
             >
               Contact Now
-            </motion.button>
+            </motion.a>
           </div>
           <div className="flex-1 justify-items-end">
             <Image
