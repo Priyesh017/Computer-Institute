@@ -9,7 +9,7 @@ import { useAuthStore } from "@/store";
 export default function Header() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const { setUtype } = useAuthStore();
+  const { setUtype, user } = useAuthStore();
   const router = useRouter();
 
   const roles = [
@@ -65,17 +65,31 @@ export default function Header() {
 
               {/* Login Dropdown */}
               <div className="relative">
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setDropdownOpen((prev) => !prev)}
-                  whileHover={{
-                    scale: 1.1,
-                    color: "#fbbf24",
-                  }}
-                  className="text-white font-bold flex items-center gap-1 hover:text-yellow-300"
-                >
-                  Login <ChevronDown className="w-4 h-4" />
-                </motion.button>
+                {user ? (
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => router.push(`/${user.role.toLowerCase()}`)}
+                    whileHover={{
+                      scale: 1.1,
+                      color: "#fbbf24",
+                    }}
+                    className="text-white font-bold flex items-center gap-1 hover:text-yellow-300"
+                  >
+                    Dashboard
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setDropdownOpen((prev) => !prev)}
+                    whileHover={{
+                      scale: 1.1,
+                      color: "#fbbf24",
+                    }}
+                    className="text-white font-bold flex items-center gap-1 hover:text-yellow-300"
+                  >
+                    Login <ChevronDown className="w-4 h-4" />
+                  </motion.button>
+                )}
 
                 <AnimatePresence>
                   {isDropdownOpen && (

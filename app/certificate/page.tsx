@@ -39,7 +39,7 @@ export default function CertificateGenerator() {
         placeholder="Enter Enrollment No"
         value={EnrollmentNo}
         onChange={(e) => setEnrollmentNo(e.target.value)}
-        className="p-2 mt-4 rounded-lg border border-gray-600 bg-gray-800 focus:outline-none focus:ring-2 focus:ring-violet-400"
+        className="p-2 mt-4 rounded-lg border border-gray-600 bg-gray-800 focus:outline-none focus:ring-2 focus:ring-violet-400 text-center"
       />
       <Button
         onClick={handler}
