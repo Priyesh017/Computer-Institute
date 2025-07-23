@@ -236,7 +236,7 @@ export default function Banner() {
                       repeat: Number.POSITIVE_INFINITY,
                     }}
                   >
-                    Let&apos;s
+                    Learn
                   </motion.span>
                   <br />
                   <motion.span
@@ -250,7 +250,7 @@ export default function Banner() {
                     }}
                     style={{ backgroundSize: "200% 200%" }}
                   >
-                    Learn
+                    Grow
                   </motion.span>
                   <br />
                   <motion.div
@@ -262,7 +262,7 @@ export default function Banner() {
                       delay: 1,
                     }}
                   >
-                    Computers
+                    Succeed
                     <motion.div
                       animate={{
                         scale: [1, 1.5, 1],
