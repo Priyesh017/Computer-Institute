@@ -156,7 +156,7 @@ export default function NoticeBoard() {
       {isPending ? (
         <div className="text-center">Loading...</div>
       ) : notices.length === 0 ? (
-        <div className="flex justify-center items-center w-full md:w-2/3 text-2xl text-gray-500">
+        <div className="flex justify-center items-center w-full min-h-[300px] md:h-auto md:w-2/3 text-2xl text-gray-500">
           Notice not available
         </div>
       ) : (
